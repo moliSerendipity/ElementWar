@@ -1,0 +1,37 @@
+# Unity.gitignore模板（GitHub官方）
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# 保存的场景
+*.csc
+*.pidb
+*.suo
+*.user
+*.userprefs
+*.pidb.meta
+*.sln
+*.unityproj
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity3D generated meta files
+*.pidb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
+
+# Crashlytics generated file
+crashlytics-build.properties

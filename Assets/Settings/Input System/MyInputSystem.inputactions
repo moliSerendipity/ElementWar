@@ -1,0 +1,471 @@
+{
+    "version": 1,
+    "name": "MyInputSystem",
+    "maps": [
+        {
+            "name": "PlayerMovement",
+            "id": "6673c117-0bef-44a6-8ca8-6cc98fc5b058",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "25b32c62-9ba2-4c8d-9cf8-f22b104e7db9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "5253154b-4cbf-46e4-93cf-eedc3ef8adc7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "IsSprint",
+                    "type": "Button",
+                    "id": "6305751d-769d-46e0-a9a6-d8e4926d2e02",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsJump",
+                    "type": "Button",
+                    "id": "54b63d76-545f-4acc-b008-1540de1c5701",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "WASD",
+                    "id": "1ea27cd6-4290-4e47-bea0-f63386dfb75b",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "3e54c2e5-6307-41fe-98c8-034891630143",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "4e0efef0-99d5-48d2-8aab-11c0a06a6afe",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "91f24831-a427-4429-8a34-1ce9a684ccbb",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "09fa44d3-6bd4-4c7f-9833-7609407b3701",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "6760f5de-e12b-4757-aeae-53e871ab1eed",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "91f5a823-6b86-493f-896d-7e39ea9f35dc",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a6c5bb4-deb5-4317-afed-a99e6ab04b75",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsJump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerCombat",
+            "id": "f4103dab-0da6-49ac-81dd-8b5c738cb853",
+            "actions": [
+                {
+                    "name": "IsFire",
+                    "type": "Button",
+                    "id": "d86dc43c-295d-47c5-967b-c49f558cbaf3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsAim",
+                    "type": "Button",
+                    "id": "4230afca-4e1e-4c28-adb1-7de15016f369",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsReload",
+                    "type": "Button",
+                    "id": "962b7449-ae42-45a3-a24b-62ce17ebccc8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchWeapon",
+                    "type": "Value",
+                    "id": "2ca6de8e-e798-477d-9e87-f25723984554",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e1537fe8-ed02-458d-9e6b-7481defeab0b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8fe1e9aa-33d4-40a6-a87c-c20b91a46108",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsAim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3999fee6-2338-4c18-9cd9-f75c7275b2cb",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsReload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4288f6f5-ba03-4f0b-8d67-292b7ab01c47",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerSkill",
+            "id": "cb54b3b1-5852-4091-a318-7e16f855c2b7",
+            "actions": [
+                {
+                    "name": "IsSkill1",
+                    "type": "Button",
+                    "id": "a308c293-9df7-4083-87f0-c9bf0fec5612",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkill2",
+                    "type": "Button",
+                    "id": "f4967418-f5a6-4f9c-8606-21a7dba59f2d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkill3",
+                    "type": "Button",
+                    "id": "10058e4d-8b98-4ac6-a084-cb67cb08441b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkill4",
+                    "type": "Button",
+                    "id": "4a524b72-64d8-4091-b26a-645c7b3fb02d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d94b3e5c-2c41-409e-b3bc-abdbff0b7265",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkill1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7aaea61c-4aef-4d17-b396-8f81c7f6d961",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkill2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee982840-fc4d-4658-bc0d-ccc89bfe9344",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkill3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "340dffed-9f07-4a68-a1e6-8caefc814b84",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkill4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerTeam",
+            "id": "042c9cf2-a2a7-442b-a1aa-79ec3810ad79",
+            "actions": [
+                {
+                    "name": "IsSwitchAI1",
+                    "type": "Button",
+                    "id": "706ac1d8-beea-42b7-81f6-e23a89e0648e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSwitchAI2",
+                    "type": "Button",
+                    "id": "00566009-9ba7-4bb5-9acd-c978e9bc9888",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSwitchAI3",
+                    "type": "Button",
+                    "id": "0ed50010-3a29-45e4-a86d-567cd991edf7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSwitchAI4",
+                    "type": "Button",
+                    "id": "db8c3b70-e387-4f50-8eb4-306f075b3079",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSwitchNextCharacter",
+                    "type": "Button",
+                    "id": "eecd5709-e33b-4c33-9438-d81a41c4a6ab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bb193a75-1746-4a17-bcb1-6a99cf7b5547",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSwitchAI1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9a974e71-24b3-4df0-b82d-249c78daeb34",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSwitchAI2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8fa594f-07bc-4ff6-9231-ee0b635d2406",
+                    "path": "<Keyboard>/f3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSwitchAI3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "01d4c97e-3585-4c7d-855e-e9b63e6b5196",
+                    "path": "<Keyboard>/f4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSwitchAI4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "663753de-1ffa-4aa8-9e9e-19236838be6e",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSwitchNextCharacter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerInteraction",
+            "id": "1f484e9d-23ad-4133-a85c-253079ef2dc4",
+            "actions": [
+                {
+                    "name": "IsPickUp",
+                    "type": "Button",
+                    "id": "4d5d6982-f85d-4c98-b2bd-4453c87f0128",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsOpenOrCloseBag",
+                    "type": "Button",
+                    "id": "116bcdf3-26bd-4432-ba7f-1277be03ae12",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "439ca1ed-5ba7-4bb3-b18f-53be7a7ab7a3",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsPickUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e90f248-f0a6-4da1-969a-4f17a281d496",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsOpenOrCloseBag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
