@@ -1,14 +1,26 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
 /// 按钮状态结构体
 /// </summary>
+[Serializable]
 public struct ButtonState
 {
     public bool wasPressedThisFrame;                                            // 当前帧是否刚按下
     public bool isHeld;                                                         // 是否持续按住
     public bool wasReleasedThisFrame;                                           // 当前帧是否刚松开
+
+    /// <summary>
+    /// 重置按钮按下和松开状态
+    /// </summary>
+    public void Reset()
+    {
+        wasPressedThisFrame = false;
+        wasReleasedThisFrame = false;
+        // 注意：isHeld不重置，因为它表示当前是否持续按住，由逻辑控制
+    }
 }
 
 /// <summary>
@@ -46,7 +58,7 @@ public class InputManager : SingleMonoBase<InputManager>
     private InputAction[] skillActions;                                         // 技能输入缓存数组
     private InputAction[] switchAIActions;                                      // 切换AI输入缓存数组
 
-    public InputFrame Frame { get; private set; } = new InputFrame();           // 当前输入帧数据
+    public InputFrame Frame { get; private set; } = new InputFrame();           // 当前帧输入数据
 
     override protected void Awake()
     {

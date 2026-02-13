@@ -62,7 +62,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Base\SingleMonoBase.cs" />
     <Compile Include="Assets\Settings\Input System\MyInputSystem.cs" />
+    <Compile Include="Assets\Scripts\Player\Input\PlayerInputSource.cs" />
+    <Compile Include="Assets\Scripts\IInputSource.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
+    <Compile Include="Assets\Scripts\AICharacterInputSource.cs" />
+    <Compile Include="Assets\Scripts\Player\CharacterMotor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
