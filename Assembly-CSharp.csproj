@@ -62,10 +62,15 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Base\SingleMonoBase.cs" />
     <Compile Include="Assets\Settings\Input System\MyInputSystem.cs" />
+    <Compile Include="Assets\Scripts\Player\State\CharacterJumpState.cs" />
+    <Compile Include="Assets\Scripts\Player\State\CharacterMoveState.cs" />
+    <Compile Include="Assets\Scripts\Player\TPSCharacterController.cs" />
     <Compile Include="Assets\Scripts\Player\Input\PlayerInputSource.cs" />
     <Compile Include="Assets\Scripts\IInputSource.cs" />
+    <Compile Include="Assets\Scripts\Player\State\CharacterState.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterAnimator.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
+    <Compile Include="Assets\Scripts\Player\State\CharacterIdleState.cs" />
     <Compile Include="Assets\Scripts\AICharacterInputSource.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterMotor.cs" />
   </ItemGroup>

@@ -2,14 +2,17 @@ using UnityEngine;
 
 public class CharacterMotor : MonoBehaviour
 {
+    private CharacterController cc;                                             // 角色控制器组件
+    private Vector3 planarVelocity;                                             // 平面速度 (X, Z)
+    private float verticalVelocity;                                             // 垂直速度 (Y)
+
+    private float lastJumpTime;                                                 // 上次跳跃的时间
+    private const float jumpCooldown = 0.2f;                                    // 跳跃冷却时间，防止连续跳跃
+
     [Header("物理设置")]
     public float gravity = -9.81f;                                              // 重力加速度
     [Tooltip("贴地力，防止下坡时角色悬空")]
     public float stickToGroundForce = -2f;
-
-    private CharacterController cc;                                             // 角色控制器组件
-    private Vector3 planarVelocity;                                             // 平面速度 (X, Z)
-    private float verticalVelocity;                                             // 垂直速度 (Y)
 
     public Vector3 Velocity => cc.velocity;                                     // 当前角色速度
     public bool IsGrounded => cc.isGrounded;                                    // 是否在地面上
@@ -35,10 +38,15 @@ public class CharacterMotor : MonoBehaviour
     /// </summary>
     private void ProcessGravity()
     {
-        if (cc.isGrounded)
+        // 如果刚跳跃不久，强制不应用贴地力
+        bool isJustJumped = Time.time < lastJumpTime + jumpCooldown;
+
+        if (cc.isGrounded && !isJustJumped)
         {
-            // 如果在地面上，重置垂直速度并施加贴地力
-            verticalVelocity = stickToGroundForce;
+            // 只有当垂直速度本来就是向下（< 0）时，才强制设置为贴地力。
+            // 如果 verticalVelocity > 0（说明刚按了跳跃），不能覆盖
+            if (verticalVelocity < 0)
+                verticalVelocity = stickToGroundForce;
 
         }
         else
@@ -61,15 +69,14 @@ public class CharacterMotor : MonoBehaviour
         cc.Move(finalVelocity * Time.deltaTime);
 
         // 移动后重置平面速度 (因为是瞬时速度，除非状态机一直设置它)
-        // 这一步很重要，这决定了是否有惯性。
-        // 如果想要惯性，不要在这里重置，而是用 Lerp 设置 planarVelocity
+        // 如果要惯性，不要在这里重置，而是用 Lerp 设置 planarVelocity
         planarVelocity = Vector3.zero;
     }
 
     /// <summary>
     /// 设置角色的平面速度，保持垂直速度不变
     /// </summary>
-    /// <param name="_planarVelocity"></param>
+    /// <param name="_planarVelocity">平面速度</param>
     public void SetPlanarVelocity(Vector3 _planarVelocity)
     {
         planarVelocity.x = _planarVelocity.x;
@@ -80,13 +87,12 @@ public class CharacterMotor : MonoBehaviour
     /// <summary>
     /// 如果在地面上，根据指定的跳跃高度应用跳跃，计算需要的初始垂直速度
     /// </summary>
-    /// <param name="_jumpHeight"></param>
+    /// <param name="_jumpHeight">跳跃高度</param>
     public void ApplyJumpHeight(float _jumpHeight)
     {
-        if (cc.isGrounded)
-        {
-            // 根据跳跃高度计算需要的初始垂直速度，v = sqrt(-2 * g * h)
-            verticalVelocity = Mathf.Sqrt(-2f * gravity * _jumpHeight);
-        }
+        // 根据跳跃高度计算需要的初始垂直速度，v = sqrt(-2 * g * h)
+        verticalVelocity = Mathf.Sqrt(-2f * gravity * _jumpHeight);
+        // 记录跳跃时间
+        lastJumpTime = Time.time;
     }
 }
