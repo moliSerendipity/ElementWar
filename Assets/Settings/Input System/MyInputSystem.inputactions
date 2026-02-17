@@ -3,7 +3,7 @@
     "name": "MyInputSystem",
     "maps": [
         {
-            "name": "PlayerMovement",
+            "name": "Movement",
             "id": "6673c117-0bef-44a6-8ca8-6cc98fc5b058",
             "actions": [
                 {
@@ -135,7 +135,7 @@
             ]
         },
         {
-            "name": "PlayerCombat",
+            "name": "Combat",
             "id": "f4103dab-0da6-49ac-81dd-8b5c738cb853",
             "actions": [
                 {
@@ -223,7 +223,7 @@
             ]
         },
         {
-            "name": "PlayerSkill",
+            "name": "Skills",
             "id": "cb54b3b1-5852-4091-a318-7e16f855c2b7",
             "actions": [
                 {
@@ -261,6 +261,60 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkillUlt1",
+                    "type": "Button",
+                    "id": "d5ef0c94-1b65-4f01-b294-49736e6e532f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkillUlt2",
+                    "type": "Button",
+                    "id": "91d7b969-60e6-4e4d-ac22-5035bcfa91f4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkillUlt3",
+                    "type": "Button",
+                    "id": "77286936-1afb-40f6-9005-7e42014edb1c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsSkillUlt4",
+                    "type": "Button",
+                    "id": "60ee7804-e3d1-498b-a472-1d79315e666f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsPlayerSkill",
+                    "type": "Button",
+                    "id": "64ee9ae9-e515-4c1c-889c-4111ccff47f5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IsPlayerSkillUlt",
+                    "type": "Button",
+                    "id": "0335ea21-2be0-478c-80eb-0f388b64eccd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -268,7 +322,7 @@
                     "name": "",
                     "id": "d94b3e5c-2c41-409e-b3bc-abdbff0b7265",
                     "path": "<Keyboard>/1",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "IsSkill1",
@@ -279,7 +333,7 @@
                     "name": "",
                     "id": "7aaea61c-4aef-4d17-b396-8f81c7f6d961",
                     "path": "<Keyboard>/2",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "IsSkill2",
@@ -290,7 +344,7 @@
                     "name": "",
                     "id": "ee982840-fc4d-4658-bc0d-ccc89bfe9344",
                     "path": "<Keyboard>/3",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "IsSkill3",
@@ -301,17 +355,83 @@
                     "name": "",
                     "id": "340dffed-9f07-4a68-a1e6-8caefc814b84",
                     "path": "<Keyboard>/4",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "IsSkill4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68c4a80b-e2b2-46fb-a8ce-f0ce821b804c",
+                    "path": "<Keyboard>/1",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkillUlt1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "82e060b4-b075-49ef-a03b-7aeaf7603e21",
+                    "path": "<Keyboard>/2",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkillUlt2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0dfd1ab1-eb46-4e34-b10b-6f58b56f5ecf",
+                    "path": "<Keyboard>/3",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkillUlt3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "998f9d5c-6bd0-4e93-a0c4-d54bc28d8e69",
+                    "path": "<Keyboard>/4",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSkillUlt4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48f5f291-d034-46be-a022-e1f39be50c91",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsPlayerSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "08d530bf-c979-4e3f-9f3f-da17a75f8e96",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsPlayerSkillUlt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
         },
         {
-            "name": "PlayerTeam",
+            "name": "Team",
             "id": "042c9cf2-a2a7-442b-a1aa-79ec3810ad79",
             "actions": [
                 {
@@ -408,7 +528,7 @@
                 {
                     "name": "",
                     "id": "663753de-1ffa-4aa8-9e9e-19236838be6e",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -419,20 +539,39 @@
             ]
         },
         {
-            "name": "PlayerInteraction",
-            "id": "1f484e9d-23ad-4133-a85c-253079ef2dc4",
+            "name": "Interaction",
+            "id": "9b6aa93e-919a-4d08-9fc4-aba82da89096",
             "actions": [
                 {
-                    "name": "IsPickUp",
+                    "name": "Interact",
                     "type": "Button",
-                    "id": "4d5d6982-f85d-4c98-b2bd-4453c87f0128",
+                    "id": "b41a4e05-778d-4618-8001-d129ff407ab6",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
+                }
+            ],
+            "bindings": [
                 {
-                    "name": "IsOpenOrCloseBag",
+                    "name": "",
+                    "id": "dbf87214-b80c-4e9e-a291-dee311784a49",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "1f484e9d-23ad-4133-a85c-253079ef2dc4",
+            "actions": [
+                {
+                    "name": "IsToggleBag",
                     "type": "Button",
                     "id": "116bcdf3-26bd-4432-ba7f-1277be03ae12",
                     "expectedControlType": "",
@@ -444,23 +583,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "439ca1ed-5ba7-4bb3-b18f-53be7a7ab7a3",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "IsPickUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3e90f248-f0a6-4da1-969a-4f17a281d496",
                     "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "IsOpenOrCloseBag",
+                    "action": "IsToggleBag",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

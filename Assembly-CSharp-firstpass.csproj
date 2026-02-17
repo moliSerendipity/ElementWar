@@ -65,6 +65,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\YSA Toon\Shaders\Toon Lit Shader\Lights Calculation.hlsl" />
+    <None Include="Assets\Plugins\WSA\x64\xlua.dll" />
+    <None Include="Assets\Plugins\x86\xlua.dll" />
+    <None Include="Assets\Plugins\x86_64\xlua.dll" />
+    <None Include="Assets\Plugins\WSA\ARM\xlua.dll" />
+    <None Include="Assets\Plugins\WSA\ARM64\xlua.dll" />
+    <None Include="Assets\Plugins\WSA\x86\xlua.dll" />
     <None Include="Assets\Plugins\YSA Toon\Shaders\Outline Shader\CameraFixMultiplier.hlsl" />
   </ItemGroup>
   <ItemGroup>
