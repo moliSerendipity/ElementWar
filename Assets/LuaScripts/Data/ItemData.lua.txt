@@ -1,0 +1,32 @@
+-- 背包格子里具体的物品实例数据
+
+local Config_Item = require("Config.Config_Item")
+
+local ItemData = {}
+ItemData.__index = ItemData
+
+-- 构造函数
+function ItemData.New(_configID, _count, _uid)
+	local config = Config_Item[_configID]
+	if not config then
+		print("[Error] 尝试创建不存在的物品实例! ID:", _configID)
+		return nil
+	end
+
+	local self = setmetatable({}, ItemData)
+
+	self.ConfigID = _configID
+	self.Count = _count or 1
+	self.UID = _uid or 0			-- 如果是 0 代表消耗品，否则是武器等唯一装备
+	self.Config = config 			-- 引用静态配置表，方便查询
+
+	-- 武器专属动态数据
+	if self.Config.Type == 1 then
+		self.CurrentAmmo = 30	-- 当前弹匣子弹数
+		self.CurrentAmmoType = self.Config.DefaultAmmoType		-- 当前使用的子弹类型 ID
+	end
+
+	return self
+end
+
+return ItemData

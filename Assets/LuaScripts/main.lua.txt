@@ -1,1 +1,37 @@
-print("基座已跑通")
+print("===== 游戏 Lua 层启动 =====")
+
+-- 引入并初始化各系统
+local InventoryManager = require("System.InventoryManager")
+local WeaponManager = require("System.WeaponManager")
+
+-- 模拟游戏流程 (Test Case)
+function StartGame()
+    InventoryManager.Init()
+    WeaponManager.Init()
+
+     -- 2. 模拟给玩家发初始装备
+    print("\n--- 发放初始装备 ---")
+    InventoryManager.AddItem(1001, 1)    -- 给一把突击步枪
+    InventoryManager.AddItem(2001, 100)  -- 给普通子弹
+    InventoryManager.AddItem(2003, 50)   -- 给雷元素子弹 (注意：我们故意没给火子弹2002，看看它能不能正确跳过)
+    
+    InventoryManager.PrintInventory()
+    
+    print("\n[测试就绪] 请在 Unity 中按下你绑定的【切换子弹】快捷键 (比如 T 键)...")
+end
+
+-- XLua 虚拟机销毁前的全局生命周期回调
+-- C# 会在 LuaEnv.Dispose() 之前调用这个函数
+function OnLuaEnvDispose()
+	print("\n===== [Lua] 接收到虚拟机销毁指令，开始清理跨语言委托 =====")
+    
+    -- 调用所有模块的清理方法
+    WeaponManager.Dispose()
+    
+    -- 未来如果 InventoryManager 注册了 UI 事件，也在这里调用 InventoryManager.Dispose()
+    
+    print("===== [Lua] 清理完毕，准许 C# 销毁虚拟机 =====\n")
+end
+
+-- C# 会调用这个全局函数
+StartGame()

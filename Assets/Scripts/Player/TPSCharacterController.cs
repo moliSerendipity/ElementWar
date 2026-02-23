@@ -1,5 +1,7 @@
 using UnityEngine;
+using XLua;
 
+[LuaCallCSharp]
 public class TPSCharacterController : MonoBehaviour
 {
     public CharacterMotor Motor { get; private set; }
@@ -60,6 +62,11 @@ public class TPSCharacterController : MonoBehaviour
     void Start()
     {
         SwitchState(IdleState);
+
+        LuaManager.Instance.PreloadAllLuaScripts(() =>
+        {
+            LuaManager.Instance.StartGame();
+        });
     }
 
     void Update()
@@ -77,8 +84,6 @@ public class TPSCharacterController : MonoBehaviour
         Animator.UpdateLocomotion(inputFrame.move, allowSprint, inputFrame.aimButton.isHeld);
         Animator.UpdatePhysicsState(Motor.IsGrounded, Motor.Velocity.y);
         Animator.UpdateAiming(inputFrame.aimButton.isHeld);
-
-        Debug.Log(currentState.GetType().Name);
     }
 
     /// <summary>
@@ -180,5 +185,14 @@ public class TPSCharacterController : MonoBehaviour
             return sprintSpeed;
 
         return _inputMove.magnitude > 0.5f ? runSpeed : walkSpeed;
+    }
+
+    /// <summary>
+    /// 强制触发换弹，供 Lua 调用
+    /// </summary>
+    public void ForceReload()
+    {
+        Animator.TriggerReload();
+        Debug.Log("[C#] 收到 Lua 指令，开始播放换弹动画！");
     }
 }

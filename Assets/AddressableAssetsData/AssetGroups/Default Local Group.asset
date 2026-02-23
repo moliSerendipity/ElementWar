@@ -17,8 +17,32 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b8e70cf7e2d6c7243b0652d44838cdba
   m_SerializeEntries:
+  - m_GUID: 1ad1acfb94aba5142bb621cd62da72e3
+    m_Address: Lua/Data/ItemData.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 27bb2e09aea62324d8737301e72a2639
+    m_Address: Lua/System/InventoryManager.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7eea57951e2ba1140be8dc1466739da7
     m_Address: Lua/main.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e343c00779f4d04a8d2440b737428ae
+    m_Address: Lua/System/WeaponManager.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbacb1e7964ef234999d166446d44b26
+    m_Address: Lua/Config/Config_Item.lua.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - LuaScript

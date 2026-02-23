@@ -1,0 +1,17 @@
+-- 物品静态配置表
+
+local Config_Item = {
+	-- 武器类 (Type = 1，不可堆叠)
+	[1001] = { ID = 1001, Name = "突击步枪", Type = 1, MaxStack = 1, DefaultAmmoType = 2001, Icon = "UI_Icon_Rifle" },
+	[1002] = { ID = 1002, Name = "霰弹枪", Type = 1, MaxStack = 1, DefaultAmmoType = 2002, Icon = "UI_Icon_Shotgun" },
+    
+    -- 子弹类 (Type = 2, 可堆叠)
+    [2001] = { ID = 2001, Name = "普通步枪弹", Type = 2, MaxStack = 999, Element = "Physical", Icon = "UI_Icon_Ammo_Normal" },
+    [2002] = { ID = 2002, Name = "火元素步枪弹", Type = 2, MaxStack = 999, Element = "Fire", Icon = "UI_Icon_Ammo_Fire" },
+    [2003] = { ID = 2003, Name = "雷元素步枪弹", Type = 2, MaxStack = 999, Element = "Thunder", Icon = "UI_Icon_Ammo_Thunder" },
+    
+    -- 回复类 (Type = 3)
+    [3001] = { ID = 3001, Name = "急救包", Type = 3, MaxStack = 5, HealAmount = 50, Icon = "UI_Icon_Medkit" }
+}
+
+return Config_Item

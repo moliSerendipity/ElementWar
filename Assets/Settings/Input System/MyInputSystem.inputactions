@@ -166,6 +166,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "IsSwitchAmmo",
+                    "type": "Button",
+                    "id": "d9958860-695b-49d2-8e59-b23100a24233",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "SwitchWeapon",
                     "type": "Value",
                     "id": "2ca6de8e-e798-477d-9e87-f25723984554",
@@ -219,6 +228,17 @@
                     "action": "SwitchWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "564247bd-00c0-45d5-9edb-a0be2adf85f9",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsSwitchAmmo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -232,7 +252,7 @@
                     "id": "a308c293-9df7-4083-87f0-c9bf0fec5612",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap,Hold",
                     "initialStateCheck": false
                 },
                 {
@@ -241,7 +261,7 @@
                     "id": "f4967418-f5a6-4f9c-8606-21a7dba59f2d",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap,Hold",
                     "initialStateCheck": false
                 },
                 {
@@ -250,7 +270,7 @@
                     "id": "10058e4d-8b98-4ac6-a084-cb67cb08441b",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap,Hold",
                     "initialStateCheck": false
                 },
                 {
@@ -259,43 +279,7 @@
                     "id": "4a524b72-64d8-4091-b26a-645c7b3fb02d",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "IsSkillUlt1",
-                    "type": "Button",
-                    "id": "d5ef0c94-1b65-4f01-b294-49736e6e532f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "IsSkillUlt2",
-                    "type": "Button",
-                    "id": "91d7b969-60e6-4e4d-ac22-5035bcfa91f4",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "IsSkillUlt3",
-                    "type": "Button",
-                    "id": "77286936-1afb-40f6-9005-7e42014edb1c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "IsSkillUlt4",
-                    "type": "Button",
-                    "id": "60ee7804-e3d1-498b-a472-1d79315e666f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap,Hold",
                     "initialStateCheck": false
                 },
                 {
@@ -322,7 +306,7 @@
                     "name": "",
                     "id": "d94b3e5c-2c41-409e-b3bc-abdbff0b7265",
                     "path": "<Keyboard>/1",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "IsSkill1",
@@ -359,50 +343,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "IsSkill4",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "68c4a80b-e2b2-46fb-a8ce-f0ce821b804c",
-                    "path": "<Keyboard>/1",
-                    "interactions": "Hold",
-                    "processors": "",
-                    "groups": "",
-                    "action": "IsSkillUlt1",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "82e060b4-b075-49ef-a03b-7aeaf7603e21",
-                    "path": "<Keyboard>/2",
-                    "interactions": "Hold",
-                    "processors": "",
-                    "groups": "",
-                    "action": "IsSkillUlt2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0dfd1ab1-eb46-4e34-b10b-6f58b56f5ecf",
-                    "path": "<Keyboard>/3",
-                    "interactions": "Hold",
-                    "processors": "",
-                    "groups": "",
-                    "action": "IsSkillUlt3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "998f9d5c-6bd0-4e93-a0c4-d54bc28d8e69",
-                    "path": "<Keyboard>/4",
-                    "interactions": "Hold",
-                    "processors": "",
-                    "groups": "",
-                    "action": "IsSkillUlt4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

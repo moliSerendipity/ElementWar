@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using XLua;
 
 /// <summary>
 /// 按钮状态结构体
@@ -39,6 +40,7 @@ public class InputFrame
     public ButtonState fireButton;                                              // 射击输入
     public ButtonState aimButton;                                               // 瞄准输入
     public ButtonState reloadButton;                                            // 换弹输入
+    public ButtonState switchAmmoButton;                                        // 切换弹药输入
     public float switchWeapon;                                                  // 切换武器输入 (滚轮)
 
     [Header("玩家技能")]
@@ -58,6 +60,7 @@ public class InputFrame
     public bool toggleBag;                                                      // 当前帧是否按下背包按键
 }
 
+[LuaCallCSharp]
 public class InputManager : SingleMonoBase<InputManager>
 {
     private MyInputSystem inputSystem;                                          // 输入系统
@@ -70,6 +73,7 @@ public class InputManager : SingleMonoBase<InputManager>
     public event Action<int> OnSkill;                                           // 参数是角色索引 (0-3)
     public event Action<int> OnSkillUlt;                                        // 参数是角色索引 (0-3)
     public event Action OnToggleBag;                                            // 打开/关闭背包
+    public event Action OnSwitchAmmoType;                                       // 切换弹药类型
 
     override protected void Awake()
     {
@@ -119,6 +123,7 @@ public class InputManager : SingleMonoBase<InputManager>
         UpdateButtonState(ref Frame.fireButton, inputSystem.Combat.IsFire);
         UpdateButtonState(ref Frame.aimButton, inputSystem.Combat.IsAim);
         UpdateButtonState(ref Frame.reloadButton, inputSystem.Combat.IsReload);
+        UpdateButtonState(ref Frame.switchAmmoButton, inputSystem.Combat.IsSwitchAmmo);
         Frame.switchWeapon = inputSystem.Combat.SwitchWeapon.ReadValue<float>();
 
         // 更新玩家技能输入
@@ -132,6 +137,10 @@ public class InputManager : SingleMonoBase<InputManager>
 
         // 更新系统/交互输入
         UpdateButtonState(ref Frame.interactButton, inputSystem.Interaction.Interact);
+
+        // 处理切换弹药类型的输入
+        if (Frame.switchAmmoButton.wasPressedThisFrame)
+            OnSwitchAmmoType?.Invoke();
     }
 
     private void LateUpdate()
@@ -154,6 +163,17 @@ public class InputManager : SingleMonoBase<InputManager>
     private void OnDisable()
     {
         inputSystem?.Disable();
+    }
+
+    protected override void OnDestroy()
+    {
+        // 暴力清空所有委托，切断 C# 对 Lua 的引用
+        OnSkill = null;
+        OnSkillUlt = null;
+        OnToggleBag = null;
+        OnSwitchAmmoType = null;
+
+        base.OnDestroy();
     }
 
     #region 技能输入绑定

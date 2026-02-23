@@ -252,6 +252,15 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""IsSwitchAmmo"",
+                    ""type"": ""Button"",
+                    ""id"": ""d9958860-695b-49d2-8e59-b23100a24233"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""SwitchWeapon"",
                     ""type"": ""Value"",
                     ""id"": ""2ca6de8e-e798-477d-9e87-f25723984554"",
@@ -305,6 +314,17 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""564247bd-00c0-45d5-9edb-a0be2adf85f9"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IsSwitchAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -318,7 +338,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""id"": ""a308c293-9df7-4083-87f0-c9bf0fec5612"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap,Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -327,7 +347,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""id"": ""f4967418-f5a6-4f9c-8606-21a7dba59f2d"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap,Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -336,7 +356,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""id"": ""10058e4d-8b98-4ac6-a084-cb67cb08441b"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap,Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -345,43 +365,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""id"": ""4a524b72-64d8-4091-b26a-645c7b3fb02d"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""IsSkillUlt1"",
-                    ""type"": ""Button"",
-                    ""id"": ""d5ef0c94-1b65-4f01-b294-49736e6e532f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""IsSkillUlt2"",
-                    ""type"": ""Button"",
-                    ""id"": ""91d7b969-60e6-4e4d-ac22-5035bcfa91f4"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""IsSkillUlt3"",
-                    ""type"": ""Button"",
-                    ""id"": ""77286936-1afb-40f6-9005-7e42014edb1c"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""IsSkillUlt4"",
-                    ""type"": ""Button"",
-                    ""id"": ""60ee7804-e3d1-498b-a472-1d79315e666f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap,Hold"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -408,7 +392,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""d94b3e5c-2c41-409e-b3bc-abdbff0b7265"",
                     ""path"": ""<Keyboard>/1"",
-                    ""interactions"": ""Tap"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""IsSkill1"",
@@ -445,50 +429,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""IsSkill4"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""68c4a80b-e2b2-46fb-a8ce-f0ce821b804c"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""IsSkillUlt1"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""82e060b4-b075-49ef-a03b-7aeaf7603e21"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""IsSkillUlt2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0dfd1ab1-eb46-4e34-b10b-6f58b56f5ecf"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""IsSkillUlt3"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""998f9d5c-6bd0-4e93-a0c4-d54bc28d8e69"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""IsSkillUlt4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -694,6 +634,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         m_Combat_IsFire = m_Combat.FindAction("IsFire", throwIfNotFound: true);
         m_Combat_IsAim = m_Combat.FindAction("IsAim", throwIfNotFound: true);
         m_Combat_IsReload = m_Combat.FindAction("IsReload", throwIfNotFound: true);
+        m_Combat_IsSwitchAmmo = m_Combat.FindAction("IsSwitchAmmo", throwIfNotFound: true);
         m_Combat_SwitchWeapon = m_Combat.FindAction("SwitchWeapon", throwIfNotFound: true);
         // Skills
         m_Skills = asset.FindActionMap("Skills", throwIfNotFound: true);
@@ -701,10 +642,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         m_Skills_IsSkill2 = m_Skills.FindAction("IsSkill2", throwIfNotFound: true);
         m_Skills_IsSkill3 = m_Skills.FindAction("IsSkill3", throwIfNotFound: true);
         m_Skills_IsSkill4 = m_Skills.FindAction("IsSkill4", throwIfNotFound: true);
-        m_Skills_IsSkillUlt1 = m_Skills.FindAction("IsSkillUlt1", throwIfNotFound: true);
-        m_Skills_IsSkillUlt2 = m_Skills.FindAction("IsSkillUlt2", throwIfNotFound: true);
-        m_Skills_IsSkillUlt3 = m_Skills.FindAction("IsSkillUlt3", throwIfNotFound: true);
-        m_Skills_IsSkillUlt4 = m_Skills.FindAction("IsSkillUlt4", throwIfNotFound: true);
         m_Skills_IsPlayerSkill = m_Skills.FindAction("IsPlayerSkill", throwIfNotFound: true);
         m_Skills_IsPlayerSkillUlt = m_Skills.FindAction("IsPlayerSkillUlt", throwIfNotFound: true);
         // Team
@@ -937,6 +874,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_IsFire;
     private readonly InputAction m_Combat_IsAim;
     private readonly InputAction m_Combat_IsReload;
+    private readonly InputAction m_Combat_IsSwitchAmmo;
     private readonly InputAction m_Combat_SwitchWeapon;
     /// <summary>
     /// Provides access to input actions defined in input action map "Combat".
@@ -961,6 +899,10 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Combat/IsReload".
         /// </summary>
         public InputAction @IsReload => m_Wrapper.m_Combat_IsReload;
+        /// <summary>
+        /// Provides access to the underlying input action "Combat/IsSwitchAmmo".
+        /// </summary>
+        public InputAction @IsSwitchAmmo => m_Wrapper.m_Combat_IsSwitchAmmo;
         /// <summary>
         /// Provides access to the underlying input action "Combat/SwitchWeapon".
         /// </summary>
@@ -1000,6 +942,9 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
             @IsReload.started += instance.OnIsReload;
             @IsReload.performed += instance.OnIsReload;
             @IsReload.canceled += instance.OnIsReload;
+            @IsSwitchAmmo.started += instance.OnIsSwitchAmmo;
+            @IsSwitchAmmo.performed += instance.OnIsSwitchAmmo;
+            @IsSwitchAmmo.canceled += instance.OnIsSwitchAmmo;
             @SwitchWeapon.started += instance.OnSwitchWeapon;
             @SwitchWeapon.performed += instance.OnSwitchWeapon;
             @SwitchWeapon.canceled += instance.OnSwitchWeapon;
@@ -1023,6 +968,9 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
             @IsReload.started -= instance.OnIsReload;
             @IsReload.performed -= instance.OnIsReload;
             @IsReload.canceled -= instance.OnIsReload;
+            @IsSwitchAmmo.started -= instance.OnIsSwitchAmmo;
+            @IsSwitchAmmo.performed -= instance.OnIsSwitchAmmo;
+            @IsSwitchAmmo.canceled -= instance.OnIsSwitchAmmo;
             @SwitchWeapon.started -= instance.OnSwitchWeapon;
             @SwitchWeapon.performed -= instance.OnSwitchWeapon;
             @SwitchWeapon.canceled -= instance.OnSwitchWeapon;
@@ -1067,10 +1015,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Skills_IsSkill2;
     private readonly InputAction m_Skills_IsSkill3;
     private readonly InputAction m_Skills_IsSkill4;
-    private readonly InputAction m_Skills_IsSkillUlt1;
-    private readonly InputAction m_Skills_IsSkillUlt2;
-    private readonly InputAction m_Skills_IsSkillUlt3;
-    private readonly InputAction m_Skills_IsSkillUlt4;
     private readonly InputAction m_Skills_IsPlayerSkill;
     private readonly InputAction m_Skills_IsPlayerSkillUlt;
     /// <summary>
@@ -1100,22 +1044,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Skills/IsSkill4".
         /// </summary>
         public InputAction @IsSkill4 => m_Wrapper.m_Skills_IsSkill4;
-        /// <summary>
-        /// Provides access to the underlying input action "Skills/IsSkillUlt1".
-        /// </summary>
-        public InputAction @IsSkillUlt1 => m_Wrapper.m_Skills_IsSkillUlt1;
-        /// <summary>
-        /// Provides access to the underlying input action "Skills/IsSkillUlt2".
-        /// </summary>
-        public InputAction @IsSkillUlt2 => m_Wrapper.m_Skills_IsSkillUlt2;
-        /// <summary>
-        /// Provides access to the underlying input action "Skills/IsSkillUlt3".
-        /// </summary>
-        public InputAction @IsSkillUlt3 => m_Wrapper.m_Skills_IsSkillUlt3;
-        /// <summary>
-        /// Provides access to the underlying input action "Skills/IsSkillUlt4".
-        /// </summary>
-        public InputAction @IsSkillUlt4 => m_Wrapper.m_Skills_IsSkillUlt4;
         /// <summary>
         /// Provides access to the underlying input action "Skills/IsPlayerSkill".
         /// </summary>
@@ -1162,18 +1090,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
             @IsSkill4.started += instance.OnIsSkill4;
             @IsSkill4.performed += instance.OnIsSkill4;
             @IsSkill4.canceled += instance.OnIsSkill4;
-            @IsSkillUlt1.started += instance.OnIsSkillUlt1;
-            @IsSkillUlt1.performed += instance.OnIsSkillUlt1;
-            @IsSkillUlt1.canceled += instance.OnIsSkillUlt1;
-            @IsSkillUlt2.started += instance.OnIsSkillUlt2;
-            @IsSkillUlt2.performed += instance.OnIsSkillUlt2;
-            @IsSkillUlt2.canceled += instance.OnIsSkillUlt2;
-            @IsSkillUlt3.started += instance.OnIsSkillUlt3;
-            @IsSkillUlt3.performed += instance.OnIsSkillUlt3;
-            @IsSkillUlt3.canceled += instance.OnIsSkillUlt3;
-            @IsSkillUlt4.started += instance.OnIsSkillUlt4;
-            @IsSkillUlt4.performed += instance.OnIsSkillUlt4;
-            @IsSkillUlt4.canceled += instance.OnIsSkillUlt4;
             @IsPlayerSkill.started += instance.OnIsPlayerSkill;
             @IsPlayerSkill.performed += instance.OnIsPlayerSkill;
             @IsPlayerSkill.canceled += instance.OnIsPlayerSkill;
@@ -1203,18 +1119,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
             @IsSkill4.started -= instance.OnIsSkill4;
             @IsSkill4.performed -= instance.OnIsSkill4;
             @IsSkill4.canceled -= instance.OnIsSkill4;
-            @IsSkillUlt1.started -= instance.OnIsSkillUlt1;
-            @IsSkillUlt1.performed -= instance.OnIsSkillUlt1;
-            @IsSkillUlt1.canceled -= instance.OnIsSkillUlt1;
-            @IsSkillUlt2.started -= instance.OnIsSkillUlt2;
-            @IsSkillUlt2.performed -= instance.OnIsSkillUlt2;
-            @IsSkillUlt2.canceled -= instance.OnIsSkillUlt2;
-            @IsSkillUlt3.started -= instance.OnIsSkillUlt3;
-            @IsSkillUlt3.performed -= instance.OnIsSkillUlt3;
-            @IsSkillUlt3.canceled -= instance.OnIsSkillUlt3;
-            @IsSkillUlt4.started -= instance.OnIsSkillUlt4;
-            @IsSkillUlt4.performed -= instance.OnIsSkillUlt4;
-            @IsSkillUlt4.canceled -= instance.OnIsSkillUlt4;
             @IsPlayerSkill.started -= instance.OnIsPlayerSkill;
             @IsPlayerSkill.performed -= instance.OnIsPlayerSkill;
             @IsPlayerSkill.canceled -= instance.OnIsPlayerSkill;
@@ -1651,6 +1555,13 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnIsReload(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "IsSwitchAmmo" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnIsSwitchAmmo(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "SwitchWeapon" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1693,34 +1604,6 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnIsSkill4(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "IsSkillUlt1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnIsSkillUlt1(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "IsSkillUlt2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnIsSkillUlt2(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "IsSkillUlt3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnIsSkillUlt3(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "IsSkillUlt4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnIsSkillUlt4(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "IsPlayerSkill" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

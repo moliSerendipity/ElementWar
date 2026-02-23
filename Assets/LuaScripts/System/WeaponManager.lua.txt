@@ -1,0 +1,92 @@
+-- 负责处理战斗中的武器状态与子弹切换逻辑
+
+local InventoryManager = require("System.InventoryManager")
+local Config_Item = require("Config.Config_Item")
+local WeaponManager = {}
+
+-- 预设的子弹循环顺序 (普通 -> 火 -> 雷)
+WeaponManager.AmmoCycle = { 2001, 2002, 2003 }
+
+function WeaponManager.Init()
+	-- XLua 绑定 C# 事件的语法：CS.命名空间.类名.Instance:事件名('+', 回调函数)
+	if CS.InputManager.Instance then
+		CS.InputManager.Instance:OnSwitchAmmoType('+', WeaponManager.OnSwitchAmmoTypePressed)
+		print("[WeaponManager] 成功监听 C# 的切换子弹按键事件")
+    else
+        print("[Error] InputManager C# 实例未找到！")
+    end
+end
+
+function WeaponManager.OnSwitchAmmoTypePressed()
+	print("\n[WeaponManager] 玩家请求切换子弹类型...")
+
+	-- 获取当前装备的武器 (假设背包里第一把武器就是装备的武器)
+	local equippedWeapon = nil
+	for i = 1, InventoryManager.MaxSlots do
+		local item = InventoryManager.Slots[i]
+		if item and item.Config.Type == 1 then
+			equippedWeapon = item
+			break
+		end
+	end
+
+	if not equippedWeapon then
+		print("[WeaponManager] 玩家没有装备武器，无法切换子弹！")
+        return
+    end
+
+    local currentAmmo = equippedWeapon.CurrentAmmoType
+    local nextAmmo = WeaponManager.GetNextAvailableAmmo(currentAmmo)
+
+    -- 如果有别的子弹可以切，并且不是当前正在用的
+    if nextAmmo and nextAmmo ~= currentAmmo then
+    	equippedWeapon.CurrentAmmoType = nextAmmo
+    	print(string.format("[WeaponManager] 成功切换子弹为: %s", Config_Item[nextAmmo].Name))
+
+    	-- 反向调用 C#：通知角色播放换弹动画
+    	local tpsController = CS.UnityEngine.Object.FindObjectOfType(typeof(CS.TPSCharacterController))
+    	if tpsController then
+    		tpsController:ForceReload()
+        else
+            print("[Error] 找不到 TPSCharacterController")
+        end
+    else
+    	print("[WeaponManager] 背包里没有其他类型的子弹可供切换。")
+    end
+end
+
+-- 在背包中寻找下一种可用的子弹
+function WeaponManager.GetNextAvailableAmmo(_currentAmmoID)
+	-- 找到当前子弹在循环列表中的位置
+	local currentIndex = 1
+	for i, ammoID in ipairs(WeaponManager.AmmoCycle) do
+		if ammoID == _currentAmmoID then
+			currentIndex = i
+			break
+		end
+	end
+
+	-- 往后找，最多找一圈
+	for offset = 1, #WeaponManager.AmmoCycle do
+		local checkIndex = ((currentIndex + offset - 1) % #WeaponManager.AmmoCycle) + 1
+		local checkAmmoID = WeaponManager.AmmoCycle[checkIndex]
+
+		-- 检查背包里有没有这种子弹
+		if InventoryManager.GetItemCount(checkAmmoID) > 0 then
+			return checkAmmoID
+		end
+	end
+
+	-- 如果没有，就返回当前子弹 ID
+	return _currentAmmoID
+end
+
+-- 清理函数：注销所有 C# 事件
+function WeaponManager.Dispose()
+	if CS.InputManager.Instance then
+		CS.InputManager.Instance:OnSwitchAmmoType('-', WeaponManager.OnSwitchAmmoTypePressed)
+        print("[WeaponManager] 成功解绑 C# 的 OnSwitchAmmoType 事件")
+    end
+end
+
+return WeaponManager

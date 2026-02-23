@@ -77,6 +77,7 @@
     <Compile Include="Assets\XLua\Src\SignatureLoader.cs" />
     <Compile Include="Assets\Scripts\Player\Input\PlayerInputSource.cs" />
     <Compile Include="Assets\XLua\Src\ObjectPool.cs" />
+    <Compile Include="Assets\XLua\Gen\TPSCharacterControllerWrap.cs" />
     <Compile Include="Assets\XLua\Src\LuaFunction.cs" />
     <Compile Include="Assets\XLua\Gen\DelegatesGensBridge.cs" />
     <Compile Include="Assets\XLua\Src\StaticLuaCallbacks.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Assets\XLua\Src\Utils.cs" />
     <Compile Include="Assets\Scripts\Player\State\CharacterIdleState.cs" />
     <Compile Include="Assets\Scripts\AICharacterInputSource.cs" />
+    <Compile Include="Assets\XLua\Gen\InputManagerWrap.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_CSCallLua_ItfDBridge.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterMotor.cs" />
     <Compile Include="Assets\XLua\Gen\EnumWrap.cs" />
@@ -116,11 +118,14 @@
   <ItemGroup>
     <None Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
     <None Include="Assets\XLua\Resources\xlua\util.lua.txt" />
+    <None Include="Assets\LuaScripts\System\InventoryManager.lua.txt" />
     <None Include="Assets\XLua\Gen\link.xml" />
     <None Include="Assets\XLua\Resources\perf\profiler.lua.txt" />
+    <None Include="Assets\LuaScripts\Data\ItemData.lua.txt" />
     <None Include="Assets\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\LuaScripts\Config\Config_Item.lua.txt" />
     <None Include="Assets\LuaScripts\main.lua.txt" />
+    <None Include="Assets\LuaScripts\System\WeaponManager.lua.txt" />
     <None Include="Assets\XLua\Resources\tdr\tdr.lua.txt" />
     <None Include="Assets\XLua\CHANGELOG.txt" />
   </ItemGroup>

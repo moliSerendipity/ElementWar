@@ -1,0 +1,143 @@
+-- 背包系统单例
+
+local ItemData = require("Data.ItemData")
+
+local InventoryManager = {}
+
+-- 静态变量
+InventoryManager.MaxSlots = 30				-- 背包总格子数
+InventoryManager.Slots = {}					-- 背包数据 (Model): key = 索引(1到30), value = ItemData实例
+InventoryManager.WeaponEquipped = nil		-- 当前装备的武器
+
+-- 初始化背包
+function InventoryManager.Init()
+	for i = 1, InventoryManager.MaxSlots do
+		InventoryManager.Slots[i] = nil
+	end
+	print("[InventoryManager] Initialized with", InventoryManager.MaxSlots, "slots.")
+end
+
+-- 添加物品 (考虑堆叠)
+-- 返回值: 成功添加的数量 (可能因为背包满了只装下一部分)
+function InventoryManager.AddItem(_configID, _count)
+	local config = require("Config.Config_Item")[_configID]
+	if not config then
+		return 0
+	end
+
+	local leftCount = _count
+
+	-- 如果是可堆叠物品，先找有没有没装满的同类格子
+	if config.MaxStack > 1 then
+		for i = 1, InventoryManager.MaxSlots do
+			local item = InventoryManager.Slots[i]
+			if item and item.ConfigID == _configID and item.Count < config.MaxStack then
+				local leftSpace = config.MaxStack - item.Count
+				if leftCount <= leftSpace then
+					item.Count = item.Count + leftCount
+					return _count 		-- 全部存入
+				else
+					item.Count = config.MaxStack
+					leftCount = leftCount - leftSpace
+				end
+			end
+		end
+	end
+
+	-- 如果还有剩余，或者是不重叠物品（武器），找空格子放
+	while leftCount > 0 do
+		local emptySlotIndex = InventoryManager.GetFirstEmptySlot()
+		if emptySlotIndex == -1 then
+			print("[Inventory] 背包已满！有", leftCount, "个物品被丢弃或掉落")
+			break
+		end
+
+		local addCount = math.min(leftCount, config.MaxStack)
+
+		-- 生成 UID (如果是武器)
+		local uid = (config.Type == 1) and os.time() or 0
+		InventoryManager.Slots[emptySlotIndex] = ItemData.New(_configID, addCount, uid)
+		leftCount = leftCount - addCount
+	end
+
+	-- TODO: 触发事件通知 UI 刷新
+    -- EventManager.Fire("OnInventoryChanged")
+
+    local addedCount = _count - leftCount
+    print(string.format("[Inventory] 成功添加 %d 个 %s", addedCount, config.Name))
+    return addedCount
+end
+
+-- 寻找第一个空格子
+function InventoryManager.GetFirstEmptySlot()
+	for i = 1, InventoryManager.MaxSlots do
+		if InventoryManager.Slots[i] == nil then
+			return i
+		end
+	end
+
+	return -1		-- 背包已满
+end
+
+-- 扣除物品
+function InventoryManager.ConsumeItem(_configID, _count)
+	local currentCount = InventoryManager.GetItemCount(_configID)
+	if currentCount < _count then
+		print("[Inventory] 物品不足！ID:", _configId)
+        return false
+    end
+
+    local needToConsume = _count
+    for i = 1, InventoryManager.MaxSlots do
+    	local item = InventoryManager.Slots[i]
+    	if item and item.ConfigID == _configID then
+    		if item.Count >= needToConsume then
+    			item.Count = item.Count - needToConsume
+    			if item.Count == 0 then
+    				InventoryManager.Slots[i] = nil
+    			end
+    			-- TODO: 触发 UI 刷新
+    			return true
+    		else
+    			needToConsume = needToConsume - item.Count
+    			InventoryManager.Slots[i] = nil
+    		end
+    	end
+    end
+
+    return false
+end
+
+-- 获取某物品总数
+function InventoryManager.GetItemCount(_configID)
+	local total = 0
+	for i = 1, InventoryManager.MaxSlots do
+		local item = InventoryManager.Slots[i]
+		if item and item.ConfigID == _configID then
+			total = total + item.Count
+		end
+	end
+
+	return total
+end
+
+-- Debug: 打印背包内容
+function InventoryManager.PrintInventory()
+	print("--- 当前背包状态 ---")
+	local empty = true
+
+	for i = 1, InventoryManager.MaxSlots do
+		local item = InventoryManager.Slots[i]
+		if item then
+			print(string.format("格子[%d]: %s x%d", i, item.Config.Name, item.Count))
+			empty = false
+		end
+	end
+
+	if empty then
+		print("背包是空的")
+	end
+	print("--------------------")
+end
+
+return InventoryManager
