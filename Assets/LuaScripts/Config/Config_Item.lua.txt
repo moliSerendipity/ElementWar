@@ -1,17 +1,30 @@
 -- 物品静态配置表
 
 local Config_Item = {
-	-- 武器类 (Type = 1，不可堆叠)
-	[1001] = { ID = 1001, Name = "突击步枪", Type = 1, MaxStack = 1, DefaultAmmoType = 2001, Icon = "UI_Icon_Rifle" },
-	[1002] = { ID = 1002, Name = "霰弹枪", Type = 1, MaxStack = 1, DefaultAmmoType = 2002, Icon = "UI_Icon_Shotgun" },
+	-- =========================================================
+    -- 武器类 (ID: 1XXX) | 格式: 1(大类) + 枪族(X) + 序号(XX)
+    -- WeaponClass: 1=步枪, 2=狙击
+    -- =========================================================
+    [1101] = { ID = 1101, Name = "标准突击步枪", Type = 1, WeaponClass = 1, MaxStack = 1, DefaultAmmoType = 2100 },
+    [1201] = { ID = 1201, Name = "重型狙击枪",   Type = 1, WeaponClass = 2, MaxStack = 1, DefaultAmmoType = 2200 },
     
-    -- 子弹类 (Type = 2, 可堆叠)
-    [2001] = { ID = 2001, Name = "普通步枪弹", Type = 2, MaxStack = 999, Element = "Physical", Icon = "UI_Icon_Ammo_Normal" },
-    [2002] = { ID = 2002, Name = "火元素步枪弹", Type = 2, MaxStack = 999, Element = "Fire", Icon = "UI_Icon_Ammo_Fire" },
-    [2003] = { ID = 2003, Name = "雷元素步枪弹", Type = 2, MaxStack = 999, Element = "Thunder", Icon = "UI_Icon_Ammo_Thunder" },
+    -- =========================================================
+    -- 弹药类 (ID: 2XXX) | 格式: 2(大类) + 枪族(X) + 元素(XX)
+    -- =========================================================
     
-    -- 回复类 (Type = 3)
-    [3001] = { ID = 3001, Name = "急救包", Type = 3, MaxStack = 5, HealAmount = 50, Icon = "UI_Icon_Medkit" }
+    -- 步枪弹系 (21XX)
+    [2100] = { ID = 2100, Name = "步枪弹_物理", Type = 2, WeaponClass = 1, Element = "Physical", MaxStack = 999 },
+    [2101] = { ID = 2101, Name = "步枪弹_火",   Type = 2, WeaponClass = 1, Element = "Fire",     MaxStack = 999 },
+    [2102] = { ID = 2102, Name = "步枪弹_雷",   Type = 2, WeaponClass = 1, Element = "Thunder",  MaxStack = 999 },
+    
+    -- 狙击弹系 (22XX)
+    [2200] = { ID = 2200, Name = "狙击弹_物理", Type = 2, WeaponClass = 2, Element = "Physical", MaxStack = 300 },
+    [2201] = { ID = 2201, Name = "狙击弹_火",   Type = 2, WeaponClass = 2, Element = "Fire",     MaxStack = 300 },
+    
+    -- =========================================================
+    -- 消耗品类 (ID: 3XXX) 
+    -- =========================================================
+    [3001] = { ID = 3001, Name = "医疗包", Type = 3, MaxStack = 5, HealAmount = 50 },
 }
 
 return Config_Item

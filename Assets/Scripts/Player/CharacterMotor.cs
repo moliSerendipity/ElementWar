@@ -43,9 +43,9 @@ public class CharacterMotor : MonoBehaviour
 
         if (cc.isGrounded && !isJustJumped)
         {
-            // 只有当垂直速度本来就是向下（< 0）时，才强制设置为贴地力。
+            // 只有当垂直速度本来就是向下（<= 0）时，才强制设置为贴地力。
             // 如果 verticalVelocity > 0（说明刚按了跳跃），不能覆盖
-            if (verticalVelocity < 0)
+            if (verticalVelocity <= 0)
                 verticalVelocity = stickToGroundForce;
 
         }
@@ -94,5 +94,26 @@ public class CharacterMotor : MonoBehaviour
         verticalVelocity = Mathf.Sqrt(-2f * gravity * _jumpHeight);
         // 记录跳跃时间
         lastJumpTime = Time.time;
+    }
+
+    /// <summary>
+    /// 瞬移角色到指定位置和旋转，清空水平动量，防止瞬移后角色因为之前的惯性飞出去
+    /// </summary>
+    /// <param name="_targetPosition">目标坐标</param>
+    /// <param name="_targetRotation">目标旋转</param>
+    public void Teleport(Vector3 _targetPosition, Quaternion _targetRotation)
+    {
+        // 必须先关闭 CharacterController，否则 Unity 物理底层会覆盖修改
+        cc.enabled = false;
+        // 赋值新坐标和旋转
+        transform.position = _targetPosition;
+        transform.rotation = _targetRotation;
+        // 清空水平残留动量，防止瞬移后角色因为之前的惯性飞出去
+        planarVelocity = Vector3.zero;
+        verticalVelocity = stickToGroundForce;
+        // 重启 CharacterController
+        cc.enabled = true;
+        // 使 cc.isGrounded 立即更新，防止瞬移后角色悬空
+        cc.Move(Vector3.down * 0.05f);
     }
 }

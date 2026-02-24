@@ -29,4 +29,13 @@ function ItemData.New(_configID, _count, _uid)
 	return self
 end
 
+-- 打印自身信息
+function ItemData:ToString()
+	local str = string.format("【%s】x%d", self.Config.Name, self.Count)
+	if self.Config.Type == 1 then
+        str = str .. string.format(" (UID:%d, 子弹:%d, 类型:%d)", self.UID, self.CurrentAmmo, self.CurrentAmmoType)
+    end
+    return str
+end
+
 return ItemData

@@ -1,4 +1,4 @@
--- 背包系统单例
+-- 负责处理物品的增删改查
 
 local ItemData = require("Data.ItemData")
 
@@ -7,7 +7,7 @@ local InventoryManager = {}
 -- 静态变量
 InventoryManager.MaxSlots = 30				-- 背包总格子数
 InventoryManager.Slots = {}					-- 背包数据 (Model): key = 索引(1到30), value = ItemData实例
-InventoryManager.WeaponEquipped = nil		-- 当前装备的武器
+local weaponUIDCounter = 10000    			-- 模拟服务器发放的全局唯一 ID 生成器
 
 -- 初始化背包
 function InventoryManager.Init()
@@ -32,13 +32,13 @@ function InventoryManager.AddItem(_configID, _count)
 		for i = 1, InventoryManager.MaxSlots do
 			local item = InventoryManager.Slots[i]
 			if item and item.ConfigID == _configID and item.Count < config.MaxStack then
-				local leftSpace = config.MaxStack - item.Count
+				local leftSpace = config.MaxStack - item.Count 		-- 当前格子还能装多少
 				if leftCount <= leftSpace then
 					item.Count = item.Count + leftCount
 					return _count 		-- 全部存入
 				else
-					item.Count = config.MaxStack
-					leftCount = leftCount - leftSpace
+					item.Count = config.MaxStack			-- 填满这个格子
+					leftCount = leftCount - leftSpace		-- 剩下的继续找下一个格子
 				end
 			end
 		end
@@ -46,26 +46,31 @@ function InventoryManager.AddItem(_configID, _count)
 
 	-- 如果还有剩余，或者是不重叠物品（武器），找空格子放
 	while leftCount > 0 do
-		local emptySlotIndex = InventoryManager.GetFirstEmptySlot()
-		if emptySlotIndex == -1 then
-			print("[Inventory] 背包已满！有", leftCount, "个物品被丢弃或掉落")
+		local isEmptySlotIndex = InventoryManager.GetFirstEmptySlot()
+		if isEmptySlotIndex == -1 then
+			print(string.format("[Inventory] 警告：背包已满！%d 个 %s 被丢弃。", leftCount, config.Name))
 			break
 		end
 
 		local addCount = math.min(leftCount, config.MaxStack)
 
-		-- 生成 UID (如果是武器)
-		local uid = (config.Type == 1) and os.time() or 0
-		InventoryManager.Slots[emptySlotIndex] = ItemData.New(_configID, addCount, uid)
+		-- 生成 UID (武器给唯一ID，材料给0)
+        local uid = 0
+        if config.Type == 1 then
+            weaponUIDCounter = weaponUIDCounter + 1
+            uid = weaponUIDCounter
+        end
+
+		InventoryManager.Slots[isEmptySlotIndex] = ItemData.New(_configID, addCount, uid)
 		leftCount = leftCount - addCount
 	end
 
 	-- TODO: 触发事件通知 UI 刷新
     -- EventManager.Fire("OnInventoryChanged")
 
-    local addedCount = _count - leftCount
-    print(string.format("[Inventory] 成功添加 %d 个 %s", addedCount, config.Name))
-    return addedCount
+    local actualAdded = _count - leftCount
+    print(string.format("[Inventory] 成功添加 %d 个 %s", actualAdded, config.Name))
+    return actualAdded
 end
 
 -- 寻找第一个空格子
@@ -81,9 +86,9 @@ end
 
 -- 扣除物品
 function InventoryManager.ConsumeItem(_configID, _count)
-	local currentCount = InventoryManager.GetItemCount(_configID)
-	if currentCount < _count then
-		print("[Inventory] 物品不足！ID:", _configId)
+	local currentTotal = InventoryManager.GetItemCount(_configID)
+	if currentTotal < _count then
+		print(string.format("[Inventory] 扣除失败：[%d] 数量不足 (拥有:%d, 需要:%d)", _configId, currentTotal, count))
         return false
     end
 
@@ -123,21 +128,20 @@ end
 
 -- Debug: 打印背包内容
 function InventoryManager.PrintInventory()
-	print("--- 当前背包状态 ---")
-	local empty = true
+	print("\n=============== 🎒 当前背包状态 ===============")
+	local isEmpty = true
 
 	for i = 1, InventoryManager.MaxSlots do
-		local item = InventoryManager.Slots[i]
-		if item then
-			print(string.format("格子[%d]: %s x%d", i, item.Config.Name, item.Count))
-			empty = false
+		if InventoryManager.Slots[i] ~= nil then
+			print(string.format("格子[%02d]: %s", i, InventoryManager.Slots[i]:ToString()))
+			isEmpty = false
 		end
 	end
 
-	if empty then
+	if isEmpty then
 		print("背包是空的")
 	end
-	print("--------------------")
+	print("===============================================\n")
 end
 
 return InventoryManager

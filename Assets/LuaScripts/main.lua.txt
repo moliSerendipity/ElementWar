@@ -7,30 +7,26 @@ local WeaponManager = require("System.WeaponManager")
 -- 模拟游戏流程 (Test Case)
 function StartGame()
     InventoryManager.Init()
-    WeaponManager.Init()
 
-     -- 2. 模拟给玩家发初始装备
-    print("\n--- 发放初始装备 ---")
-    InventoryManager.AddItem(1001, 1)    -- 给一把突击步枪
-    InventoryManager.AddItem(2001, 100)  -- 给普通子弹
-    InventoryManager.AddItem(2003, 50)   -- 给雷元素子弹 (注意：我们故意没给火子弹2002，看看它能不能正确跳过)
-    
+    print("\n--- 🛒 测试 1：疯狂发货 ---")
+    InventoryManager.AddItem(1101, 1)     -- 给 1 把 突击步枪 (ID: 1101)
+    InventoryManager.AddItem(2100, 1500)  -- 给 1500 发 物理步枪弹 (ID: 2100)
+    InventoryManager.AddItem(2101, 300)   -- 给 300 发 火步枪弹 (ID: 2101)
+    InventoryManager.AddItem(2200, 50)    -- 给 50 发 物理狙击弹 (ID: 2200，用来干扰测试)
+
     InventoryManager.PrintInventory()
-    
-    print("\n[测试就绪] 请在 Unity 中按下你绑定的【切换子弹】快捷键 (比如 T 键)...")
-end
 
--- XLua 虚拟机销毁前的全局生命周期回调
--- C# 会在 LuaEnv.Dispose() 之前调用这个函数
-function OnLuaEnvDispose()
-	print("\n===== [Lua] 接收到虚拟机销毁指令，开始清理跨语言委托 =====")
+    print("\n--- 🔫 测试 2：开枪狂扫 ---")
+    print("准备消耗 1200 发物理步枪弹(2100)...")
+    local success = InventoryManager.ConsumeItem(2100, 1200)
     
-    -- 调用所有模块的清理方法
-    WeaponManager.Dispose()
-    
-    -- 未来如果 InventoryManager 注册了 UI 事件，也在这里调用 InventoryManager.Dispose()
-    
-    print("===== [Lua] 清理完毕，准许 C# 销毁虚拟机 =====\n")
+    if success then
+        print("开火完毕！剩余步枪弹数量:", InventoryManager.GetItemCount(2100))
+    else
+        print("卡壳了...")
+    end
+
+    InventoryManager.PrintInventory()
 end
 
 -- C# 会调用这个全局函数
