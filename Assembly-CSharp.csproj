@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\Player\Input\PlayerInputSource.cs" />
     <Compile Include="Assets\XLua\Src\ObjectPool.cs" />
     <Compile Include="Assets\XLua\Gen\TPSCharacterControllerWrap.cs" />
+    <Compile Include="Assets\XLua\Gen\TeamControllerWrap.cs" />
     <Compile Include="Assets\XLua\Src\LuaFunction.cs" />
     <Compile Include="Assets\XLua\Gen\DelegatesGensBridge.cs" />
     <Compile Include="Assets\XLua\Src\StaticLuaCallbacks.cs" />
@@ -118,17 +119,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
+    <None Include="Assets\LuaScripts\Config\Config_Common.lua.txt" />
+    <None Include="Assets\LuaScripts\Config\Config_Ammo.lua.txt" />
     <None Include="Assets\XLua\Resources\xlua\util.lua.txt" />
+    <None Include="Assets\LuaScripts\System\TeamManager.lua.txt" />
+    <None Include="Assets\LuaScripts\Data\CharacterData.lua.txt" />
+    <None Include="Assets\LuaScripts\Config\Config_Throwable.lua.txt" />
     <None Include="Assets\LuaScripts\System\InventoryManager.lua.txt" />
     <None Include="Assets\XLua\Gen\link.xml" />
     <None Include="Assets\XLua\Resources\perf\profiler.lua.txt" />
+    <None Include="Assets\LuaScripts\System\CombatManager.lua.txt" />
     <None Include="Assets\LuaScripts\Data\ItemData.lua.txt" />
     <None Include="Assets\XLua\Resources\perf\memory.lua.txt" />
+    <None Include="Assets\LuaScripts\Config\Config_Consumable.lua.txt" />
     <None Include="Assets\LuaScripts\Config\Config_Item.lua.txt" />
     <None Include="Assets\LuaScripts\main.lua.txt" />
     <None Include="Assets\LuaScripts\System\WeaponManager.lua.txt" />
     <None Include="Assets\XLua\Resources\tdr\tdr.lua.txt" />
     <None Include="Assets\XLua\CHANGELOG.txt" />
+    <None Include="Assets\LuaScripts\Config\Config_Weapon.lua.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

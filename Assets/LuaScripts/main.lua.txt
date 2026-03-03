@@ -3,6 +3,7 @@ print("===== 游戏 Lua 层启动 =====")
 -- 引入并初始化各系统
 local InventoryManager = require("System.InventoryManager")
 local WeaponManager = require("System.WeaponManager")
+local TeamManager = require("System.TeamManager")
 
 -- 模拟游戏流程 (Test Case)
 function StartGame()
@@ -27,6 +28,20 @@ function StartGame()
     end
 
     InventoryManager.PrintInventory()
+end
+
+-- XLua 虚拟机销毁前的全局生命周期回调
+-- C# 会在 LuaEnv.Dispose() 之前调用这个函数
+function OnLuaEnvDispose()
+    print("\n===== [Lua] 接收到虚拟机销毁指令，开始清理跨语言委托 =====")
+    
+    -- 调用所有模块的清理方法
+    WeaponManager.Dispose()
+    TeamManager.Dispose()
+    
+    -- 未来如果 InventoryManager 注册了 UI 事件，也在这里调用 InventoryManager.Dispose()
+    
+    print("===== [Lua] 清理完毕，准许 C# 销毁虚拟机 =====\n")
 end
 
 -- C# 会调用这个全局函数

@@ -1,0 +1,37 @@
+local Config_Common = require("Config.Config_Common")
+
+local Config_Throwable = {
+    -- 破片手雷
+    [Config_Common.ThrowableIDStart + 1] = {
+        ID = Config_Common.ThrowableIDStart + 1,
+        Name = "破片手雷",
+        Type = Config_Common.ItemType.Throwable,
+        EquipSlot = Config_Common.EquipSlot.Throwable,
+        ElementType = Config_Common.ElementType.Physical,
+        BaseDamage = 80,
+        DamageRadius = 5,      -- 伤害范围（米）
+        FuseTime = 3.0,        -- 引信时间（秒）
+        MaxStack = 5,
+        PrefabPath = "",
+        IconPath = "",
+        HotfixVersion = 1.0
+    }
+}
+
+-- 配置校验
+local function ValidateThrowableConfig()
+    for id, config in pairs(Config_Throwable) do
+        local requiredFields = { "ID", "Name", "Type", "EquipSlot", "ElementType", "BaseDamage", "DamageRadius", "FuseTime", "MaxStack" }
+        for _, field in ipairs(requiredFields) do
+            if config[field] == nil then
+                error(string.format("投掷物配置 %d 缺少必填字段: %s", id, field))
+            end
+        end
+        -- TODO: 检查ID是否符合规则
+    end
+    print("[配置校验] 投掷物配置校验通过!")
+end
+
+ValidateThrowableConfig()
+
+return Config_Throwable

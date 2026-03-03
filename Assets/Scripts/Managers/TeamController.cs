@@ -1,7 +1,10 @@
 using Cinemachine;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using XLua;
 
+[LuaCallCSharp]
 public class TeamController : SingleMonoBase<TeamController>
 {
     [Header("队伍成员")]
@@ -11,6 +14,8 @@ public class TeamController : SingleMonoBase<TeamController>
     public CinemachineFreeLook cameraFollowTarget;
 
     private int currentPlayerIndex = 0;                                         // 当前控制的玩家索引
+
+    public event Action<int> OnCharacterSwapped;                                // 当完成角色切换时触发，参数是新的角色索引 (0-3)
 
     protected override void Awake()
     {
@@ -62,6 +67,14 @@ public class TeamController : SingleMonoBase<TeamController>
         }
     }
 
+    protected override void OnDestroy()
+    {
+        // 暴力清空所有委托，切断 C# 对 Lua 的引用
+        OnCharacterSwapped = null;
+
+        base.OnDestroy();
+    }
+
     /// <summary>
     /// 更新摄像机跟随目标为当前主控角色
     /// </summary>
@@ -102,7 +115,10 @@ public class TeamController : SingleMonoBase<TeamController>
         currentPlayerIndex = _targetIndex;
         UpdateCameraTarget();
 
-        Debug.Log($"[TeamController] 角色互换成功！当前主控: 角色 {_targetIndex}");
+        Debug.Log($"[TeamController] 角色互换成功！当前主控: 角色 {_targetIndex + 1}");
+
+        // 通知 Lua 层同步数据
+        OnCharacterSwapped?.Invoke(currentPlayerIndex);
     }
 
     /// <summary>

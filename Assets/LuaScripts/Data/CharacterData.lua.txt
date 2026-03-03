@@ -1,0 +1,90 @@
+-- 角色数据与独立装备栏
+
+local Config_Common = require("Config.Config_Common")
+local InventoryManager = require("System.InventoryManager")
+
+local CharacterData = {}
+CharacterData.__index = CharacterData
+
+-- 装备槽位枚举
+-- CharacterData.WeaponSlots = { Main = 1, Sub = 2, Melee = 3, Throwable = 4}
+
+function CharacterData.New(_characterID, _name)
+	local self = setmetatable({}, CharacterData)
+	self.CharacterID = _characterID
+	self.Name = _name
+	self.HP = 100
+
+	-- 装备栏哈希表
+	self.Loadout = { [1] = nil, [2] = nil, [3] = nil, [4] = nil}
+
+	-- 当前槽位指针 (默认主武器)
+	self.ActiveSlot = Config_Common.EquipSlot.MainWeapon
+
+	return self
+end
+
+-- 装备武器
+function CharacterData:EquipWeapon(_itemData)
+	if not _itemData or not _itemData.Config.EquipSlot then
+		print("[CharacterData] 装备失败，这不是一件可装备物品")
+		return false
+	end
+
+	local targetSlot = _itemData.Config.EquipSlot
+	local oldWeapon = self.Loadout[targetSlot]
+
+	-- 如果该槽位已经有武器了，把它脱下塞回公共背包
+	if oldWeapon then
+		print(string.format("[CharacterData] 卸下旧武器: %s,退回背包", oldWeapon.Config.Name))
+		-- 未处理背包满时的情况
+		InventoryManager.AddExistingItem(oldWeapon)
+	end
+
+	-- 装备新武器
+	self.Loadout[targetSlot] = _itemData
+	print(string.format("[CharacterData] 角色 [%s] 成功在槽位 [%d] 装备了: %s", self.Name, targetSlot, _itemData.Config.Name))
+
+	return true
+end
+
+-- 切换手持武器
+function CharacterData:SwitchWeapon(_slotIndex)
+	if not self.Loadout[_slotIndex] then
+		print(string.format("[CharacterData] 槽位 %d 是空的，无法切换！", _slotIndex))
+		return false
+	end
+
+	self.ActiveSlot = _slotIndex
+	local activeWeapon = self:GetActiveWeapon()
+	print(string.format("[CharacterData] 切换手持武器为：[%s]", activeWeapon.Config.Name))
+
+	-- TODO: 通知 C# 播放拔枪动画 (Draw Weapon)
+    return true
+end
+
+-- 切换下一把武器
+function CharacterData:SwitchNextWeapon()
+	local currentSlot = self.ActiveSlot
+	for i = 1, 4 do
+		currentSlot = currentSlot % 4 + 1
+		if self.Loadout[currentSlot] then
+			self.ActiveSlot = currentSlot
+			local activeWeapon = self:GetActiveWeapon()
+			print(string.format("[CharacterData] 切换手持武器为：[%s]", activeWeapon.Config.Name))
+			-- TODO: 通知 C# 播放拔枪动画 (Draw Weapon)
+			return true
+		end
+	end
+
+	print("[CharacterData] 没有其他武器，无法切换")
+	return false
+end
+
+-- 获取当前手持武器
+function CharacterData:GetActiveWeapon()
+	return self.Loadout[self.ActiveSlot]
+end
+
+
+return CharacterData

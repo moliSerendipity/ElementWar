@@ -1,11 +1,11 @@
 -- 负责处理战斗中的武器状态与子弹切换逻辑
 
+local Config_Common = require("Config.Config_Common")
 local InventoryManager = require("System.InventoryManager")
-local Config_Item = require("Config.Config_Item")
-local WeaponManager = {}
+local CombatManager = require("System.CombatManager")
+local TeamManager = require("System.TeamManager") 
 
--- 预设的子弹循环顺序 (普通 -> 火 -> 雷)
-WeaponManager.AmmoCycle = { 2001, 2002, 2003 }
+local WeaponManager = {}
 
 function WeaponManager.Init()
 	-- XLua 绑定 C# 事件的语法：CS.命名空间.类名.Instance:事件名('+', 回调函数)
@@ -18,67 +18,61 @@ function WeaponManager.Init()
 end
 
 function WeaponManager.OnSwitchAmmoTypePressed()
-	print("\n[WeaponManager] 玩家请求切换子弹类型...")
-
-	-- 获取当前装备的武器 (假设背包里第一把武器就是装备的武器)
-	local equippedWeapon = nil
-	for i = 1, InventoryManager.MaxSlots do
-		local item = InventoryManager.Slots[i]
-		if item and item.Config.Type == 1 then
-			equippedWeapon = item
-			break
-		end
+	-- 获取当前主控角色
+	local activeCharacter = TeamManager.GetActiveCharacter()
+	if not activeCharacter then
+		return
 	end
 
-	if not equippedWeapon then
-		print("[WeaponManager] 玩家没有装备武器，无法切换子弹！")
-        return
-    end
+	-- 获取当前手持武器
+	local weapon = activeCharacter:GetActiveWeapon()
+	if not weapon or not weapon.Config.WeaponSubType or weapon.Config.WeaponSubType ~= Config_Common.WeaponSubType.Ranged then
+		print("[WeaponManager] 无法切弹")
+		return
+	end
 
-    local currentAmmo = equippedWeapon.CurrentAmmoType
-    local nextAmmo = WeaponManager.GetNextAvailableAmmo(currentAmmo)
+	-- 获取下一种可用子弹
+	local nextAmmoID = WeaponManager.GetNextAvailableAmmo(weapon)
 
-    -- 如果有别的子弹可以切，并且不是当前正在用的
-    if nextAmmo and nextAmmo ~= currentAmmo then
-    	equippedWeapon.CurrentAmmoType = nextAmmo
-    	print(string.format("[WeaponManager] 成功切换子弹为: %s", Config_Item[nextAmmo].Name))
-
-    	-- 反向调用 C#：通知角色播放换弹动画
-    	local tpsController = CS.UnityEngine.Object.FindObjectOfType(typeof(CS.TPSCharacterController))
-    	if tpsController then
-    		tpsController:ForceReload()
-        else
-            print("[Error] 找不到 TPSCharacterController")
-        end
-    else
-    	print("[WeaponManager] 背包里没有其他类型的子弹可供切换。")
+	if nextAmmoID and nextAmmoID ~= weapon.CurrentAmmoType then
+		local success = CombatManager.SwitchAmmoType(activeCharacter, nextAmmoID)
+		-- 如果逻辑执行成功，反向调用 C# 播放动画
+		if success then
+			local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
+			if tpsController then
+				tpsController:ForceReload()
+			end
+		end
+	else
+		print("[WeaponManager] 背包中没有其他适用当前枪械的元素子弹。")
     end
 end
 
 -- 在背包中寻找下一种可用的子弹
-function WeaponManager.GetNextAvailableAmmo(_currentAmmoID)
-	-- 找到当前子弹在循环列表中的位置
-	local currentIndex = 1
-	for i, ammoID in ipairs(WeaponManager.AmmoCycle) do
-		if ammoID == _currentAmmoID then
-			currentIndex = i
-			break
-		end
-	end
+function WeaponManager.GetNextAvailableAmmo(_weapon)
+	local currentAmmoID = _weapon.CurrentAmmoType
+	local weaponClass = _weapon.Config.WeaponClass
 
-	-- 往后找，最多找一圈
-	for offset = 1, #WeaponManager.AmmoCycle do
-		local checkIndex = ((currentIndex + offset - 1) % #WeaponManager.AmmoCycle) + 1
-		local checkAmmoID = WeaponManager.AmmoCycle[checkIndex]
+	-- 根据配置表规则计算该枪械对应的基础子弹 ID
+    -- 公式: AmmoIDStart(3000) + (WeaponClass * 100)
+    local baseAmmoID = Config_Common.AmmoIDStart + (weaponClass * 100)
 
-		-- 检查背包里有没有这种子弹
-		if InventoryManager.GetItemCount(checkAmmoID) > 0 then
-			return checkAmmoID
-		end
-	end
+    -- 计算当前子弹的偏移量 (0=物理, 1=火, 2=雷, 3=冰)
+    local currentOffset = currentAmmoID % 100
 
-	-- 如果没有，就返回当前子弹 ID
-	return _currentAmmoID
+    -- 循环向后查找元素
+    local maxElements = 4
+    for i = 1, maxElements do
+    	local nextOffset = (currentOffset + i) % maxElements
+    	local checkAmmoID = baseAmmoID + nextOffset
+    	-- 如果算出的这个 ID 在背包里有库存
+    	if checkAmmoID ~= currentAmmoID and InventoryManager.GetItemCount(checkAmmoID) > 0 then
+    		return checkAmmoID
+    	end
+    end
+
+	-- 找了一圈都没有，返回原本的子弹
+    return currentAmmoID
 end
 
 -- 清理函数：注销所有 C# 事件
@@ -88,5 +82,6 @@ function WeaponManager.Dispose()
         print("[WeaponManager] 成功解绑 C# 的 OnSwitchAmmoType 事件")
     end
 end
+
 
 return WeaponManager

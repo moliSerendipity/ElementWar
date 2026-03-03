@@ -1,0 +1,53 @@
+-- 公共常量和枚举定义
+
+local Config_Common = {
+	-- 物品类型枚举
+	ItemType = {
+		Weapon = 1,					-- 武器
+		Throwable = 2,				-- 投掷物
+		Ammo = 3,					-- 弹药
+		Consumable = 4				-- 消耗品
+	},
+
+	-- 武器类型枚举
+	WeaponClass = {
+		Rifle = 1,					-- 步枪
+		Sniper = 2,					-- 狙击枪
+		Pistol = 3,					-- 手枪
+		Melee = 4					-- 近战武器
+	},
+
+	-- 武器子类型枚举
+	WeaponSubType = {
+        Ranged = 1,   				-- 远程枪械（需要弹药）
+        Melee = 2,    				-- 近战武器（无需弹药）
+        Energy = 3    				-- 能量武器（需要能量，后续扩展）
+    },
+
+	-- 元素类型枚举
+	ElementType = {
+		Physical = 1,				-- 物理
+		Fire = 2,					-- 火
+		Thunder = 3,				-- 雷
+		Ice = 4 					-- 冰
+	},
+
+	-- 装备槽位枚举
+	EquipSlot = {
+		MainWeapon = 1,				-- 主武器
+		SecondaryWeapon = 2,		-- 副武器
+		MeleeWeapon = 3,			-- 近战武器
+		Throwable = 4 				-- 投掷物
+	},
+
+	-- ID段常量
+	WeaponIDStart = 1000,
+	ThrowableIDStart = 2000,
+	AmmoIDStart = 3000,
+	ConsumableIDStart = 4000,
+
+	-- 配置版本
+	ConfigVersion = 1.0
+}
+
+return Config_Common

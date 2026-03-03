@@ -25,6 +25,9 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(InputManager), InputManagerWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(TeamController), TeamControllerWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(TPSCharacterController), TPSCharacterControllerWrap.__Register);
         
         

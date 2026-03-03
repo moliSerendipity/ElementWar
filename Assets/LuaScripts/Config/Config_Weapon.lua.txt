@@ -1,0 +1,115 @@
+local Config_Common = require("Config.Config_Common")
+
+local Config_Weapon = {
+	-- 标准突击步枪
+	[Config_Common.WeaponIDStart + 101] = {
+		ID = Config_Common.WeaponIDStart + 101,
+		Name = "标准突击步枪",
+		Type = Config_Common.ItemType.Weapon,
+		WeaponClass = Config_Common.WeaponClass.Rifle,
+		WeaponSubType = Config_Common.WeaponSubType.Ranged,
+		EquipSlot = Config_Common.EquipSlot.MainWeapon,
+		MaxStack = 1,
+		HasAmmo = true,
+		-- 核心战斗属性
+		BaseDamage = 25,			-- 基础伤害
+		FireRate = 0.1,				-- 射速 (秒/发)
+		MagazineCapacity = 30,		-- 弹匣容量
+		-- MaxAmmoCarry = 180,		-- 最大携带弹药量
+		-- Range = 50,				-- 射程 (米)
+		ReloadTime = 2.0,			-- 换弹时间
+		DefaultAmmoType = Config_Common.AmmoIDStart + 100,		-- 默认子弹类型
+		-- 资源路径
+		PrefabPath = "",
+		IconPath = "",
+		-- 热更版本
+		HotfixVersion = 1.0
+	},
+	-- 重型狙击枪
+	[Config_Common.WeaponIDStart + 201] = {
+		ID = Config_Common.WeaponIDStart + 201,
+		Name = "重型狙击枪",
+		Type = Config_Common.ItemType.Weapon,
+		WeaponClass = Config_Common.WeaponClass.Sniper,
+		WeaponSubType = Config_Common.WeaponSubType.Ranged,
+		EquipSlot = Config_Common.EquipSlot.MainWeapon,
+		MaxStack = 1,
+		HasAmmo = true,
+		-- 核心战斗属性
+		BaseDamage = 120,			-- 基础伤害
+		FireRate = 1.5,				-- 射速 (秒/发)
+		MagazineCapacity = 5,		-- 弹匣容量
+		-- MaxAmmoCarry = 25,		-- 最大携带弹药量
+		-- Range = 200,				-- 射程 (米)
+		ReloadTime = 3.5,			-- 换弹时间
+		DefaultAmmoType = Config_Common.AmmoIDStart + 200,		-- 默认子弹类型
+		-- 资源路径
+		PrefabPath = "",
+		IconPath = "",
+		-- 热更版本
+		HotfixVersion = 1.0
+	},
+	-- 战术手枪
+	[Config_Common.WeaponIDStart + 301] = {
+		ID = Config_Common.WeaponIDStart + 301,
+		Name = "战术手枪",
+		Type = Config_Common.ItemType.Weapon,
+		WeaponClass = Config_Common.WeaponClass.Pistol,
+		WeaponSubType = Config_Common.WeaponSubType.Ranged,
+		EquipSlot = Config_Common.EquipSlot.SecondaryWeapon,
+		MaxStack = 1,
+		HasAmmo = true,
+		-- 核心战斗属性
+		BaseDamage = 15,			-- 基础伤害
+		FireRate = 0.2,				-- 射速 (秒/发)
+		MagazineCapacity = 15,		-- 弹匣容量
+		-- MaxAmmoCarry = 60,		-- 最大携带弹药量
+		-- Range = 30,				-- 射程 (米)
+		ReloadTime = 1.5,			-- 换弹时间
+		DefaultAmmoType = Config_Common.AmmoIDStart + 300,		-- 默认子弹类型
+		-- 资源路径
+		PrefabPath = "",
+		IconPath = "",
+		-- 热更版本
+		HotfixVersion = 1.0
+	},
+	-- 尼泊尔军刀
+	[Config_Common.WeaponIDStart + 401] = {
+		ID = Config_Common.WeaponIDStart + 401,
+		Name = "尼泊尔军刀",
+		Type = Config_Common.ItemType.Weapon,
+		WeaponClass = Config_Common.WeaponClass.Melee,
+		WeaponSubType = Config_Common.WeaponSubType.Melee,
+		EquipSlot = Config_Common.EquipSlot.MeleeWeapon,
+		MaxStack = 1,
+		HasAmmo = false,
+		-- 核心战斗属性
+		BaseDamage = 50,			-- 基础伤害
+		AttackRate = 0.8,			-- 攻速 (秒)
+		Range = 2,					-- 攻击范围 (米)
+		-- 资源路径
+		PrefabPath = "",
+		IconPath = "",
+		-- 热更版本
+		HotfixVersion = 1.0
+	}
+}
+
+-- 配置校验函数
+local function ValidateWeaponConfig()
+	for id, config in pairs(Config_Weapon) do
+		-- 检查必填字段
+		local requiredFields = { "ID", "Name", "Type", "WeaponClass", "EquipSlot", "MaxStack", "BaseDamage"}
+		for _, field in ipairs(requiredFields) do
+			if config[field] == nil then
+				error(string.format("武器配置 %d 缺少必填字段: %s", id, field))
+			end
+		end
+		-- TODO: 检查ID是否符合规则
+	end
+	print("[配置校验] 武器配置校验通过!")
+end
+
+ValidateWeaponConfig()
+
+return Config_Weapon

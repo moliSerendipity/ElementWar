@@ -1,0 +1,95 @@
+local Config_Common = require("Config.Config_Common")
+local Config_Item = require("Config.Config_Item")
+local InventoryManager = require("System.InventoryManager")
+
+local CombatManager = {}
+
+-- 开火
+function CombatManager.Fire(_character)
+	local weapon = _character:GetActiveWeapon()
+	if not weapon then
+		print("[CombatManager] 开火失败: 没有装备武器")
+		return false
+	end
+
+	if weapon.CurrentAmmoCount > 0 then
+		weapon.CurrentAmmoCount = weapon.CurrentAmmoCount - 1
+		print(string.format("[CombatManager] 开火成功, 弹匣剩余: %d/%d (当前子弹: %s)",
+			weapon.CurrentAmmoCount, weapon.Config.MagazineCapacity, Config_Item[weapon.CurrentAmmoType].Name))
+		return true
+	else
+		print("[CombatManager] 弹匣空了, 请换弹")
+		return false
+	end
+end
+
+-- 换弹
+function CombatManager.Reload(_character)
+	local weapon = _character:GetActiveWeapon()
+	if not weapon or not weapon.Config.WeaponSubType or weapon.Config.WeaponSubType ~= Config_Common.WeaponSubType.Ranged then
+		print("[CombatManager] 无法切弹")
+		return false
+	end
+
+	local magazineCapacity = weapon.Config.MagazineCapacity
+	local currentAmmoCount = weapon.CurrentAmmoCount
+	local currentAmmoType = weapon.CurrentAmmoType
+
+	-- 如果弹匣满了，不需要换弹
+	if currentAmmoCount >= magazineCapacity then
+		print("[CombatManager] 弹匣已满, 无需换弹")
+		return false
+	end
+
+	local needCount = magazineCapacity - currentAmmoCount
+    print(string.format("[CombatManager] 尝试换弹... 需要 %d 发 [%s]", needCount, Config_Item[currentAmmoType].Name))
+    local _, actualConsumed = InventoryManager.ConsumeItem(currentAmmoType, needCount, true)
+
+    if actualConsumed > 0 then
+        weapon.CurrentAmmoCount = weapon.CurrentAmmoCount + actualConsumed
+        print(string.format("[CombatManager] 换弹完成！装填了 %d 发。当前弹匣: %d/%d", actualConsumed, weapon.CurrentAmmoCount, magazineCapacity))
+        return true
+    else
+        print("[CombatManager] 换弹失败：背包里没有这种子弹了！")
+        return false
+    end
+end
+
+-- 切换子弹类型
+function CombatManager.SwitchAmmoType(_character, _targetAmmoID)
+	local weapon = _character:GetActiveWeapon()
+	if not weapon or not weapon.Config.WeaponSubType or weapon.Config.WeaponSubType ~= Config_Common.WeaponSubType.Ranged then
+		print("[CombatManager] 无法切弹")
+		return
+	end
+
+	local oldAmmoType = weapon.CurrentAmmoType
+	local oldAmmoCount = weapon.CurrentAmmoCount
+
+	if oldAmmoType == _targetAmmoID then
+		print("[CombatManager] 已经是该类型子弹，无需切换。")
+        return false
+    end
+
+    print(string.format("\n[CombatManager] 开始切换子弹类型: [%s] -> [%s]", Config_Item[oldAmmoType].Name, Config_Item[_targetAmmoID].Name))
+
+    -- 退弹回背包
+    if oldAmmoCount > 0 then
+    	InventoryManager.AddItem(oldAmmoType, oldAmmoCount)
+    	weapon.CurrentAmmoCount = 0
+    	print(string.format("[CombatManager] 退弹：将弹匣内剩余的 %d 发子弹退回背包。", oldAmmoCount))
+    end
+
+    -- 更改枪械的当前子弹类型
+    weapon.CurrentAmmoType = _targetAmmoID
+
+    -- 触发强制换弹
+    local success = CombatManager.Reload(_character)
+    if not success then
+    	print("[CombatManager] 警告：切换了子弹类型，但背包中没有对应的子弹来装填！")
+    end
+    return true
+end
+
+
+return CombatManager

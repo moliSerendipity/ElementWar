@@ -1,0 +1,65 @@
+-- 负责管理全队角色的数据模型与装备栏
+
+local CharacterData = require("Data.CharacterData")
+
+local TeamManager = {}
+
+TeamManager.Characters = {}			-- 队伍数据存储
+TeamManager.ActiveIndex = 1			-- 当前主控角色索引
+
+-- 初始化队伍数据
+function TeamManager.Init()
+    -- 假设队伍固定 4 人
+    TeamManager.Characters[1] = CharacterData.New(1, "主角_阿尔法")
+    TeamManager.Characters[2] = CharacterData.New(2, "队友_贝塔")
+    TeamManager.Characters[3] = CharacterData.New(3, "队友_伽马")
+    TeamManager.Characters[4] = CharacterData.New(4, "队友_德尔塔")
+
+    TeamManager.ActiveIndex = 1
+
+    -- 监听 C# 的切人事件，保持数据同步
+    if CS.TeamController.Instance then
+        CS.TeamController.Instance:OnCharacterSwapped('+', TeamManager.SyncActiveCharacter)
+    else
+        print("[TeamManager] 警告：找不到 C# TeamController 实例，无法绑定切人同步事件！")
+    end
+
+    print("[TeamManager] 队伍数据初始化完成，当前主控: 1号位")
+end
+
+-- 获取当前正在操控的角色数据
+function TeamManager.GetCurrentPlayer()
+    return TeamManager.Characters[TeamManager.ActiveIndex]
+end
+
+-- 根据索引获取特定角色数据 (比如 AI 释放技能时需要拿自己的数据)
+function TeamManager.GetCharacter(_index)
+    if _index < 1 or _index > 4 then
+        print("[TeamManager] 错误：获取角色的索引越界: " .. tostring(_index))
+        return nil
+    end
+    return TeamManager.Characters[_index]
+end
+
+-- [桥接接口] 同步 C# 层的切人操作
+-- 当 C# 层的 TeamController 完成坐标互换后，必须调用此接口，否则 Lua 层的装备数据会对不上
+function TeamManager.SyncActiveCharacter(_csIndex)
+	local luaIndex = _csIndex + 1
+	if TeamManager.Characters[luaIndex] then
+		TeamManager.ActiveIndex = luaIndex
+		print(string.format("[TeamManager] 数据层主控角色已同步为: %d号位 [%s]", luaIndex, TeamManager.Characters[luaIndex].Name))
+    else
+        print("[TeamManager] 错误：C# 传来的切换索引无效: " .. tostring(_csIndex))
+    end
+end
+
+-- 清理函数：注销所有 C# 事件
+function TeamManager.Dispose()
+    if CS.TeamController.Instance then
+        CS.TeamController.Instance:OnCharacterSwapped('-', TeamManager.SyncActiveCharacter)
+        print("[TeamManager] 成功解绑 C# 的 OnCharacterSwapped 事件")
+    end
+end
+
+
+return TeamManager

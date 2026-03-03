@@ -1,5 +1,6 @@
 -- 背包格子里具体的物品实例数据
 
+local Config_Common = require("Config.Config_Common")
 local Config_Item = require("Config.Config_Item")
 
 local ItemData = {}
@@ -20,9 +21,9 @@ function ItemData.New(_configID, _count, _uid)
 	self.UID = _uid or 0			-- 如果是 0 代表消耗品，否则是武器等唯一装备
 	self.Config = config 			-- 引用静态配置表，方便查询
 
-	-- 武器专属动态数据
-	if self.Config.Type == 1 then
-		self.CurrentAmmo = 30	-- 当前弹匣子弹数
+	-- 远程枪械专属动态数据
+	if self.Config.WeaponSubType and self.Config.WeaponSubType == Config_Common.WeaponSubType.Ranged then
+		self.CurrentAmmoCount = self.Config.MagazineCapacity	-- 当前弹匣子弹数
 		self.CurrentAmmoType = self.Config.DefaultAmmoType		-- 当前使用的子弹类型 ID
 	end
 
@@ -33,9 +34,10 @@ end
 function ItemData:ToString()
 	local str = string.format("【%s】x%d", self.Config.Name, self.Count)
 	if self.Config.Type == 1 then
-        str = str .. string.format(" (UID:%d, 子弹:%d, 类型:%d)", self.UID, self.CurrentAmmo, self.CurrentAmmoType)
+        str = str .. string.format(" (UID:%d, 子弹:%d, 类型:%d)", self.UID, self.CurrentAmmoCount, self.CurrentAmmoType)
     end
     return str
 end
+
 
 return ItemData

@@ -1,0 +1,35 @@
+local Config_Common = require("Config.Config_Common")
+
+local Config_Consumable = {
+    -- 医疗包
+    [Config_Common.ConsumableIDStart + 1] = {
+        ID = Config_Common.ConsumableIDStart + 1,
+        Name = "医疗包",
+        Type = Config_Common.ItemType.Consumable,
+        HealAmount = 50,
+        UseTime = 1.5,     -- 使用时间（秒）
+        Cooldown = 0,      -- 冷却时间（秒）
+        MaxStack = 5,
+        PrefabPath = "",
+        IconPath = "",
+        HotfixVersion = 1.0
+    }
+}
+
+-- 配置校验
+local function ValidateConsumableConfig()
+    for id, config in pairs(Config_Consumable) do
+        local requiredFields = { "ID", "Name", "Type", "MaxStack" }
+        for _, field in ipairs(requiredFields) do
+            if config[field] == nil then
+                error(string.format("消耗品配置 %d 缺少必填字段: %s", id, field))
+            end
+        end
+        -- TODO: 检查ID是否符合规则
+    end
+    print("[配置校验] 消耗品配置校验通过!")
+end
+
+ValidateConsumableConfig()
+
+return Config_Consumable
