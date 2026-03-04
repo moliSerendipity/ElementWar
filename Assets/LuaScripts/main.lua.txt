@@ -1,33 +1,101 @@
-print("===== 游戏 Lua 层启动 =====")
+print("\n=======================================================")
+print("   [Lua Env] 核心业务系统 集成测试 (Integration Test)  ")
+print("=======================================================\n")
 
 -- 引入并初始化各系统
 local InventoryManager = require("System.InventoryManager")
 local WeaponManager = require("System.WeaponManager")
 local TeamManager = require("System.TeamManager")
+local CombatManager = require("System.CombatManager")
 
 -- 模拟游戏流程 (Test Case)
 function StartGame()
+    -- ==========================================
+    -- 初始化所有系统
+    -- ==========================================
     InventoryManager.Init()
+    TeamManager.Init()
+    WeaponManager.Init()
 
-    print("\n--- 🛒 测试 1：疯狂发货 ---")
-    InventoryManager.AddItem(1101, 1)     -- 给 1 把 突击步枪 (ID: 1101)
-    InventoryManager.AddItem(2100, 1500)  -- 给 1500 发 物理步枪弹 (ID: 2100)
-    InventoryManager.AddItem(2101, 300)   -- 给 300 发 火步枪弹 (ID: 2101)
-    InventoryManager.AddItem(2200, 50)    -- 给 50 发 物理狙击弹 (ID: 2200，用来干扰测试)
+    local player = TeamManager.GetCurrentPlayer()
 
-    InventoryManager.PrintInventory()
-
-    print("\n--- 🔫 测试 2：开枪狂扫 ---")
-    print("准备消耗 1200 发物理步枪弹(2100)...")
-    local success = InventoryManager.ConsumeItem(2100, 1200)
+    print("\n>>> [Test Case 1] 背包发货与堆叠溢出测试 <<<")
+    -- 发放武器
+    InventoryManager.AddItem(1101, 1)    -- 突击步枪 1 (UID: 10001)
+    InventoryManager.AddItem(1101, 1)    -- 突击步枪 2 (UID: 10002)
+    InventoryManager.AddItem(1301, 1)    -- 战术手枪
+    InventoryManager.AddItem(2001, 3)    -- 破片手雷 x3
+    -- 发放子弹 (测试 999 堆叠溢出)
+    InventoryManager.AddItem(3100, 1200) -- 物理步枪弹 (分两格: 999 + 201)
+    InventoryManager.AddItem(3101, 50)   -- 火步枪弹 x50
+    InventoryManager.AddItem(3300, 30)   -- 物理手枪弹 x30
     
-    if success then
-        print("开火完毕！剩余步枪弹数量:", InventoryManager.GetItemCount(2100))
-    else
-        print("卡壳了...")
-    end
-
     InventoryManager.PrintInventory()
+
+    print("\n>>> [Test Case 2] 装备系统与资产守恒测试 <<<")
+    -- 模拟 UI 点击，拿到前三个格子的物品
+    local rifle1 = InventoryManager.Slots[1]
+    local rifle2 = InventoryManager.Slots[2]
+    local pistol = InventoryManager.Slots[3]
+    local grenade = InventoryManager.Slots[4]
+
+    -- 装备第一把步枪
+    player:EquipWeapon(rifle1)
+    InventoryManager.Slots[1] = nil
+
+    -- 再次在主武器槽装备第二把步枪 (测试旧武器是否退回背包)
+    print("-> 尝试在已有主武器的情况下，装备另一把步枪...")
+    player:EquipWeapon(rifle2)
+    InventoryManager.Slots[2] = nil
+
+    -- 装备手枪和手雷
+    player:EquipWeapon(pistol)
+    InventoryManager.Slots[3] = nil
+    player:EquipWeapon(grenade)
+    InventoryManager.Slots[4] = nil
+
+    InventoryManager.PrintInventory() -- 此时应该能看到第一把步枪(UID 10001)被退回了背包
+
+    print("\n>>>[Test Case 3] 战斗开火与换弹测试 <<<")
+    -- 当前默认是主武器 (步枪)
+    print("当前手持:", player:GetActiveWeapon().Config.Name)
+    
+    -- 把弹匣打空
+    for i = 1, 31 do
+        CombatManager.Fire(player)
+    end
+    
+    -- 换弹测试 (应该消耗背包里的 3100 物理子弹)
+    print("\n-> 尝试换弹...")
+    CombatManager.Reload(player)
+    CombatManager.Fire(player) -- 换完弹再打一发，变成 29/30
+
+    print("\n>>>[Test Case 4] 切换子弹类型与强制退弹测试 <<<")
+    print("-> 玩家按下 T 键，请求切子弹...")
+    -- 这里我们手动调用 WeaponManager 模拟按下 T 键
+    WeaponManager.OnSwitchAmmoTypePressed()
+    
+    -- 测试开火，检查是否打出的是火子弹
+    CombatManager.Fire(player)
+    InventoryManager.PrintInventory() -- 检查背包里是否多出了 29发 物理步枪弹(退回的)
+
+    print("\n>>>[Test Case 5] 切枪与投掷物消耗测试 <<<")
+    print("-> 玩家按下 4 键，切出手雷...")
+    player:SwitchWeapon(4) -- 切换到投掷物槽位
+    
+    CombatManager.Fire(player) -- 扔第一颗 (剩余2)
+    CombatManager.Fire(player) -- 扔第二颗 (剩余1)
+    CombatManager.Fire(player) -- 扔第三颗 (剩余0，自动切回主武器)
+    
+    print("当前手持:", player:GetActiveWeapon().Config.Name)
+
+    print("\n>>> [Test Case 6] C# 边界与错误拦截测试 <<<")
+    print("-> 尝试在没有备弹的情况下切子弹...")
+    WeaponManager.OnSwitchAmmoTypePressed() -- 只有物理和火，火已经在枪里了，物理被退回了，应该切回物理
+
+    print("\n=======================================================")
+    print("                 全系统集成测试 结束                   ")
+    print("=======================================================\n")
 end
 
 -- XLua 虚拟机销毁前的全局生命周期回调

@@ -10,11 +10,11 @@ public class SingleMonoBase<T> : MonoBehaviour where T : SingleMonoBase<T>
 
     protected virtual void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
-#if UNITY_EDITOR
-            Debug.LogError($"{typeof(T).Name} 不符合单例模式");
-#endif
+            Debug.LogError($"[Singleton] 场景中存在多个 {typeof(T).Name} 实例，正在销毁多余的物体！");
+            Destroy(this);
+            return;
         }
         Instance = this as T;
     }

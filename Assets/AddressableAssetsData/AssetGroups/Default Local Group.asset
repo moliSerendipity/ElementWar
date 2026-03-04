@@ -17,6 +17,18 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b8e70cf7e2d6c7243b0652d44838cdba
   m_SerializeEntries:
+  - m_GUID: 07481df48af688645bc6bfa1e3d2cef4
+    m_Address: Lua/Config/Config_Throwable.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f78b6dd531dce84698f7e40e74b956e
+    m_Address: Lua/Config/Config_Weapon.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1ad1acfb94aba5142bb621cd62da72e3
     m_Address: Lua/Data/ItemData.lua.txt
     m_ReadOnly: 0
@@ -25,6 +37,30 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 27bb2e09aea62324d8737301e72a2639
     m_Address: Lua/System/InventoryManager.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31808cff4eb128c479f61d0b4fcfa0bf
+    m_Address: Lua/Config/Config_Common.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39981d530fec8c2498feee0890b213d6
+    m_Address: Lua/System/CombatManager.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55151ad9ee94992478e06e72a048162b
+    m_Address: Lua/Data/CharacterData.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6309d9e7891c3574ba633d53564d191a
+    m_Address: Lua/System/TeamManager.lua.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - LuaScript
@@ -43,6 +79,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bbacb1e7964ef234999d166446d44b26
     m_Address: Lua/Config/Config_Item.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca9ac689744780a409344f26a43cd920
+    m_Address: Lua/Config/Config_Consumable.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d179c72f007499d47b61e59134b5d3fa
+    m_Address: Lua/Config/Config_Ammo.lua.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - LuaScript

@@ -7,6 +7,7 @@ public class TPSCharacterController : MonoBehaviour
     public CharacterMotor Motor { get; private set; }
     public CharacterAnimator Animator { get; private set; }
     public Transform MainCameraTransform { get; set; }
+    public WeaponController WeaponController { get; private set; }
 
     [Header("移动设置")]
     public float walkSpeed = 2.0f;
@@ -40,6 +41,7 @@ public class TPSCharacterController : MonoBehaviour
     {
         Motor = GetComponent<CharacterMotor>();
         Animator = GetComponent<CharacterAnimator>();
+        WeaponController = GetComponent<WeaponController>();
         Motor.gravity = this.gravity;
 
         // 初始化输入源
@@ -62,11 +64,6 @@ public class TPSCharacterController : MonoBehaviour
     void Start()
     {
         SwitchState(IdleState);
-
-        LuaManager.Instance.PreloadAllLuaScripts(() =>
-        {
-            LuaManager.Instance.StartGame();
-        });
     }
 
     void Update()
@@ -187,6 +184,7 @@ public class TPSCharacterController : MonoBehaviour
         return _inputMove.magnitude > 0.5f ? runSpeed : walkSpeed;
     }
 
+    #region 供 Lua 调用的接口
     /// <summary>
     /// 强制触发换弹，供 Lua 调用
     /// </summary>
@@ -195,4 +193,17 @@ public class TPSCharacterController : MonoBehaviour
         Animator.TriggerReload();
         Debug.Log("[C#] 收到 Lua 指令，开始播放换弹动画！");
     }
+
+    public void ForceFire(int _ammoConfigID)
+    {
+        if (WeaponController != null)
+        {
+            WeaponController.FireProjectile(_ammoConfigID);
+        }
+        else
+        {
+            Debug.LogWarning("[C#] 当前角色没有挂载 WeaponController！");
+        }
+    }
+    #endregion
 }

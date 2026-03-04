@@ -60,6 +60,7 @@
     <Analyzer Include="E:\Unity\2022.3.62f2c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GameObjectPool.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_ICalcWrap.cs" />
     <Compile Include="Assets\XLua\Src\TemplateEngine\TemplateEngine.cs" />
     <Compile Include="Assets\Scripts\Base\SingleMonoBase.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets\XLua\Gen\TeamControllerWrap.cs" />
     <Compile Include="Assets\XLua\Src\LuaFunction.cs" />
     <Compile Include="Assets\XLua\Gen\DelegatesGensBridge.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\XLua\Src\StaticLuaCallbacks.cs" />
     <Compile Include="Assets\Scripts\Managers\TeamController.cs" />
     <Compile Include="Assets\XLua\Src\LuaBase.cs" />
@@ -94,7 +96,9 @@
     <Compile Include="Assets\Scripts\Player\CharacterAnimator.cs" />
     <Compile Include="Assets\XLua\Src\ObjectTranslatorPool.cs" />
     <Compile Include="Assets\XLua\Src\DelegateBridge.cs" />
+    <Compile Include="Assets\Scripts\WeaponController.cs" />
     <Compile Include="Assets\XLua\Src\CopyByValue.cs" />
+    <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\Loader\CustomLoader.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
     <Compile Include="Assets\XLua\Src\TypeExtensions.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Assets\XLua\Gen\Tutorial_CSCallLua_ItfDBridge.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterMotor.cs" />
     <Compile Include="Assets\XLua\Gen\EnumWrap.cs" />
+    <Compile Include="Assets\Scripts\Config\XLuaConfig.cs" />
     <Compile Include="Assets\Scripts\Managers\LuaManager.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\ByString\ByString.cs" />
     <Compile Include="Assets\XLua\Tutorial\LuaCallCSharp\LuaCallCs.cs" />

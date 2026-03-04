@@ -19,7 +19,7 @@ end
 
 function WeaponManager.OnSwitchAmmoTypePressed()
 	-- 获取当前主控角色
-	local activeCharacter = TeamManager.GetActiveCharacter()
+	local activeCharacter = TeamManager.GetCurrentPlayer()
 	if not activeCharacter then
 		return
 	end

@@ -21,18 +21,20 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(TPSCharacterController);
-			Utils.BeginObjectRegister(type, L, translator, 0, 5, 13, 8);
+			Utils.BeginObjectRegister(type, L, translator, 0, 6, 14, 8);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPlayerControl", _m_SetPlayerControl);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SwitchState", _m_SwitchState);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "CalculateMoveDirectionAndRotation", _m_CalculateMoveDirectionAndRotation);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetTargetSpeed", _m_GetTargetSpeed);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ForceReload", _m_ForceReload);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ForceFire", _m_ForceFire);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Motor", _g_get_Motor);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "Animator", _g_get_Animator);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "MainCameraTransform", _g_get_MainCameraTransform);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "WeaponController", _g_get_WeaponController);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "IdleState", _g_get_IdleState);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "MoveState", _g_get_MoveState);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "JumpState", _g_get_JumpState);
@@ -241,6 +243,34 @@ namespace XLua.CSObjectWrap
             
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_ForceFire(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int __ammoConfigID = LuaAPI.xlua_tointeger(L, 2);
+                    
+                    gen_to_be_invoked.ForceFire( __ammoConfigID );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
         
         
         
@@ -280,6 +310,20 @@ namespace XLua.CSObjectWrap
 			
                 TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.MainCameraTransform);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_WeaponController(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.WeaponController);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

@@ -12,15 +12,49 @@ function CombatManager.Fire(_character)
 		return false
 	end
 
-	if weapon.CurrentAmmoCount > 0 then
-		weapon.CurrentAmmoCount = weapon.CurrentAmmoCount - 1
-		print(string.format("[CombatManager] 开火成功, 弹匣剩余: %d/%d (当前子弹: %s)",
-			weapon.CurrentAmmoCount, weapon.Config.MagazineCapacity, Config_Item[weapon.CurrentAmmoType].Name))
-		return true
-	else
-		print("[CombatManager] 弹匣空了, 请换弹")
-		return false
-	end
+	local weaponType = weapon.Config.WeaponSubType
+
+    -- 1. 远程枪械逻辑
+    if weaponType == Config_Common.WeaponSubType.Ranged then
+        if weapon.CurrentAmmoCount > 0 then
+            weapon.CurrentAmmoCount = weapon.CurrentAmmoCount - 1
+            local ammoID = weapon.CurrentAmmoType
+
+            print(string.format("[CombatManager] 砰！枪械开火。弹匣剩余: %d/%d (当前子弹: %s)",
+                weapon.CurrentAmmoCount, weapon.Config.MagazineCapacity, Config_Item[weapon.CurrentAmmoType].Name))
+            
+            if CS.TeamController.Instance then
+            	local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
+            	if tpsController then
+            		tpsController:ForceFire(ammoID)
+            	end
+            end
+            return true
+        else
+            print("[CombatManager] 咔嗒！弹匣空了, 请换弹")
+            return false
+        end
+
+    -- 2. 投掷物逻辑 (用完即弃)
+    elseif weapon.Config.Type == Config_Common.ItemType.Throwable then
+        print(string.format("[CombatManager] 扔出了投掷物: %s", weapon.Config.Name))
+        weapon.Count = weapon.Count - 1
+        
+        -- 如果手雷用光了，清空该槽位，并自动切回主武器
+        if weapon.Count <= 0 then
+            _character.Loadout[weapon.Config.EquipSlot] = nil
+            print("[CombatManager] 手雷已耗尽！自动切回主武器。")
+            _character:SwitchWeapon(Config_Common.EquipSlot.MainWeapon)
+        end
+        return true
+
+    -- 3. 近战武器逻辑 (无消耗)
+    elseif weaponType == Config_Common.WeaponSubType.Melee then
+        print(string.format("[CombatManager] 挥舞近战武器: %s", weapon.Config.Name))
+        return true
+    end
+
+    return false
 end
 
 -- 换弹

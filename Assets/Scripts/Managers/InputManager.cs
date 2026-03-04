@@ -302,6 +302,7 @@ public class InputManager : SingleMonoBase<InputManager>
         Frame.fireButton.Reset();
         Frame.aimButton.Reset();
         Frame.reloadButton.Reset();
+        Frame.switchAmmoButton.Reset();
         Frame.switchWeapon = 0f;
         Frame.playerSkillButton.Reset();
         Frame.playerSkillUltButton.Reset();

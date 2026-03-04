@@ -100,7 +100,7 @@ end
 function InventoryManager.ConsumeItem(_configID, _count, _isForced)
 	local currentTotal = InventoryManager.GetItemCount(_configID)
 	if (not _isForced and currentTotal < _count) or currentTotal == 0 then
-		print(string.format("[InventoryManager] 扣除失败：[%d] 数量不足 (拥有:%d, 需要:%d)", _configId, currentTotal, _count))
+		print(string.format("[InventoryManager] 扣除失败：[%d] 数量不足 (拥有:%d, 需要:%d)", _configID, currentTotal, _count))
         return false, 0
     end
 

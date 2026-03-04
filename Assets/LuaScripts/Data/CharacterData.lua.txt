@@ -36,9 +36,12 @@ function CharacterData:EquipWeapon(_itemData)
 
 	-- 如果该槽位已经有武器了，把它脱下塞回公共背包
 	if oldWeapon then
-		print(string.format("[CharacterData] 卸下旧武器: %s,退回背包", oldWeapon.Config.Name))
-		-- 未处理背包满时的情况
-		InventoryManager.AddExistingItem(oldWeapon)
+		local success = InventoryManager.AddExistingItem(oldWeapon)
+    	if not success then
+        	print("[CharacterData] 背包已满，无法卸下旧武器，装备失败！")
+        	return false -- 强行终止装备流程
+    	end
+    	print(string.format("[CharacterData] 卸下旧武器: %s,退回背包", oldWeapon.Config.Name))
 	end
 
 	-- 装备新武器
