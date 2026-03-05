@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5636283730920179273}
   - component: {fileID: 7483703213934798628}
   m_Layer: 0
-  m_Name: Bullet_Prefab
+  m_Name: Projectile_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 938c6a191b0135b488e2f893d94ee256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpeed: 2
+  initialSpeed: 50
   gravityMultiplier: 1
   maxLifeTime: 5
   hitMask:

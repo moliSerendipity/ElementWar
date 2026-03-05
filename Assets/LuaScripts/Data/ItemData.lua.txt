@@ -21,10 +21,16 @@ function ItemData.New(_configID, _count, _uid)
 	self.UID = _uid or 0			-- 如果是 0 代表消耗品，否则是武器等唯一装备
 	self.Config = config 			-- 引用静态配置表，方便查询
 
-	-- 远程枪械专属动态数据
-	if self.Config.WeaponSubType and self.Config.WeaponSubType == Config_Common.WeaponSubType.Ranged then
-		self.CurrentAmmoCount = self.Config.MagazineCapacity	-- 当前弹匣子弹数
-		self.CurrentAmmoType = self.Config.DefaultAmmoType		-- 当前使用的子弹类型 ID
+	if self.Config.WeaponSubType then
+		-- 远程枪械专属动态数据
+		if self.Config.WeaponSubType == Config_Common.WeaponSubType.Ranged then
+			self.CurrentAmmoCount = self.Config.MagazineCapacity	-- 当前弹匣子弹数
+			self.CurrentAmmoType = self.Config.DefaultAmmoType		-- 当前使用的子弹类型 ID
+			self.FireCooldown = 0   								-- 射击冷却
+		-- 近战武器专属动态数据
+    	elseif self.Config.WeaponSubType == Config_Common.WeaponSubType.Melee then
+        	self.FireCooldown = 0   -- 借用同一个变量名作为攻击冷却 (对应 Config 的 AttackRate)
+		end
 	end
 
 	return self

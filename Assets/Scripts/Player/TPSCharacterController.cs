@@ -194,6 +194,10 @@ public class TPSCharacterController : MonoBehaviour
         Debug.Log("[C#] 收到 Lua 指令，开始播放换弹动画！");
     }
 
+    /// <summary>
+    /// 触发开火表现，供 Lua 调用
+    /// </summary>
+    /// <param name="_ammoConfigID">使用的子弹ID</param>
     public void ForceFire(int _ammoConfigID)
     {
         if (WeaponController != null)

@@ -7,10 +7,64 @@ local TeamManager = require("System.TeamManager")
 
 local WeaponManager = {}
 
+function WeaponManager.Update(_deltaTime)
+	local activeCharacter = TeamManager.GetCurrentPlayer()
+	if not activeCharacter then
+		return
+	end
+
+	local weapon = activeCharacter:GetActiveWeapon()
+	if not weapon then
+		return
+	end
+
+	local weaponSubType = weapon.Config.WeaponSubType
+	-- 只处理枪械和近战，投掷物走单独的按键或立刻释放，不在 Update 里轮询
+	if weaponSubType ~= Config_Common.WeaponSubType.Ranged and weaponSubType ~= Config_Common.WeaponSubType.Melee then
+		return
+	end
+
+	-- 更新冷却
+	if weapon.FireCooldown > 0 then
+		weapon.FireCooldown = weapon.FireCooldown - _deltaTime
+	end
+
+	local inputFrame = CS.InputManager.Instance.Frame
+	local attemptToFire = false
+
+	-- 判断意图
+	if weaponSubType == Config_Common.WeaponSubType.Ranged then
+		if weapon.Config.IsAuto then
+			attemptToFire = inputFrame.fireButton.isHeld
+		else
+			attemptToFire = inputFrame.fireButton.wasPressedThisFrame
+		end
+	elseif weaponSubType == Config_Common.WeaponSubType.Melee then
+		attemptToFire = inputFrame.fireButton.isHeld
+	end
+
+	-- 意图与冷却碰撞
+	if attemptToFire and weapon.FireCooldown <= 0 then
+		local success = CombatManager.Fire(activeCharacter)
+
+		if success then
+			-- 成功执行动作，重置冷却
+            if weaponSubType == Config_Common.WeaponSubType.Ranged then
+                weapon.FireCooldown = weapon.Config.FireRate
+            elseif weaponSubType == Config_Common.WeaponSubType.Melee then
+                weapon.FireCooldown = weapon.Config.AttackRate
+            end
+        else
+            weapon.FireCooldown = 0.2
+        end
+    end
+end
+
 function WeaponManager.Init()
 	-- XLua 绑定 C# 事件的语法：CS.命名空间.类名.Instance:事件名('+', 回调函数)
 	if CS.InputManager.Instance then
-		CS.InputManager.Instance:OnSwitchAmmoType('+', WeaponManager.OnSwitchAmmoTypePressed)
+		CS.InputManager.Instance:OnSwitchAmmoType('-', WeaponManager.OnSwitchAmmoTypePressed)
+        CS.InputManager.Instance:OnSwitchAmmoType('+', WeaponManager.OnSwitchAmmoTypePressed)
 		print("[WeaponManager] 成功监听 C# 的切换子弹按键事件")
     else
         print("[Error] InputManager C# 实例未找到！")
@@ -73,6 +127,15 @@ function WeaponManager.GetNextAvailableAmmo(_weapon)
 
 	-- 找了一圈都没有，返回原本的子弹
     return currentAmmoID
+end
+
+function WeaponManager.OnFirePressed()
+	local activeCharacter = TeamManager.GetCurrentPlayer()
+	if not activeCharacter then
+		return
+	end
+
+	local success = CombatManager.Fire(activeCharacter)
 end
 
 -- 清理函数：注销所有 C# 事件

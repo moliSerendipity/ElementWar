@@ -13,7 +13,7 @@ public static class LuaManagerConfig
     public const string AddressSuffix = ".lua.txt";                             // Lua 脚本在 Address (Key) 中的后缀
 
     public const string MainLuaEntry = "main";                                  // Lua 入口脚本名称 (不带扩展名)
-    public const float GCInterval = 1.0f;                                       // GC 间隔 (秒)
+    public const float GCInterval = 60.0f;                                       // GC 间隔 (秒)
 }
 
 /// <summary>
@@ -33,6 +33,11 @@ public class LuaManager : SingleMonoBase<LuaManager>
     private bool isPreloadCompleted = false;                                    // 预加载完成标志
     private float GCTimer = 0f;                                                 // GC 计时器
 
+    // 用于缓存 Lua 的全局 Update 函数，避免每帧获取产生开销
+    [CSharpCallLua]
+    public delegate void LuaUpdateDelegate(float deltaTime);
+    private LuaUpdateDelegate luaGameUpdate;
+
     protected override void Awake()
     {
         base.Awake();
@@ -46,6 +51,9 @@ public class LuaManager : SingleMonoBase<LuaManager>
         if (GlobalLuaEnv == null || !isPreloadCompleted)
             return;
 
+        // 驱动 Lua 层的帧更新
+        luaGameUpdate?.Invoke(Time.deltaTime);
+
         // 清理 C# → Lua 引用，防止内存泄漏
         GlobalLuaEnv.Tick();
 
@@ -55,16 +63,17 @@ public class LuaManager : SingleMonoBase<LuaManager>
         {
             GlobalLuaEnv.GcStep(0);
             GCTimer = 0f;
-            Debug.Log($"[LuaManager][{Time.time:0.000}] Lua GC executed.");
+            //Debug.Log($"[LuaManager][{Time.time:0.000}] Lua GC executed.");
         }
     }
 
     protected override void OnDestroy()
     {
-        base.OnDestroy();
-
+        luaGameUpdate = null;
         SafeDisposeLuaEnv();
         ClearLuaScriptCache();
+
+        base.OnDestroy();
     }
 
     #region 初始化 Lua 虚拟机，自定义加载器
@@ -267,5 +276,8 @@ public class LuaManager : SingleMonoBase<LuaManager>
         // 加载并执行 main.lua
         SafeDoString($"require('{LuaManagerConfig.MainLuaEntry}')", "LuaMainEntry");
         Debug.Log($"[LuaManager][{Time.time:0.000}] Lua main script executed.");
+
+        // 获取 Lua 中的全局函数 GameUpdate
+        GlobalLuaEnv.Global.Get("GameUpdate", out luaGameUpdate);
     }
 }

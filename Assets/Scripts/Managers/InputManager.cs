@@ -74,6 +74,7 @@ public class InputManager : SingleMonoBase<InputManager>
     public event Action<int> OnSkillUlt;                                        // 参数是角色索引 (0-3)
     public event Action OnToggleBag;                                            // 打开/关闭背包
     public event Action OnSwitchAmmoType;                                       // 切换弹药类型
+    public event Action OnFire;                                                 // 射击事件
 
     override protected void Awake()
     {
@@ -121,6 +122,10 @@ public class InputManager : SingleMonoBase<InputManager>
 
         // 更新战斗输入
         UpdateButtonState(ref Frame.fireButton, inputSystem.Combat.IsFire);
+        if (Frame.fireButton.wasPressedThisFrame)
+        {
+            OnFire?.Invoke();
+        }
         UpdateButtonState(ref Frame.aimButton, inputSystem.Combat.IsAim);
         UpdateButtonState(ref Frame.reloadButton, inputSystem.Combat.IsReload);
         UpdateButtonState(ref Frame.switchAmmoButton, inputSystem.Combat.IsSwitchAmmo);
@@ -172,6 +177,7 @@ public class InputManager : SingleMonoBase<InputManager>
         OnSkillUlt = null;
         OnToggleBag = null;
         OnSwitchAmmoType = null;
+        OnFire = null;
 
         base.OnDestroy();
     }

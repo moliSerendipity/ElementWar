@@ -56,46 +56,46 @@ function StartGame()
 
     InventoryManager.PrintInventory() -- 此时应该能看到第一把步枪(UID 10001)被退回了背包
 
-    print("\n>>>[Test Case 3] 战斗开火与换弹测试 <<<")
-    -- 当前默认是主武器 (步枪)
-    print("当前手持:", player:GetActiveWeapon().Config.Name)
+    -- print("\n>>>[Test Case 3] 战斗开火与换弹测试 <<<")
+    -- -- 当前默认是主武器 (步枪)
+    -- print("当前手持:", player:GetActiveWeapon().Config.Name)
     
-    -- 把弹匣打空
-    for i = 1, 31 do
-        CombatManager.Fire(player)
-    end
+    -- -- 把弹匣打空
+    -- for i = 1, 31 do
+    --     CombatManager.Fire(player)
+    -- end
     
-    -- 换弹测试 (应该消耗背包里的 3100 物理子弹)
-    print("\n-> 尝试换弹...")
-    CombatManager.Reload(player)
-    CombatManager.Fire(player) -- 换完弹再打一发，变成 29/30
+    -- -- 换弹测试 (应该消耗背包里的 3100 物理子弹)
+    -- print("\n-> 尝试换弹...")
+    -- CombatManager.Reload(player)
+    -- CombatManager.Fire(player) -- 换完弹再打一发，变成 29/30
 
-    print("\n>>>[Test Case 4] 切换子弹类型与强制退弹测试 <<<")
-    print("-> 玩家按下 T 键，请求切子弹...")
-    -- 这里我们手动调用 WeaponManager 模拟按下 T 键
-    WeaponManager.OnSwitchAmmoTypePressed()
+    -- print("\n>>>[Test Case 4] 切换子弹类型与强制退弹测试 <<<")
+    -- print("-> 玩家按下 T 键，请求切子弹...")
+    -- -- 这里我们手动调用 WeaponManager 模拟按下 T 键
+    -- WeaponManager.OnSwitchAmmoTypePressed()
     
-    -- 测试开火，检查是否打出的是火子弹
-    CombatManager.Fire(player)
-    InventoryManager.PrintInventory() -- 检查背包里是否多出了 29发 物理步枪弹(退回的)
+    -- -- 测试开火，检查是否打出的是火子弹
+    -- CombatManager.Fire(player)
+    -- InventoryManager.PrintInventory() -- 检查背包里是否多出了 29发 物理步枪弹(退回的)
 
-    print("\n>>>[Test Case 5] 切枪与投掷物消耗测试 <<<")
-    print("-> 玩家按下 4 键，切出手雷...")
-    player:SwitchWeapon(4) -- 切换到投掷物槽位
+    -- print("\n>>>[Test Case 5] 切枪与投掷物消耗测试 <<<")
+    -- print("-> 玩家按下 4 键，切出手雷...")
+    -- player:SwitchWeapon(4) -- 切换到投掷物槽位
     
-    CombatManager.Fire(player) -- 扔第一颗 (剩余2)
-    CombatManager.Fire(player) -- 扔第二颗 (剩余1)
-    CombatManager.Fire(player) -- 扔第三颗 (剩余0，自动切回主武器)
+    -- CombatManager.Fire(player) -- 扔第一颗 (剩余2)
+    -- CombatManager.Fire(player) -- 扔第二颗 (剩余1)
+    -- CombatManager.Fire(player) -- 扔第三颗 (剩余0，自动切回主武器)
     
-    print("当前手持:", player:GetActiveWeapon().Config.Name)
+    -- print("当前手持:", player:GetActiveWeapon().Config.Name)
 
-    print("\n>>> [Test Case 6] C# 边界与错误拦截测试 <<<")
-    print("-> 尝试在没有备弹的情况下切子弹...")
-    WeaponManager.OnSwitchAmmoTypePressed() -- 只有物理和火，火已经在枪里了，物理被退回了，应该切回物理
+    -- print("\n>>> [Test Case 6] C# 边界与错误拦截测试 <<<")
+    -- print("-> 尝试在没有备弹的情况下切子弹...")
+    -- WeaponManager.OnSwitchAmmoTypePressed() -- 只有物理和火，火已经在枪里了，物理被退回了，应该切回物理
 
-    print("\n=======================================================")
-    print("                 全系统集成测试 结束                   ")
-    print("=======================================================\n")
+    -- print("\n=======================================================")
+    -- print("                 全系统集成测试 结束                   ")
+    -- print("=======================================================\n")
 end
 
 -- XLua 虚拟机销毁前的全局生命周期回调
@@ -107,9 +107,13 @@ function OnLuaEnvDispose()
     WeaponManager.Dispose()
     TeamManager.Dispose()
     
-    -- 未来如果 InventoryManager 注册了 UI 事件，也在这里调用 InventoryManager.Dispose()
-    
     print("===== [Lua] 清理完毕，准许 C# 销毁虚拟机 =====\n")
+end
+
+-- 全局帧更新接口 (由 C# LuaManager.Update 每帧调用)
+function GameUpdate(_deltaTime)
+    -- 将帧时间分发给各个需要持续轮询的系统
+    WeaponManager.Update(_deltaTime)
 end
 
 -- C# 会调用这个全局函数

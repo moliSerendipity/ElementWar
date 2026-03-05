@@ -9,8 +9,9 @@ local Config_Weapon = {
 		WeaponClass = Config_Common.WeaponClass.Rifle,
 		WeaponSubType = Config_Common.WeaponSubType.Ranged,
 		EquipSlot = Config_Common.EquipSlot.MainWeapon,
-		MaxStack = 1,
+		IsAuto = true,
 		HasAmmo = true,
+		MaxStack = 1,
 		-- 核心战斗属性
 		BaseDamage = 25,			-- 基础伤害
 		FireRate = 0.1,				-- 射速 (秒/发)
@@ -33,8 +34,9 @@ local Config_Weapon = {
 		WeaponClass = Config_Common.WeaponClass.Sniper,
 		WeaponSubType = Config_Common.WeaponSubType.Ranged,
 		EquipSlot = Config_Common.EquipSlot.MainWeapon,
-		MaxStack = 1,
+		IsAuto = false,
 		HasAmmo = true,
+		MaxStack = 1,
 		-- 核心战斗属性
 		BaseDamage = 120,			-- 基础伤害
 		FireRate = 1.5,				-- 射速 (秒/发)
@@ -57,8 +59,9 @@ local Config_Weapon = {
 		WeaponClass = Config_Common.WeaponClass.Pistol,
 		WeaponSubType = Config_Common.WeaponSubType.Ranged,
 		EquipSlot = Config_Common.EquipSlot.SecondaryWeapon,
-		MaxStack = 1,
+		IsAuto = false,
 		HasAmmo = true,
+		MaxStack = 1,
 		-- 核心战斗属性
 		BaseDamage = 15,			-- 基础伤害
 		FireRate = 0.2,				-- 射速 (秒/发)
@@ -81,8 +84,9 @@ local Config_Weapon = {
 		WeaponClass = Config_Common.WeaponClass.Melee,
 		WeaponSubType = Config_Common.WeaponSubType.Melee,
 		EquipSlot = Config_Common.EquipSlot.MeleeWeapon,
-		MaxStack = 1,
+		IsAuto = true,
 		HasAmmo = false,
+		MaxStack = 1,
 		-- 核心战斗属性
 		BaseDamage = 50,			-- 基础伤害
 		AttackRate = 0.8,			-- 攻速 (秒)

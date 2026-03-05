@@ -10,26 +10,45 @@ public class WeaponController : MonoBehaviour
     [Tooltip("枪口位置，用于生成子弹的起始坐标")]
     public Transform muzzlePoint;
     [Tooltip("子弹预制体")]
-    public GameObject bulletPrefab;
+    public GameObject projectilePrefab;
 
     public void FireProjectile(int _ammoConfigID)
     {
-        if (muzzlePoint == null || bulletPrefab == null)
+        if (muzzlePoint == null || projectilePrefab == null)
         {
             Debug.LogError("[WeaponController] 枪口点或子弹预制体未配置！");
             return;
         }
 
+        // 获取屏幕正中心 (准星位置) 发出的射线
+        Ray cameraRay = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Vector3 targetPoint;
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int layerMask = ~(1 << playerLayer);
+
+        // 2. 检测射线是否打中了东西 (1000米射程，排除Player层)
+        // 注意：你需要定义一个 layerMask 排除玩家自己，这里简写
+        if (Physics.Raycast(cameraRay, out RaycastHit hit, 1000f, layerMask))
+        {
+            targetPoint = hit.point; // 瞄准到了墙壁/怪物
+        }
+        else
+        {
+            targetPoint = cameraRay.GetPoint(1000f); // 瞄准到了天空
+        }
+
+        // 3. 计算真实的射击方向：从枪口指向瞄准点
+        Vector3 realFireDirection = (targetPoint - muzzlePoint.position).normalized;
+
         // 生成子弹
-        GameObject bullet = Instantiate(bulletPrefab, muzzlePoint.position, muzzlePoint.rotation);
+        GameObject projectileObj = GameObjectPool.Instance.Get(projectilePrefab, muzzlePoint.position, Quaternion.LookRotation(realFireDirection));
 
         // 初始化弹道
-        Projectile projectile = bullet.GetComponent<Projectile>();
+        Projectile projectile = projectileObj.GetComponent<Projectile>();
         if (projectile != null)
         {
-            // 这里的发射方向应该是相机的准星方向。
-            // 对于 Demo 而言，我们暂时使用 MuzzlePoint 的正前方。
-            projectile.Init(muzzlePoint.forward);
+            projectile.Init(realFireDirection);
         }
     }
 }

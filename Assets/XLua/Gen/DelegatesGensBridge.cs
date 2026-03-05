@@ -194,6 +194,11 @@ namespace XLua
 			    return new System.Action<float>(__Gen_Delegate_Imp2);
 			}
 		
+		    if (type == typeof(LuaManager.LuaUpdateDelegate))
+			{
+			    return new LuaManager.LuaUpdateDelegate(__Gen_Delegate_Imp2);
+			}
+		
 		    if (type == typeof(System.Action<string>))
 			{
 			    return new System.Action<string>(__Gen_Delegate_Imp3);

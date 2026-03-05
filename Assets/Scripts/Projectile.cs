@@ -10,6 +10,7 @@ public class Projectile : MonoBehaviour
     public float initialSpeed = 200f;                                   // 初始速度 (米/秒)
     public float gravityMultiplier = 1f;                                // 重力下坠倍率 (影响抛物线弧度)
     public float maxLifeTime = 5f;                                      // 最大存活时间，防止飞出地图边界内存泄漏
+    private float lifeTimer = 0f;                                       // 存活计时器
 
     [Header("碰撞设置")]
     [Tooltip("子弹能击中哪些层")]
@@ -22,6 +23,14 @@ public class Projectile : MonoBehaviour
     {
         if (!isInitialized)
             return;
+
+        lifeTimer += Time.deltaTime;
+        if (lifeTimer > maxLifeTime)
+        {
+            isInitialized = false;
+            GameObjectPool.Instance.Release(gameObject);
+            return;
+        }
 
         // 施加重力影响 (v = v0 + gt)
         currentVelocity += Physics.gravity * gravityMultiplier * Time.deltaTime;
@@ -55,7 +64,12 @@ public class Projectile : MonoBehaviour
         {
             currentVelocity = _direction.normalized * initialSpeed;
             isInitialized = true;
-            Destroy(gameObject, maxLifeTime);
+            // 每次从池子里拿出来，重置计时器
+            lifeTimer = 0f;
+            // TrailRenderer 重新激活时可能会有一条飞过去的线，需要清除它
+            TrailRenderer tr = GetComponent<TrailRenderer>();
+            if (tr != null)
+                tr.Clear();
         }
     }
 
@@ -68,7 +82,8 @@ public class Projectile : MonoBehaviour
 
         // TODO: Phase 4 将在这里反向调用 Lua 进行元素附着与伤害计算
 
-        // 命中后立刻销毁自己
-        Destroy(gameObject);
+        // 命中后回收
+        isInitialized = false;
+        GameObjectPool.Instance.Release(gameObject);
     }
 }
