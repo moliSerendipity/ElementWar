@@ -26,10 +26,8 @@ public class CharacterIdleState : CharacterState
             return;
         }
 
-        // 如果瞄准中，需要根据相机旋转身体
-        if (_inputFrame.aimButton.isHeld)
-        {
-            tpsCC.CalculateMoveDirectionAndRotation(Vector2.zero, true);
-        }
+        // 待机时也时刻保持面向摄像机，除非按住 Alt
+        bool isFreeLooking = _inputFrame.freeLookButton.isHeld;
+        tpsCC.CalculateMoveDirectionAndRotation(Vector2.zero, isFreeLooking);
     }
 }

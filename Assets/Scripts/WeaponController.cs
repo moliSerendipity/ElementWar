@@ -22,23 +22,22 @@ public class WeaponController : MonoBehaviour
 
         // 获取屏幕正中心 (准星位置) 发出的射线
         Ray cameraRay = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        Vector3 targetPoint;
+        // 默认打向 1000 米外的远方
+        Vector3 targetPoint = cameraRay.GetPoint(1000);
 
         int playerLayer = LayerMask.NameToLayer("Player");
         int layerMask = ~(1 << playerLayer);
 
-        // 2. 检测射线是否打中了东西 (1000米射程，排除Player层)
-        // 注意：你需要定义一个 layerMask 排除玩家自己，这里简写
+        // 检测射线是否打中了东西 (1000米射程，排除Player层)
         if (Physics.Raycast(cameraRay, out RaycastHit hit, 1000f, layerMask))
         {
-            targetPoint = hit.point; // 瞄准到了墙壁/怪物
-        }
-        else
-        {
-            targetPoint = cameraRay.GetPoint(1000f); // 瞄准到了天空
+            // 通过计算“枪口点 -> 击中点”与“摄像机射线方向”的点乘，确保击中点在射线前方
+            Vector3 toHit = hit.point - muzzlePoint.position;
+            if (Vector3.Dot(cameraRay.direction, toHit) > 0)
+                targetPoint = hit.point;
         }
 
-        // 3. 计算真实的射击方向：从枪口指向瞄准点
+        // 计算真实的射击方向：从枪口指向瞄准点
         Vector3 realFireDirection = (targetPoint - muzzlePoint.position).normalized;
 
         // 生成子弹

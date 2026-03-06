@@ -111,6 +111,7 @@
     <Compile Include="Assets\XLua\Src\LuaTable.cs" />
     <Compile Include="Assets\XLua\Src\Utils.cs" />
     <Compile Include="Assets\Scripts\Player\State\CharacterIdleState.cs" />
+    <Compile Include="Assets\Scripts\Managers\CameraController.cs" />
     <Compile Include="Assets\Scripts\AICharacterInputSource.cs" />
     <Compile Include="Assets\XLua\Gen\InputManagerWrap.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_CSCallLua_ItfDBridge.cs" />

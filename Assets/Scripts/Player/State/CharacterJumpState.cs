@@ -27,8 +27,10 @@ public class CharacterJumpState : CharacterState
     public override void Update(InputFrame _inputFrame)
     {
         bool isAiming = _inputFrame.aimButton.isHeld;
+        bool isFiring = _inputFrame.fireButton.isHeld;
+        bool isFreeLooking = _inputFrame.freeLookButton.isHeld;
 
-        Vector3 moveDir = tpsCC.CalculateMoveDirectionAndRotation(_inputFrame.move, isAiming);
+        Vector3 moveDir = tpsCC.CalculateMoveDirectionAndRotation(_inputFrame.move, isFreeLooking);
 
         // 目标速度：玩家想要达到的速度
         float targetSpeed = isAiming ? tpsCC.aimMoveSpeed : momentumVelocity.magnitude;

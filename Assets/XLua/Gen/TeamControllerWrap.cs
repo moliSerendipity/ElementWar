@@ -21,17 +21,15 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(TeamController);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 2, 2);
+			Utils.BeginObjectRegister(type, L, translator, 0, 2, 1, 1);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetCurrentPlayer", _m_GetCurrentPlayer);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnCharacterSwapped", _e_OnCharacterSwapped);
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "teamMembers", _g_get_teamMembers);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "cameraFollowTarget", _g_get_cameraFollowTarget);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "teamMembers", _s_set_teamMembers);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "cameraFollowTarget", _s_set_cameraFollowTarget);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -122,20 +120,6 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_cameraFollowTarget(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                TeamController gen_to_be_invoked = (TeamController)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.cameraFollowTarget);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -146,21 +130,6 @@ namespace XLua.CSObjectWrap
 			
                 TeamController gen_to_be_invoked = (TeamController)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.teamMembers = (System.Collections.Generic.List<TPSCharacterController>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<TPSCharacterController>));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_cameraFollowTarget(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                TeamController gen_to_be_invoked = (TeamController)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.cameraFollowTarget = (Cinemachine.CinemachineFreeLook)translator.GetObject(L, 2, typeof(Cinemachine.CinemachineFreeLook));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

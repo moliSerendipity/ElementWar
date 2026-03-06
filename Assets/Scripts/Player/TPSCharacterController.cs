@@ -36,6 +36,8 @@ public class TPSCharacterController : MonoBehaviour
     // 辅助变量：用于平滑旋转
     private float targetRotationY;
     private float rotationVelocity;
+    // 记录上一帧是否处于无视摄像机的状态
+    private bool wasIgnoringCameraLastFrame = false;
 
     private void Awake()
     {
@@ -119,48 +121,65 @@ public class TPSCharacterController : MonoBehaviour
     }
 
     /// <summary>
-    /// 根据输入和相机计算角色的移动方向，并根据是否瞄准调整角色朝向
+    /// 移动与转向计算
     /// </summary>
     /// <param name="_inputMove">移动输入</param>
-    /// <param name="_isAiming">是否瞄准</param>
+    /// <param name="_isFreeLooking">是否按住了 Alt 键</param>
     /// <returns>角色移动方向</returns>
-    public Vector3 CalculateMoveDirectionAndRotation(Vector2 _inputMove, bool _isAiming)
+    public Vector3 CalculateMoveDirectionAndRotation(Vector2 _inputMove, bool _isFreeLooking)
     {
-        if (MainCameraTransform == null)
-            return transform.forward * _inputMove.y + transform.right * _inputMove.x;
+        Vector3 referenceForward;
+        Vector3 referenceRight;
 
-        // 计算相机的前向量和右向量，并将它们投影到水平面上 (归一化)
-        Vector3 cameraForward = MainCameraTransform.forward;
-        Vector3 cameraRight = MainCameraTransform.right;
-        cameraForward.y = 0;
-        cameraRight.y = 0;
-        cameraForward.Normalize();
-        cameraRight.Normalize();
+        // 获取摄像机是否正在处于回弹追赶状态
+        bool isCameraRecentering = CameraController.Instance != null && CameraController.Instance.IsRecentering;
 
-        // 根据输入和相机方向计算角色的移动方向 (归一化)
-        Vector3 moveDir = (cameraForward * _inputMove.y + cameraRight * _inputMove.x).normalized;
+        // 只要按住 Alt，或者摄像机正在弹回来，角色的身体逻辑必须与摄像机彻底断开
+        bool shouldIgnoreCamera = _isFreeLooking || isCameraRecentering;
 
-        // 如果没有输入，并且不在瞄准状态，保持当前朝向，不需要旋转
-        if (moveDir == Vector3.zero && !_isAiming)
-            return Vector3.zero;
-
-        // 根据是否瞄准来决定角色的目标朝向
-        // 瞄准时角色朝向相机前方；非瞄准时角色朝向移动方向
-        if (_isAiming)
+        // 确定移动参照系
+        if (!shouldIgnoreCamera && MainCameraTransform != null)
         {
-            targetRotationY = MainCameraTransform.eulerAngles.y;
+            // 常规战斗状态：以摄像机为准
+            referenceForward = MainCameraTransform.forward;
+            referenceRight = MainCameraTransform.right;
         }
         else
         {
-            if (moveDir.sqrMagnitude > 0.01f)
-            {
-                targetRotationY = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
-            }
+            // 自由观察或回弹状态中：以角色自己当前的身体朝向为准
+            referenceForward = transform.forward;
+            referenceRight = transform.right;
         }
 
-        // 平滑旋转角色朝向
-        float smoothRotationY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotationY, ref rotationVelocity, rotationSmoothTime);
-        transform.rotation = Quaternion.Euler(0, smoothRotationY, 0);
+        // 计算参照系的前向量和右向量，并将它们投影到水平面上 (归一化)
+        referenceForward.y = 0;
+        referenceRight.y = 0;
+        referenceForward.Normalize();
+        referenceRight.Normalize();
+
+        // 根据输入和参照系计算角色的移动方向 (归一化)
+        Vector3 moveDir = (referenceForward * _inputMove.y + referenceRight * _inputMove.x).normalized;
+
+        // 当从“锁定状态”恢复到“跟随状态”的那一帧
+        if (wasIgnoringCameraLastFrame && !shouldIgnoreCamera)
+        {
+            // 强行把被冻结的“旋转弹簧”速度清零，斩断过冲导致的抽搐现象
+            rotationVelocity = 0f;
+        }
+
+        // 更新历史状态
+        wasIgnoringCameraLastFrame = shouldIgnoreCamera;
+
+        // 处理角色身体的旋转
+        if (!shouldIgnoreCamera)
+        {
+            if (MainCameraTransform != null)
+                targetRotationY = MainCameraTransform.eulerAngles.y;
+
+            // 平滑旋转角色朝向
+            float smoothRotationY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotationY, ref rotationVelocity, rotationSmoothTime);
+            transform.rotation = Quaternion.Euler(0, smoothRotationY, 0);
+        }
 
         return moveDir;
     }

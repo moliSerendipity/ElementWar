@@ -127,6 +127,15 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""IsFreeLook"",
+                    ""type"": ""Button"",
+                    ""id"": ""f3c7a42b-e664-422c-b259-c14ae7314db9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -215,6 +224,17 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""IsJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""045b41fb-62c7-4010-8f1e-1cd2a37ca7c4"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IsFreeLook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -629,6 +649,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         m_Movement_Look = m_Movement.FindAction("Look", throwIfNotFound: true);
         m_Movement_IsSprint = m_Movement.FindAction("IsSprint", throwIfNotFound: true);
         m_Movement_IsJump = m_Movement.FindAction("IsJump", throwIfNotFound: true);
+        m_Movement_IsFreeLook = m_Movement.FindAction("IsFreeLook", throwIfNotFound: true);
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_IsFire = m_Combat.FindAction("IsFire", throwIfNotFound: true);
@@ -746,6 +767,7 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Look;
     private readonly InputAction m_Movement_IsSprint;
     private readonly InputAction m_Movement_IsJump;
+    private readonly InputAction m_Movement_IsFreeLook;
     /// <summary>
     /// Provides access to input actions defined in input action map "Movement".
     /// </summary>
@@ -773,6 +795,10 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Movement/IsJump".
         /// </summary>
         public InputAction @IsJump => m_Wrapper.m_Movement_IsJump;
+        /// <summary>
+        /// Provides access to the underlying input action "Movement/IsFreeLook".
+        /// </summary>
+        public InputAction @IsFreeLook => m_Wrapper.m_Movement_IsFreeLook;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -811,6 +837,9 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
             @IsJump.started += instance.OnIsJump;
             @IsJump.performed += instance.OnIsJump;
             @IsJump.canceled += instance.OnIsJump;
+            @IsFreeLook.started += instance.OnIsFreeLook;
+            @IsFreeLook.performed += instance.OnIsFreeLook;
+            @IsFreeLook.canceled += instance.OnIsFreeLook;
         }
 
         /// <summary>
@@ -834,6 +863,9 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
             @IsJump.started -= instance.OnIsJump;
             @IsJump.performed -= instance.OnIsJump;
             @IsJump.canceled -= instance.OnIsJump;
+            @IsFreeLook.started -= instance.OnIsFreeLook;
+            @IsFreeLook.performed -= instance.OnIsFreeLook;
+            @IsFreeLook.canceled -= instance.OnIsFreeLook;
         }
 
         /// <summary>
@@ -1525,6 +1557,13 @@ public partial class @MyInputSystem: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnIsJump(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "IsFreeLook" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnIsFreeLook(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Combat" which allows adding and removing callbacks.

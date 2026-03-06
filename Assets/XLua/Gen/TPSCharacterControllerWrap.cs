@@ -169,9 +169,9 @@ namespace XLua.CSObjectWrap
                 
                 {
                     UnityEngine.Vector2 __inputMove;translator.Get(L, 2, out __inputMove);
-                    bool __isAiming = LuaAPI.lua_toboolean(L, 3);
+                    bool __isFreeLooking = LuaAPI.lua_toboolean(L, 3);
                     
-                        var gen_ret = gen_to_be_invoked.CalculateMoveDirectionAndRotation( __inputMove, __isAiming );
+                        var gen_ret = gen_to_be_invoked.CalculateMoveDirectionAndRotation( __inputMove, __isFreeLooking );
                         translator.PushUnityEngineVector3(L, gen_ret);
                     
                     

@@ -10,9 +10,6 @@ public class TeamController : SingleMonoBase<TeamController>
     [Header("队伍成员")]
     public List<TPSCharacterController> teamMembers = new List<TPSCharacterController>();
 
-    [Header("摄像机跟随目标")]
-    public CinemachineFreeLook cameraFollowTarget;
-
     private int currentPlayerIndex = 0;                                         // 当前控制的玩家索引
 
     public event Action<int> OnCharacterSwapped;                                // 当完成角色切换时触发，参数是新的角色索引 (0-3)
@@ -80,10 +77,9 @@ public class TeamController : SingleMonoBase<TeamController>
     /// </summary>
     private void UpdateCameraTarget()
     {
-        if (cameraFollowTarget != null && teamMembers.Count > 0)
+        if (CameraController.Instance != null && teamMembers.Count > 0)
         {
-            cameraFollowTarget.Follow = teamMembers[currentPlayerIndex].transform;
-            cameraFollowTarget.LookAt = teamMembers[currentPlayerIndex].transform;
+            CameraController.Instance.SetTarget(teamMembers[currentPlayerIndex].transform);
         }
     }
 

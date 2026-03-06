@@ -35,6 +35,7 @@ public class InputFrame
     public Vector2 look;                                                        // 视角输入 (单位：像素)
     public ButtonState sprintButton;                                            // 冲刺输入
     public ButtonState jumpButton;                                              // 跳跃输入
+    public ButtonState freeLookButton;                                          // 自由视角输入
 
     [Header("战斗输入")]
     public ButtonState fireButton;                                              // 射击输入
@@ -114,18 +115,16 @@ public class InputManager : SingleMonoBase<InputManager>
             return;
         }
 
+        #region 输入更新逻辑
         // 更新移动输入
         Frame.move = inputSystem.Movement.Move.ReadValue<Vector2>();
         Frame.look = inputSystem.Movement.Look.ReadValue<Vector2>();
         UpdateButtonState(ref Frame.sprintButton, inputSystem.Movement.IsSprint);
         UpdateButtonState(ref Frame.jumpButton, inputSystem.Movement.IsJump);
+        UpdateButtonState(ref Frame.freeLookButton, inputSystem.Movement.IsFreeLook);
 
         // 更新战斗输入
         UpdateButtonState(ref Frame.fireButton, inputSystem.Combat.IsFire);
-        if (Frame.fireButton.wasPressedThisFrame)
-        {
-            OnFire?.Invoke();
-        }
         UpdateButtonState(ref Frame.aimButton, inputSystem.Combat.IsAim);
         UpdateButtonState(ref Frame.reloadButton, inputSystem.Combat.IsReload);
         UpdateButtonState(ref Frame.switchAmmoButton, inputSystem.Combat.IsSwitchAmmo);
@@ -142,10 +141,24 @@ public class InputManager : SingleMonoBase<InputManager>
 
         // 更新系统/交互输入
         UpdateButtonState(ref Frame.interactButton, inputSystem.Interaction.Interact);
+        #endregion
 
-        // 处理切换弹药类型的输入
+        // 如果玩家按下了开火或瞄准，强行解除自由视角状态
+        if (Frame.fireButton.isHeld || Frame.aimButton.isHeld)
+        {
+            Frame.freeLookButton.isHeld = false;
+        }
+
+        #region 输入事件处理
+        // 处理射击输入事件
+        if (Frame.fireButton.wasPressedThisFrame)
+        {
+            OnFire?.Invoke();
+        }
+        // 处理切换弹药类型的输入事件
         if (Frame.switchAmmoButton.wasPressedThisFrame)
             OnSwitchAmmoType?.Invoke();
+        #endregion
     }
 
     private void LateUpdate()

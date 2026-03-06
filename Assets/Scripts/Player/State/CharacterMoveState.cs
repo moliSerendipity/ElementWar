@@ -9,9 +9,12 @@ public class CharacterMoveState : CharacterState
     public override void Update(InputFrame _inputFrame)
     {
         bool isAiming = _inputFrame.aimButton.isHeld;
-        bool isSprinting = _inputFrame.sprintButton.isHeld && !isAiming;
+        bool isFiring = _inputFrame.fireButton.isHeld;
+        bool isSprinting = _inputFrame.sprintButton.isHeld && !isAiming && !isFiring;
 
-        Vector3 moveDir = tpsCC.CalculateMoveDirectionAndRotation(_inputFrame.move, isAiming);
+        bool isFreeLooking = _inputFrame.freeLookButton.isHeld;
+
+        Vector3 moveDir = tpsCC.CalculateMoveDirectionAndRotation(_inputFrame.move, isFreeLooking);
 
         float targetSpeed = tpsCC.GetTargetSpeed(_inputFrame.move, isAiming, isSprinting);
 
