@@ -18,6 +18,8 @@ public class Projectile : MonoBehaviour
 
     private Vector3 currentVelocity;                                    // 当前速度向量
     private bool isInitialized = false;                                 // 是否已初始化
+    private int currentAmmoID;                                          // 当前子弹的配置 ID
+    private int currentInstigatorID;                                    // 当前子弹的攻击者 ID
 
     void Update()
     {
@@ -58,11 +60,13 @@ public class Projectile : MonoBehaviour
     /// 初始化子弹（由武器控制器调用）
     /// </summary>
     /// <param name="_direction">开火方向</param>
-    public void Init(Vector3 _direction)
+    public void Init(Vector3 _direction, int _ammoID, int _instigatorID)
     {
         if (!isInitialized)
         {
             currentVelocity = _direction.normalized * initialSpeed;
+            currentAmmoID = _ammoID;
+            currentInstigatorID = _instigatorID;
             isInitialized = true;
             // 每次从池子里拿出来，重置计时器
             lifeTimer = 0f;
@@ -80,7 +84,22 @@ public class Projectile : MonoBehaviour
     {
         Debug.Log($"[Projectile] 命中物体: {_hit.collider.name}，坐标: {_hit.point}");
 
-        // TODO: Phase 4 将在这里反向调用 Lua 进行元素附着与伤害计算
+        // 尝试获取受击部位
+        Hitbox hitbox = _hit.collider.GetComponent<Hitbox>();
+        if (hitbox != null && hitbox.owner != null)
+        {
+            // 打包命中信息并发送给 Lua 进行后续处理
+            HitMessage msg = new HitMessage
+            {
+                instigatorID = currentInstigatorID,
+                targetUID = hitbox.owner.uid,
+                targetConfigID = hitbox.owner.configID,
+                ammoID = currentAmmoID,
+                hitMultiplier = hitbox.damageMultiplier
+            };
+
+            LuaManager.Instance.SendHitMessage(msg);
+        }
 
         // 命中后回收
         isInitialized = false;

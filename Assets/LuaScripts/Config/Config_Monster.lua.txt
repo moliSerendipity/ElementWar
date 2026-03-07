@@ -1,0 +1,25 @@
+-- [静态配置] 怪物属性表
+
+local Config_Common = require("Config.Config_Common")
+
+local Config_Monster = {
+    -- 普通感染者 (无自带元素)
+    [81001] = {
+        ID = 81001,
+        Name = "感染者步兵",
+        Rarity = "Normal",
+        BaseHP = 1000,
+        InnateElement = 0, -- 0代表无自带元素
+    },
+    -- 火焰护甲兵 (自带火元素，免疫火伤)
+    [82001] = {
+        ID = 82001,
+        Name = "炽热机甲",
+        Rarity = "Elite",
+        BaseHP = 5000,
+        InnateElement = Config_Common.ElementType.Fire, -- 永远挂着火元素
+    },
+}
+
+
+return Config_Monster

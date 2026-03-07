@@ -7,6 +7,8 @@ local InventoryManager = require("System.InventoryManager")
 local WeaponManager = require("System.WeaponManager")
 local TeamManager = require("System.TeamManager")
 local CombatManager = require("System.CombatManager")
+local DamageManager = require("System.DamageManager")
+local EntityManager = require("System.EntityManager")
 
 -- 模拟游戏流程 (Test Case)
 function StartGame()
@@ -16,6 +18,7 @@ function StartGame()
     InventoryManager.Init()
     TeamManager.Init()
     WeaponManager.Init()
+    EntityManager.Init()
 
     local player = TeamManager.GetCurrentPlayer()
 
@@ -27,7 +30,8 @@ function StartGame()
     InventoryManager.AddItem(2001, 3)    -- 破片手雷 x3
     -- 发放子弹 (测试 999 堆叠溢出)
     InventoryManager.AddItem(3100, 1200) -- 物理步枪弹 (分两格: 999 + 201)
-    InventoryManager.AddItem(3101, 50)   -- 火步枪弹 x50
+    InventoryManager.AddItem(3101, 500)  -- 火步枪弹 x500
+    InventoryManager.AddItem(3102, 500)  -- 雷步枪弹 x500
     InventoryManager.AddItem(3300, 30)   -- 物理手枪弹 x30
     
     InventoryManager.PrintInventory()
@@ -114,6 +118,12 @@ end
 function GameUpdate(_deltaTime)
     -- 将帧时间分发给各个需要持续轮询的系统
     WeaponManager.Update(_deltaTime)
+    EntityManager.Update(_deltaTime)
+end
+
+-- 全局受击信息接收接口 (由 C# Projectile 命中时调用)
+function OnReceiveHitMessage(msg)
+    DamageManager.ProcessHit(msg)
 end
 
 -- C# 会调用这个全局函数

@@ -50,7 +50,7 @@ MonoBehaviour:
   maxLifeTime: 5
   hitMask:
     serializedVersion: 2
-    m_Bits: 31
+    m_Bits: 159
 --- !u!96 &7483703213934798628
 TrailRenderer:
   serializedVersion: 3

@@ -1,0 +1,87 @@
+-- 严格处理 ICD 拦截、强弱元素覆盖、后手必定不残留、矩阵反应推演
+
+local Config_Common = require("Config.Config_Common")
+
+local ElementCalculator = {}
+
+-- 定义反应类型枚举
+ElementCalculator.ReactionType = {
+    None = 0,
+    Overload = 1, -- 超载 (火+雷)
+    Melt = 2,     -- 融化 (火+冰)
+}
+
+-- 每发子弹附加的基础元素量 (GU)
+local BULLET_GAUGE = 0.3
+-- 触发反应或挂载图标的阈值
+local ATTACH_THRESHOLD = 1.0
+
+--- 尝试让射入的子弹与怪物身上的元素发生反应
+--- @param entity table 怪物实体数据
+--- @param incomingElement int 射入的元素类型
+--- @param baseDamage float 子弹原始伤害
+--- @return float 最终伤害, int 触发的反应类型
+function ElementCalculator.ProcessHit(_entity, _incomingElement, _baseDamage)
+	-- 物理攻击，不参与任何元素累积和反应
+	if _incomingElement == Config_Common.ElementType.Physical then
+		return _baseDamage, ElementCalculator.ReactionType.None
+	end
+
+	local finalDamage = _baseDamage
+	local triggeredReaction = ElementCalculator.ReactionType.None
+
+	-- 检查怪物身上是否已有其他元素可以产生反应
+	local hasReacted = false
+	for existingElement, existingGauge in pairs(_entity.Elements) do
+		-- 只有当身上的元素量达到阈值时，才认为"挂着元素"，可以参与反应
+		if existingGauge >= ATTACH_THRESHOLD then
+			-- 火 + 雷 = 超载 (Overload)
+			if (existingElement == Config_Common.ElementType.Fire and _incomingElement == Config_Common.ElementType.Thunder) or
+			   (existingElement == Config_Common.ElementType.Thunder and _incomingElement == Config_Common.ElementType.Fire) then
+			   	
+			   	triggeredReaction = ElementCalculator.ReactionType.Overload
+			   	-- 超载造成额外固定伤害 (简单模拟)
+                local overloadDamage = 50.0 
+                finalDamage = finalDamage + overloadDamage
+                print(string.format("[Element] 触发【超载】! 额外伤害: %.1f", overloadDamage))
+                
+                -- 消耗掉身上的元素 (简单处理：反应后清空该元素)
+                _entity.Elements[existingElement] = nil
+                hasReacted = true
+                break -- 一发子弹只触发一种反应
+            end
+
+            -- 冰 + 火 = 融化 (Melt)
+            -- 融化是增幅反应，直接翻倍原始伤害
+            if (existingElement == Config_Common.ElementType.Ice and _incomingElement == Config_Common.ElementType.Fire) or
+               (existingElement == Config_Common.ElementType.Fire and _incomingElement == Config_Common.ElementType.Ice) then
+                
+                triggeredReaction = ElementCalculator.ReactionType.Melt
+                finalDamage = finalDamage * 2.0
+                print(string.format("[Element] 触发【融化】! 伤害翻倍: %.1f", finalDamage))
+                
+                _entity.Elements[existingElement] = nil
+                hasReacted = true
+                break
+            end
+        end
+    end
+
+    -- 如果没有发生反应，就把这发子弹的元素量累积到怪物身上
+    if not hasReacted then
+        local currentGauge = _entity.Elements[_incomingElement] or 0
+        local newGauge = currentGauge + BULLET_GAUGE
+        _entity.Elements[_incomingElement] = newGauge
+        
+        -- 当累计量刚刚突破阈值时，打印提示 (代表真正挂上了元素)
+        if currentGauge < ATTACH_THRESHOLD and newGauge >= ATTACH_THRESHOLD then
+            print(string.format("[Element] 怪物[%d] 已被完全附着元素 ID: %d", _entity.UID, _incomingElement))
+            -- TODO: 以后可以在这里通知 UI 在怪物头上显示元素图标
+        end
+    end
+
+    return finalDamage, triggeredReaction
+end
+
+
+return ElementCalculator

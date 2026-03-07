@@ -18,6 +18,7 @@ public static class XLuaConfig
         typeof(Action<float>),
         typeof(Action<string>),
         typeof(Action<bool>),
+        typeof(LuaManager.OnHitMessageDelegate)
         
         // 如果以后有带返回值的委托，加在这里，例如：
     };

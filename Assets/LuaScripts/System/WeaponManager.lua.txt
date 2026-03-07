@@ -27,12 +27,40 @@ function WeaponManager.Update(_deltaTime)
 	-- 更新冷却
 	if weapon.FireCooldown > 0 then
 		weapon.FireCooldown = weapon.FireCooldown - _deltaTime
+		return
 	end
 
 	local inputFrame = CS.InputManager.Instance.Frame
+
+	-- 拦截手动换弹请求 - 优先级高于开火
+	if weaponSubType == Config_Common.WeaponSubType.Ranged then
+		-- 只有当弹匣空了且背包里还有这种子弹时，才触发自动换弹
+        local needAutoReload = (weapon.CurrentAmmoCount <= 0) and (InventoryManager.GetItemCount(weapon.CurrentAmmoType) > 0)
+		
+		-- 手动按 R 键，或者满足安全自动换弹条件
+		if inputFrame.reloadButton.wasPressedThisFrame or needAutoReload then
+			local success = CombatManager.Reload(activeCharacter)
+
+			if success then
+				-- 如果换弹成功，把武器冷却时间设为配置表里的 ReloadTime
+				weapon.FireCooldown = weapon.Config.ReloadTime
+
+				-- 通知 C# 表现层播放换弹动画
+				if CS.TeamController.Instance then
+					local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
+					if tpsController then
+						tpsController:ForceReload()
+					end
+				end
+				-- 换弹动作开始，直接结束本帧轮询，跳过下方的开火判定
+				return
+			end
+		end
+	end
+
 	local attemptToFire = false
 
-	-- 判断意图
+	-- 判断开火意图
 	if weaponSubType == Config_Common.WeaponSubType.Ranged then
 		if weapon.Config.IsAuto then
 			attemptToFire = inputFrame.fireButton.isHeld
@@ -92,6 +120,8 @@ function WeaponManager.OnSwitchAmmoTypePressed()
 		local success = CombatManager.SwitchAmmoType(activeCharacter, nextAmmoID)
 		-- 如果逻辑执行成功，反向调用 C# 播放动画
 		if success then
+			-- 切子弹等同于换弹，必须立刻把武器锁死 ReloadTime 的时间
+			weapon.FireCooldown = weapon.Config.ReloadTime
 			local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
 			if tpsController then
 				tpsController:ForceReload()

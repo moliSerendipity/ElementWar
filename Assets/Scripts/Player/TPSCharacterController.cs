@@ -9,6 +9,9 @@ public class TPSCharacterController : MonoBehaviour
     public Transform MainCameraTransform { get; set; }
     public WeaponController WeaponController { get; private set; }
 
+    [Header("角色 ID (必须与 Lua 数据层 ID 对应：1,2,3,4)")]
+    public int characterID = 1;
+
     [Header("移动设置")]
     public float walkSpeed = 2.0f;
     public float runSpeed = 5.0f;
@@ -221,7 +224,7 @@ public class TPSCharacterController : MonoBehaviour
     {
         if (WeaponController != null)
         {
-            WeaponController.FireProjectile(_ammoConfigID);
+            WeaponController.FireProjectile(_ammoConfigID, characterID);
         }
         else
         {

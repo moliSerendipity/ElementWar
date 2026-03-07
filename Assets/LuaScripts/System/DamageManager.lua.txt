@@ -1,0 +1,54 @@
+-- 负责接收物理层的命中信息，计算最终伤害与元素结算
+
+local Config_Weapon = require("Config.Config_Weapon")
+local Config_Ammo = require("Config.Config_Ammo")
+local TeamManager = require("System.TeamManager")
+local EntityManager = require("System.EntityManager")
+local ElementCalculator = require("System.ElementCalculator")
+
+local DamageManager = {}
+
+-- 接收来自 C# 的命中信息
+-- msg 结构: { instigatorID (int), targetUID (int), ammoID (int), hitMultiplier (float) }
+function DamageManager.ProcessHit(msg)
+	-- 获取攻击者信息
+	local attacker = TeamManager.GetCharacter(msg.instigatorID)
+	if not attacker then
+        print("[DamageManager] 无法找到 Instigator ID 为 " .. tostring(msg.instigatorID) .. " 的角色实体！")
+        return 
+    end
+	local weapon = attacker:GetActiveWeapon()
+	if not weapon then
+		print("[DamageManager] 异常：攻击者此时未装备武器！")
+		return
+	end
+	-- 获取怪物实体
+    local targetEntity = EntityManager.GetOrAddEntity(msg.targetUID)
+    if targetEntity.IsDead then
+    	return
+    end
+
+	-- 获取基础数值
+	local baseDamage = weapon.Config.BaseDamage
+	local ammoConfig = Config_Ammo[msg.ammoID]
+	local ammoDamageMultiplier = ammoConfig and ammoConfig.DamageMultiplier or 1.0
+	local elementType = ammoConfig and ammoConfig.ElementType or 1
+
+	-- 初始理论伤害 = 武器基础伤害 * 子弹倍率 * 命中部位倍率
+    local initialDamage  = baseDamage * ammoDamageMultiplier * msg.hitMultiplier
+
+    -- 计算元素反应与最终伤害
+    local finalDamage, reactionType = ElementCalculator.ProcessHit(targetEntity, elementType, initialDamage)
+
+    -- 打印最终战报
+    local isHeadshot = msg.hitMultiplier > 1.0
+    local headshotText = isHeadshot and " 【爆头！】" or ""
+
+    print(string.format("[DamageManager] 命中怪物[%d] | 基础伤害: %.1f -> 最终结算伤害: %.1f %s", 
+        msg.targetUID, initialDamage, finalDamage, headshotText))
+
+    EntityManager.ApplyDamage(targetEntity.UID, finalDamage)
+end
+
+
+return DamageManager

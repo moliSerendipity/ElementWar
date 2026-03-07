@@ -3,7 +3,8 @@
 <linker>
 
 	<assembly fullname="Assembly-CSharp">
-	    <type fullname="InputManager" preserve="all"/>
+	    <type fullname="HitMessage" preserve="all"/>
+		<type fullname="InputManager" preserve="all"/>
 		<type fullname="TeamController" preserve="all"/>
 		<type fullname="TPSCharacterController" preserve="all"/>
 		<type fullname="Tutorial.BaseClass" preserve="all"/>

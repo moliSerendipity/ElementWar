@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(TPSCharacterController);
-			Utils.BeginObjectRegister(type, L, translator, 0, 6, 14, 8);
+			Utils.BeginObjectRegister(type, L, translator, 0, 6, 15, 9);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPlayerControl", _m_SetPlayerControl);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SwitchState", _m_SwitchState);
@@ -38,6 +38,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "IdleState", _g_get_IdleState);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "MoveState", _g_get_MoveState);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "JumpState", _g_get_JumpState);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "characterID", _g_get_characterID);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "walkSpeed", _g_get_walkSpeed);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "runSpeed", _g_get_runSpeed);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sprintSpeed", _g_get_sprintSpeed);
@@ -47,6 +48,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "gravity", _g_get_gravity);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "MainCameraTransform", _s_set_MainCameraTransform);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "characterID", _s_set_characterID);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "walkSpeed", _s_set_walkSpeed);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "runSpeed", _s_set_runSpeed);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "sprintSpeed", _s_set_sprintSpeed);
@@ -373,6 +375,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_characterID(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.characterID);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_walkSpeed(RealStatePtr L)
         {
 		    try {
@@ -480,6 +496,21 @@ namespace XLua.CSObjectWrap
 			
                 TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.MainCameraTransform = (UnityEngine.Transform)translator.GetObject(L, 2, typeof(UnityEngine.Transform));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_characterID(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.characterID = LuaAPI.xlua_tointeger(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

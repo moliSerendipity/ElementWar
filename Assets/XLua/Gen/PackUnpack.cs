@@ -17,6 +17,116 @@ namespace XLua
     {
         
 		
+		public static void UnPack(ObjectTranslator translator, RealStatePtr L, int idx, out HitMessage val)
+		{
+		    val = new HitMessage();
+            int top = LuaAPI.lua_gettop(L);
+			
+			if (Utils.LoadField(L, idx, "instigatorID"))
+            {
+			    
+                translator.Get(L, top + 1, out val.instigatorID);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+			if (Utils.LoadField(L, idx, "targetUID"))
+            {
+			    
+                translator.Get(L, top + 1, out val.targetUID);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+			if (Utils.LoadField(L, idx, "targetConfigID"))
+            {
+			    
+                translator.Get(L, top + 1, out val.targetConfigID);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+			if (Utils.LoadField(L, idx, "ammoID"))
+            {
+			    
+                translator.Get(L, top + 1, out val.ammoID);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+			if (Utils.LoadField(L, idx, "hitMultiplier"))
+            {
+			    
+                translator.Get(L, top + 1, out val.hitMultiplier);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
+		}
+		
+        public static bool Pack(IntPtr buff, int offset, HitMessage field)
+        {
+            
+            if(!Pack(buff, offset, field.instigatorID))
+            {
+                return false;
+            }
+            
+            if(!Pack(buff, offset + 4, field.targetUID))
+            {
+                return false;
+            }
+            
+            if(!Pack(buff, offset + 8, field.targetConfigID))
+            {
+                return false;
+            }
+            
+            if(!Pack(buff, offset + 12, field.ammoID))
+            {
+                return false;
+            }
+            
+            if(!Pack(buff, offset + 16, field.hitMultiplier))
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        public static bool UnPack(IntPtr buff, int offset, out HitMessage field)
+        {
+            field = default(HitMessage);
+            
+            if(!UnPack(buff, offset, out field.instigatorID))
+            {
+                return false;
+            }
+            
+            if(!UnPack(buff, offset + 4, out field.targetUID))
+            {
+                return false;
+            }
+            
+            if(!UnPack(buff, offset + 8, out field.targetConfigID))
+            {
+                return false;
+            }
+            
+            if(!UnPack(buff, offset + 12, out field.ammoID))
+            {
+                return false;
+            }
+            
+            if(!UnPack(buff, offset + 16, out field.hitMultiplier))
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        
+		
 		public static void UnPack(ObjectTranslator translator, RealStatePtr L, int idx, out UnityEngine.Vector2 val)
 		{
 		    val = new UnityEngine.Vector2();

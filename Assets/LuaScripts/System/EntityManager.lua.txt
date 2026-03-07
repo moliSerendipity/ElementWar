@@ -1,0 +1,85 @@
+-- 负责管理场景中所有怪物实体的数据、生命值与元素衰减
+
+local Config_Monster = require("Config.Config_Monster")
+
+local EntityManager = {}
+
+-- 实体内存池 (Key: 实例 UID, Value: 实体动态数据)
+EntityManager.Entities = {}
+
+function EntityManager.Init()
+	EntityManager.Entities = {}
+	print("[EntityManager] 实体管理器初始化完毕")
+end
+
+-- 获取实体数据（如果不存在，说明是第一次被打中，自动注册进池子）
+function EntityManager.GetOrAddEntity(_uid, _configID)
+	if not EntityManager.Entities[_uid] then
+		local config = Config_Monster[_configID]
+		if not config then 
+            print("[EntityManager] 严重错误：未知的怪物配置 ID: " .. tostring(configID))
+            return nil 
+        end
+
+        local entity = {
+        	UID = _uid,
+        	Config = config,
+        	IsDead = false,
+        	HP = config.BaseHP,
+        	MaxHP = config.BaseHP,
+        	-- 元素挂载池: Elements[ElementType] = { GU = 剩余元素量, DecayRate = 每秒衰减率 }
+        	Elements = {},
+        	-- ICD 追踪器: 记录[攻击者_武器_元素] 对此怪物的攻击频率，用于 2.5s / 3hits 计算
+            ICD_Tracker = {}
+        }
+
+		-- 如果怪物有自带元素，初始化时直接给它锁死 9.9 的无限元素量
+        if config.InnateElement ~= 0 then
+            entity.Elements[config.InnateElement] = { GU = 9.9, DecayRate = 0 }
+        end
+
+        EntityManager.Entities[_uid] = entity
+		print(string.format("[EntityManager] 新怪物入池: UID[%d]", _uid))
+	end
+	return EntityManager.Entities[_uid]
+end
+
+function EntityManager.Update(_deltaTime)
+	for uid, entity in pairs(EntityManager.Entities) do
+		if not entity.IsDead then
+			-- 遍历该怪物身上挂载的所有元素，进行严格的线性衰减
+			for elementType, data in pairs(entity.Elements) do
+				-- DecayRate=0 表示这是怪物的自带元素，不衰减
+				if data.DecayRate > 0 then
+					data.GU = data.GU - data.DecayRate * _deltaTime
+					-- 如果衰减到 0 以下，彻底清除该元素
+					if data.GU <= 0 then
+						entity.Elements[elementType] = nil
+						print(string.format("怪物[%d] 身上的 [%d] 元素已完全消散", uid, elementType))
+					end
+				end
+			end
+		end
+	end
+end
+
+-- 处理伤害
+function EntityManager.ApplyDamage(_uid, _finalDamage)
+	local entity = EntityManager.Entities[_uid]
+	if not entity or entity.IsDead then
+		return
+	end
+
+	entity.HP = entity.HP - _finalDamage
+	if entity.HP <= 0 then
+		entity.HP = 0
+		entity.IsDead = true
+		entity.Elements = {} 		-- 死亡清空元素
+		print(string.format("[EntityManager] 怪物 [%s] (UID:%d) 已被击杀！", entity.Config.Name, _uid))
+        
+        -- TODO: 反向通知 C# 播放死亡动画并销毁 Collider
+    end
+end
+
+
+return EntityManager

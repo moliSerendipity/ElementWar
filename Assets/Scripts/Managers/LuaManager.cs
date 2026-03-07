@@ -38,6 +38,10 @@ public class LuaManager : SingleMonoBase<LuaManager>
     public delegate void LuaUpdateDelegate(float deltaTime);
     private LuaUpdateDelegate luaGameUpdate;
 
+    [CSharpCallLua]
+    public delegate void OnHitMessageDelegate(HitMessage msg);
+    private OnHitMessageDelegate luaOnHitMessage;
+
     protected override void Awake()
     {
         base.Awake();
@@ -70,6 +74,7 @@ public class LuaManager : SingleMonoBase<LuaManager>
     protected override void OnDestroy()
     {
         luaGameUpdate = null;
+        luaOnHitMessage = null;
         SafeDisposeLuaEnv();
         ClearLuaScriptCache();
 
@@ -279,5 +284,20 @@ public class LuaManager : SingleMonoBase<LuaManager>
 
         // 获取 Lua 中的全局函数 GameUpdate
         GlobalLuaEnv.Global.Get("GameUpdate", out luaGameUpdate);
+
+        // 获取 Lua 的全局受击接收函数
+        GlobalLuaEnv.Global.Get("OnReceiveHitMessage", out luaOnHitMessage);
+    }
+
+    /// <summary>
+    /// 发送受击消息到 Lua 侧，触发 Lua 中的 OnReceiveHitMessage(msg) 函数
+    /// </summary>
+    /// <param name="msg"></param>
+    public void SendHitMessage(HitMessage msg)
+    {
+        if (luaOnHitMessage != null)
+        {
+            luaOnHitMessage.Invoke(msg);
+        }
     }
 }

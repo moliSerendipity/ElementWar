@@ -12,7 +12,7 @@ public class WeaponController : MonoBehaviour
     [Tooltip("子弹预制体")]
     public GameObject projectilePrefab;
 
-    public void FireProjectile(int _ammoConfigID)
+    public void FireProjectile(int _ammoConfigID, int _instigatorID)
     {
         if (muzzlePoint == null || projectilePrefab == null)
         {
@@ -47,7 +47,8 @@ public class WeaponController : MonoBehaviour
         Projectile projectile = projectileObj.GetComponent<Projectile>();
         if (projectile != null)
         {
-            projectile.Init(realFireDirection);
+            // 将子弹 ID 和 攻击者 ID 一并传给子弹
+            projectile.Init(realFireDirection, _ammoConfigID, _instigatorID);
         }
     }
 }

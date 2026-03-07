@@ -16,9 +16,9 @@ namespace XLua
     public partial class ObjectTranslator
     {
         
-        class IniterAdderUnityEngineVector2
+        class IniterAdderHitMessage
         {
-            static IniterAdderUnityEngineVector2()
+            static IniterAdderHitMessage()
             {
                 LuaEnv.AddIniter(Init);
             }
@@ -26,6 +26,7 @@ namespace XLua
 			static void Init(LuaEnv luaenv, ObjectTranslator translator)
 			{
 			
+				translator.RegisterPushAndGetAndUpdate<HitMessage>(translator.PushHitMessage, translator.Get, translator.UpdateHitMessage);
 				translator.RegisterPushAndGetAndUpdate<UnityEngine.Vector2>(translator.PushUnityEngineVector2, translator.Get, translator.UpdateUnityEngineVector2);
 				translator.RegisterPushAndGetAndUpdate<UnityEngine.Vector3>(translator.PushUnityEngineVector3, translator.Get, translator.UpdateUnityEngineVector3);
 				translator.RegisterPushAndGetAndUpdate<UnityEngine.Vector4>(translator.PushUnityEngineVector4, translator.Get, translator.UpdateUnityEngineVector4);
@@ -40,9 +41,75 @@ namespace XLua
 			}
         }
         
-        static IniterAdderUnityEngineVector2 s_IniterAdderUnityEngineVector2_dumb_obj = new IniterAdderUnityEngineVector2();
-        static IniterAdderUnityEngineVector2 IniterAdderUnityEngineVector2_dumb_obj {get{return s_IniterAdderUnityEngineVector2_dumb_obj;}}
+        static IniterAdderHitMessage s_IniterAdderHitMessage_dumb_obj = new IniterAdderHitMessage();
+        static IniterAdderHitMessage IniterAdderHitMessage_dumb_obj {get{return s_IniterAdderHitMessage_dumb_obj;}}
         
+        
+        int HitMessage_TypeID = -1;
+        public void PushHitMessage(RealStatePtr L, HitMessage val)
+        {
+            if (HitMessage_TypeID == -1)
+            {
+			    bool is_first;
+                HitMessage_TypeID = getTypeId(L, typeof(HitMessage), out is_first);
+				
+            }
+			
+            IntPtr buff = LuaAPI.xlua_pushstruct(L, 20, HitMessage_TypeID);
+            if (!CopyByValue.Pack(buff, 0, val))
+            {
+                throw new Exception("pack fail fail for HitMessage ,value="+val);
+            }
+			
+        }
+		
+        public void Get(RealStatePtr L, int index, out HitMessage val)
+        {
+		    LuaTypes type = LuaAPI.lua_type(L, index);
+            if (type == LuaTypes.LUA_TUSERDATA )
+            {
+			    if (LuaAPI.xlua_gettypeid(L, index) != HitMessage_TypeID)
+				{
+				    throw new Exception("invalid userdata for HitMessage");
+				}
+				
+                IntPtr buff = LuaAPI.lua_touserdata(L, index);if (!CopyByValue.UnPack(buff, 0, out val))
+                {
+                    throw new Exception("unpack fail for HitMessage");
+                }
+            }
+			else if (type ==LuaTypes.LUA_TTABLE)
+			{
+			    CopyByValue.UnPack(this, L, index, out val);
+			}
+            else
+            {
+                val = (HitMessage)objectCasters.GetCaster(typeof(HitMessage))(L, index, null);
+            }
+        }
+		
+        public void UpdateHitMessage(RealStatePtr L, int index, HitMessage val)
+        {
+		    
+            if (LuaAPI.lua_type(L, index) == LuaTypes.LUA_TUSERDATA)
+            {
+			    if (LuaAPI.xlua_gettypeid(L, index) != HitMessage_TypeID)
+				{
+				    throw new Exception("invalid userdata for HitMessage");
+				}
+				
+                IntPtr buff = LuaAPI.lua_touserdata(L, index);
+                if (!CopyByValue.Pack(buff, 0,  val))
+                {
+                    throw new Exception("pack fail for HitMessage ,value="+val);
+                }
+            }
+			
+            else
+            {
+                throw new Exception("try to update a data with lua type:" + LuaAPI.lua_type(L, index));
+            }
+        }
         
         int UnityEngineVector2_TypeID = -1;
         public void PushUnityEngineVector2(RealStatePtr L, UnityEngine.Vector2 val)
@@ -751,7 +818,13 @@ namespace XLua
 	    internal static bool __tryArrayGet(Type type, RealStatePtr L, ObjectTranslator translator, object obj, int index)
 		{
 		
-			if (type == typeof(UnityEngine.Vector2[]))
+			if (type == typeof(HitMessage[]))
+			{
+			    HitMessage[] array = obj as HitMessage[];
+				translator.PushHitMessage(L, array[index]);
+				return true;
+			}
+			else if (type == typeof(UnityEngine.Vector2[]))
 			{
 			    UnityEngine.Vector2[] array = obj as UnityEngine.Vector2[];
 				translator.PushUnityEngineVector2(L, array[index]);
@@ -817,7 +890,13 @@ namespace XLua
 		internal static bool __tryArraySet(Type type, RealStatePtr L, ObjectTranslator translator, object obj, int array_idx, int obj_idx)
 		{
 		
-			if (type == typeof(UnityEngine.Vector2[]))
+			if (type == typeof(HitMessage[]))
+			{
+			    HitMessage[] array = obj as HitMessage[];
+				translator.Get(L, obj_idx, out array[array_idx]);
+				return true;
+			}
+			else if (type == typeof(UnityEngine.Vector2[]))
 			{
 			    UnityEngine.Vector2[] array = obj as UnityEngine.Vector2[];
 				translator.Get(L, obj_idx, out array[array_idx]);
