@@ -13,7 +13,7 @@ local Config_Weapon = {
 		HasAmmo = true,
 		MaxStack = 1,
 		-- 核心战斗属性
-		BaseDamage = 25,			-- 基础伤害
+		WeaponATK = 25,				-- 武器攻击力
 		FireRate = 0.1,				-- 射速 (秒/发)
 		MagazineCapacity = 30,		-- 弹匣容量
 		-- MaxAmmoCarry = 180,		-- 最大携带弹药量
@@ -38,7 +38,7 @@ local Config_Weapon = {
 		HasAmmo = true,
 		MaxStack = 1,
 		-- 核心战斗属性
-		BaseDamage = 120,			-- 基础伤害
+		WeaponATK = 120,			-- 武器攻击力
 		FireRate = 1.5,				-- 射速 (秒/发)
 		MagazineCapacity = 5,		-- 弹匣容量
 		-- MaxAmmoCarry = 25,		-- 最大携带弹药量
@@ -63,7 +63,7 @@ local Config_Weapon = {
 		HasAmmo = true,
 		MaxStack = 1,
 		-- 核心战斗属性
-		BaseDamage = 15,			-- 基础伤害
+		WeaponATK = 15,				-- 武器攻击力
 		FireRate = 0.2,				-- 射速 (秒/发)
 		MagazineCapacity = 15,		-- 弹匣容量
 		-- MaxAmmoCarry = 60,		-- 最大携带弹药量
@@ -88,7 +88,7 @@ local Config_Weapon = {
 		HasAmmo = false,
 		MaxStack = 1,
 		-- 核心战斗属性
-		BaseDamage = 50,			-- 基础伤害
+		WeaponATK = 50,				-- 武器攻击力
 		AttackRate = 0.8,			-- 攻速 (秒)
 		Range = 2,					-- 攻击范围 (米)
 		-- 资源路径
@@ -103,7 +103,7 @@ local Config_Weapon = {
 local function ValidateWeaponConfig()
 	for id, config in pairs(Config_Weapon) do
 		-- 检查必填字段
-		local requiredFields = { "ID", "Name", "Type", "WeaponClass", "EquipSlot", "MaxStack", "BaseDamage"}
+		local requiredFields = { "ID", "Name", "Type", "WeaponClass", "EquipSlot", "MaxStack", "WeaponATK"}
 		for _, field in ipairs(requiredFields) do
 			if config[field] == nil then
 				error(string.format("武器配置 %d 缺少必填字段: %s", id, field))

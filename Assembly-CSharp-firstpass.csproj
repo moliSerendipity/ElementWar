@@ -60,8 +60,17 @@
     <Analyzer Include="E:\Unity\2022.3.62f2c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\projectileActor.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\scripts\particleColorChangerMaster.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\ExplodingProjectile.cs" />
     <Compile Include="Assets\Plugins\YSA Toon\Scripts\MeshFilterNormalsFix.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\EffectActor.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\Projectile.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\CameraShakeCaller.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\scripts\destroyMe.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\CameraShakeProjectile.cs" />
     <Compile Include="Assets\Plugins\YSA Toon\Scripts\SkinnedMeshNormalsFix.cs" />
+    <Compile Include="Assets\Plugins\EffectCore\packs\WebDemoAssets\scripts\CameraShake.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\YSA Toon\Shaders\Toon Lit Shader\Lights Calculation.hlsl" />
@@ -938,6 +947,10 @@
       <HintPath>Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.AI.Navigation">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
@@ -998,12 +1011,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Netcode.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.Netcode.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.PlasticSCM.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Netcode.Editor.PackageChecker">
@@ -1024,6 +1037,10 @@
     </Reference>
     <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
       <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
@@ -1122,6 +1139,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.AI.Navigation.Updater">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1140,6 +1161,10 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Searcher.Editor">
@@ -1164,6 +1189,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Game.Gameplay.csproj">
+      <Project>{DF20E843-3B51-9F4F-9D01-CA9117B5E479}</Project>
+      <Name>Game.Gameplay</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Presentation.csproj">
+      <Project>{01115D8D-C387-FCD1-B580-68C54DC05864}</Project>
+      <Name>Game.Presentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Definition.csproj">
+      <Project>{74410520-7A3B-D8F9-76B6-115D9F006991}</Project>
+      <Name>Game.Definition</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Foundation.csproj">
+      <Project>{F28BA59D-4902-9C84-A04F-4281E1058710}</Project>
+      <Name>Game.Foundation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

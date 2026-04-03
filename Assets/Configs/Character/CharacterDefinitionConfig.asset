@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f933f06d555a1ac4f8d9bf697caf0e86, type: 3}
+  m_Name: CharacterDefinitionConfig
+  m_EditorClassIdentifier: 
+  configId: CharacterDefinitionConfig
+  displayName: 
+  description: 
+  isEnabled: 1
+  characterBaseStatConfig: {fileID: 11400000, guid: 5178e91c772ddad4280e7d6f3479874b,
+    type: 2}
+  characterMovementConfig: {fileID: 11400000, guid: 8d75dd2c1b38c3447a9addd46edaab71,
+    type: 2}
+  characterJumpConfig: {fileID: 11400000, guid: 63ace8f17c94e314c9411e05ec13ec0b,
+    type: 2}
+  characterAimConfig: {fileID: 11400000, guid: 720a9a864f9448f45b9a047fbcb90346, type: 2}
+  characterSwitchConfig: {fileID: 11400000, guid: a3fe90f4369f94c4dae3feadc544590b,
+    type: 2}
+  weaponLoadoutConfig: {fileID: 11400000, guid: 2b68ea8211ddabd4c827ec297d960abb,
+    type: 2}
+  skillLoadoutConfig: {fileID: 0}
+  characterResistanceSetConfig: {fileID: 11400000, guid: dee68760815bed64888521f60f81fef1,
+    type: 2}
+  aiProfileConfig: {fileID: 11400000, guid: e29a715a1d1c45b42a099af42b5c8342, type: 2}
+  isPlayerControllable: 1
+  isAiControllable: 0

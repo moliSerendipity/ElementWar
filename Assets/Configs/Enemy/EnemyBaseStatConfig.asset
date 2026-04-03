@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41bd188334fcb6e4fbbeb1857c1ad0c6, type: 3}
+  m_Name: EnemyBaseStatConfig
+  m_EditorClassIdentifier: 
+  configId: EnemyBaseStatConfig
+  displayName: 
+  description: 
+  isEnabled: 1
+  maxHealth: 9999999
+  attackPower: 12
+  defense: 2
+  toughness: 120
+  damageTakenMultiplier: 1
+  weakPointDamageMultiplier: 1.5

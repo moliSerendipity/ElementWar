@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7651025895685551295}
-  - component: {fileID: 5636283730920179273}
   - component: {fileID: 7483703213934798628}
+  - component: {fileID: 2715834307447087474}
   m_Layer: 0
   m_Name: Projectile_Prefab
   m_TagString: Untagged
@@ -33,24 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5636283730920179273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8690317525120470640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 938c6a191b0135b488e2f893d94ee256, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialSpeed: 50
-  gravityMultiplier: 1
-  maxLifeTime: 5
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 159
 --- !u!96 &7483703213934798628
 TrailRenderer:
   serializedVersion: 3
@@ -164,3 +146,17 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2715834307447087474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8690317525120470640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38fab7197fa787a46b146e269b10ff4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualSpeed: 300
+  bulletMesh: {fileID: 0}

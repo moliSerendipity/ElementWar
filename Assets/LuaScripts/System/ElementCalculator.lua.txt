@@ -1,87 +1,155 @@
 -- 严格处理 ICD 拦截、强弱元素覆盖、后手必定不残留、矩阵反应推演
 
 local Config_Common = require("Config.Config_Common")
+local Config_Curve = require("Config.Config_Curve")
 
 local ElementCalculator = {}
 
--- 定义反应类型枚举
+-- 反应类型定义
 ElementCalculator.ReactionType = {
     None = 0,
-    Overload = 1, -- 超载 (火+雷)
-    Melt = 2,     -- 融化 (火+冰)
+    Overload = 1, -- 超载 (剧变)
+    Melt = 2,     -- 融化 (增幅)
 }
 
--- 每发子弹附加的基础元素量 (GU)
-local BULLET_GAUGE = 0.3
--- 触发反应或挂载图标的阈值
-local ATTACH_THRESHOLD = 1.0
+-- 元素反应系数矩阵
+-- ReactionMatrix[后手触发元素][先手底元素] = {反应名称, 消耗倍率, 反应系数}
+-- 反应配置矩阵 (精准消耗比例)
+ElementCalculator.ReactionMatrix = {
+    [Config_Common.ElementType.Fire] = {
+        [Config_Common.ElementType.Ice] = { Name = "融化", Type = 2, ConsumeRatio = 2.0, BaseMult = 2.0 },
+        [Config_Common.ElementType.Thunder] = { Name = "超载", Type = 1, ConsumeRatio = 1.0, ReactionMult  = 3.75 }
+    },
+    [Config_Common.ElementType.Ice] = {
+        [Config_Common.ElementType.Fire] = { Name = "融化", Type = 2, ConsumeRatio = 0.5, BaseMult = 1.5 }
+    },
+    [Config_Common.ElementType.Thunder] = {
+        [Config_Common.ElementType.Fire] = { Name = "超载", Type = 1, ConsumeRatio = 1.0, ReactionMult  = 3.75 }
+    }
+}
 
---- 尝试让射入的子弹与怪物身上的元素发生反应
---- @param entity table 怪物实体数据
---- @param incomingElement int 射入的元素类型
---- @param baseDamage float 子弹原始伤害
---- @return float 最终伤害, int 触发的反应类型
-function ElementCalculator.ProcessHit(_entity, _incomingElement, _baseDamage)
-	-- 物理攻击，不参与任何元素累积和反应
-	if _incomingElement == Config_Common.ElementType.Physical then
-		return _baseDamage, ElementCalculator.ReactionType.None
-	end
+-- 内部函数：检测 ICD (2.5秒 或 3次命中)
+local function CheckICD(_entity, _attackerID, _weaponUID, _incomingElement)
+    local timeNow = CS.UnityEngine.Time.time
+    local icdKey = string.format("%d_%d_%d", _attackerID, _weaponUID, _incomingElement)
+    
+    local tracker = _entity.ICD_Tracker[icdKey]
+    if not tracker then
+        tracker = { lastAttachTime = -100, hitCount = 0 }
+        _entity.ICD_Tracker[icdKey] = tracker
+    end
 
-	local finalDamage = _baseDamage
-	local triggeredReaction = ElementCalculator.ReactionType.None
-
-	-- 检查怪物身上是否已有其他元素可以产生反应
-	local hasReacted = false
-	for existingElement, existingGauge in pairs(_entity.Elements) do
-		-- 只有当身上的元素量达到阈值时，才认为"挂着元素"，可以参与反应
-		if existingGauge >= ATTACH_THRESHOLD then
-			-- 火 + 雷 = 超载 (Overload)
-			if (existingElement == Config_Common.ElementType.Fire and _incomingElement == Config_Common.ElementType.Thunder) or
-			   (existingElement == Config_Common.ElementType.Thunder and _incomingElement == Config_Common.ElementType.Fire) then
-			   	
-			   	triggeredReaction = ElementCalculator.ReactionType.Overload
-			   	-- 超载造成额外固定伤害 (简单模拟)
-                local overloadDamage = 50.0 
-                finalDamage = finalDamage + overloadDamage
-                print(string.format("[Element] 触发【超载】! 额外伤害: %.1f", overloadDamage))
-                
-                -- 消耗掉身上的元素 (简单处理：反应后清空该元素)
-                _entity.Elements[existingElement] = nil
-                hasReacted = true
-                break -- 一发子弹只触发一种反应
-            end
-
-            -- 冰 + 火 = 融化 (Melt)
-            -- 融化是增幅反应，直接翻倍原始伤害
-            if (existingElement == Config_Common.ElementType.Ice and _incomingElement == Config_Common.ElementType.Fire) or
-               (existingElement == Config_Common.ElementType.Fire and _incomingElement == Config_Common.ElementType.Ice) then
-                
-                triggeredReaction = ElementCalculator.ReactionType.Melt
-                finalDamage = finalDamage * 2.0
-                print(string.format("[Element] 触发【融化】! 伤害翻倍: %.1f", finalDamage))
-                
-                _entity.Elements[existingElement] = nil
-                hasReacted = true
-                break
-            end
+    local canAttach = false
+    -- 规则 1：时间重置法则 (2.5s)
+    if timeNow - tracker.lastAttachTime >= 2.5 then
+        tracker.hitCount = 1
+        tracker.lastAttachTime = timeNow
+        canAttach = true
+    else
+        -- 规则 2：命中次数法则 (3hit)
+        tracker.hitCount = tracker.hitCount + 1
+        if tracker.hitCount >= 4 then
+            tracker.hitCount = 1 -- 下一发重新计数
+            tracker.lastAttachTime = timeNow
+            canAttach = true
         end
     end
 
-    -- 如果没有发生反应，就把这发子弹的元素量累积到怪物身上
-    if not hasReacted then
-        local currentGauge = _entity.Elements[_incomingElement] or 0
-        local newGauge = currentGauge + BULLET_GAUGE
-        _entity.Elements[_incomingElement] = newGauge
-        
-        -- 当累计量刚刚突破阈值时，打印提示 (代表真正挂上了元素)
-        if currentGauge < ATTACH_THRESHOLD and newGauge >= ATTACH_THRESHOLD then
-            print(string.format("[Element] 怪物[%d] 已被完全附着元素 ID: %d", _entity.UID, _incomingElement))
-            -- TODO: 以后可以在这里通知 UI 在怪物头上显示元素图标
-        end
-    end
-
-    return finalDamage, triggeredReaction
+    return canAttach
 end
 
+-- 获取基于元素精通的增幅收益系数
+function ElementCalculator.GetEMBonus_Amplifying(_EM)
+    return (2.78 * _EM) / (_EM + 1400)
+end
+
+-- 获取基于元素精通的剧变收益系数
+function ElementCalculator.GetEMBonus_Transformative(_EM)
+    return (16.0 * _EM) / (_EM + 2000)
+end
+
+-- 附着与元素反应处理
+function ElementCalculator.ProcessHit(_targetEntity, _attacker, _incomingElement)
+    local result = {
+        IsImmune = (_incomingElement == _targetEntity.Config.InnateElement),
+        ReactionName = "None",
+        AmpMultiplier = 1.0,        -- 增幅倍率
+        TransformDamage = 0         -- 剧变反应直接产生的伤害
+    }
+
+    if result.IsImmune or _incomingElement == Config_Common.ElementType.Physical then
+        return result
+    end
+
+    local weapon = _attacker:GetActiveWeapon()
+    -- 判断这发元素子弹是否有附着权利 (ICD拦截)
+    local canAttach = CheckICD(_targetEntity, _attacker.CharacterID, weapon.UID, _incomingElement)
+
+    -- 计算这发子弹包含多少元素量 (狙击枪强元素 2.0，其他弱元素 1.0)
+    local incomingGU = (weapon.Config.WeaponClass == Config_Common.WeaponClass.Sniper) and 2.0 or 1.0
+
+    -- 如果有权附着，开始结算反应矩阵
+    if canAttach then
+        local hasReacted = false
+        for auraElem, auraData in pairs(_targetEntity.Elements) do
+            if auraData.GU > 0 then
+                -- 去反应矩阵里查反应
+                local matrixDef = ElementCalculator.ReactionMatrix[_incomingElement]
+                local reactionDef = matrixDef and matrixDef[auraElem]
+
+                if reactionDef then
+                    hasReacted = true
+                    result.ReactionName = reactionDef.Name
+
+                    -- 计算反应系数
+                    if reactionDef.Type == 2 then -- 增幅反应 (融化)
+                        local emBonus = ElementCalculator.GetEMBonus_Amplifying(_attacker.EM)
+                        result.AmpMultiplier = reactionDef.BaseMult * (1 + emBonus)
+                    elseif reactionDef.Type == 1 then -- 剧变反应 (超载)
+                        local lvlBase = Config_Curve.TransformativeBaseByLevel[_attacker.Level] or 1000
+                        local emBonus = ElementCalculator.GetEMBonus_Transformative(_attacker.EM)
+                        result.TransformDamage = lvlBase * reactionDef.ReactionMult * (1 + emBonus)
+                    end
+
+                    -- 元素消耗：从怪物的底元素(Aura)中扣除 (打入GU * 消耗系数)
+                    local consumedGU = incomingGU * reactionDef.ConsumeRatio
+                    
+                    -- 若底元素属于自带元素(DecayRate=0)，其GU无限，不扣减
+                    if auraData.DecayRate ~= 0 then
+                        auraData.GU = auraData.GU - consumedGU
+                        if auraData.GU <= 0 then
+                            _targetEntity.Elements[auraElem] = nil
+                        end
+                    end
+                    
+                    -- 后手不残留
+                    break
+                end
+            end
+        end
+
+        -- 如果没有触发任何反应，则执行强弱元素挂载/刷新规则
+        if not hasReacted then
+            local currentAura = _targetEntity.Elements[_incomingElement]
+            local newDecayRate = (incomingGU == 2.0) and 0.166 or 0.105
+
+            if not currentAura then
+                -- 全新附着
+                _targetEntity.Elements[_incomingElement] = { GU = incomingGU, DecayRate = newDecayRate }
+                print(string.format("[附着] 怪物被挂载了元素: %d (GU:%.1f)", _incomingElement, incomingGU))
+            else
+                -- 同元素覆盖规则：取最大值 (如果新打进去的强，覆盖弱的；如果新打的弱，刷新时间但不增加量)
+                if incomingGU > currentAura.GU then
+                    currentAura.GU = incomingGU
+                    currentAura.DecayRate = newDecayRate -- 取强衰减率
+                else
+                    currentAura.DecayRate = newDecayRate -- 刷新为新子弹的衰减特征
+                end
+            end
+        end
+    end
+
+    return result
+end
 
 return ElementCalculator

@@ -60,98 +60,127 @@
     <Analyzer Include="E:\Unity\2022.3.62f2c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\GameObjectPool.cs" />
+    <Compile Include="Assets\Script_Legacy\AICharacterInputSource.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_ICalcWrap.cs" />
     <Compile Include="Assets\XLua\Src\TemplateEngine\TemplateEngine.cs" />
-    <Compile Include="Assets\Scripts\Base\SingleMonoBase.cs" />
     <Compile Include="Assets\Settings\Input System\MyInputSystem.cs" />
     <Compile Include="Assets\XLua\Src\ObjectCasters.cs" />
     <Compile Include="Assets\XLua\Gen\WrapPusher.cs" />
-    <Compile Include="Assets\Scripts\Player\State\CharacterJumpState.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\CharacterAnimator.cs" />
     <Compile Include="Assets\XLua\Src\LuaEnv.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\State\CharacterMoveState.cs" />
     <Compile Include="Assets\XLua\Tutorial\CSharpCallLua\CSCallLua.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\State\CharacterIdleState.cs" />
     <Compile Include="Assets\XLua\Src\LuaDLL.cs" />
     <Compile Include="Assets\XLua\Src\LuaException.cs" />
-    <Compile Include="Assets\Scripts\Player\State\CharacterMoveState.cs" />
     <Compile Include="Assets\XLua\Gen\PackUnpack.cs" />
-    <Compile Include="Assets\Scripts\Player\TPSCharacterController.cs" />
     <Compile Include="Assets\XLua\Src\SignatureLoader.cs" />
-    <Compile Include="Assets\Scripts\Player\Input\PlayerInputSource.cs" />
     <Compile Include="Assets\XLua\Src\ObjectPool.cs" />
     <Compile Include="Assets\XLua\Gen\HitMessageWrap.cs" />
     <Compile Include="Assets\XLua\Gen\TPSCharacterControllerWrap.cs" />
     <Compile Include="Assets\XLua\Gen\TeamControllerWrap.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\Input\PlayerInputSource.cs" />
     <Compile Include="Assets\XLua\Src\LuaFunction.cs" />
     <Compile Include="Assets\XLua\Gen\DelegatesGensBridge.cs" />
-    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\XLua\Src\StaticLuaCallbacks.cs" />
-    <Compile Include="Assets\Scripts\HitMessage.cs" />
-    <Compile Include="Assets\Scripts\Managers\TeamController.cs" />
-    <Compile Include="Assets\Scripts\Hitbox.cs" />
     <Compile Include="Assets\XLua\Src\LuaBase.cs" />
     <Compile Include="Assets\XLua\Src\InternalGlobals.cs" />
-    <Compile Include="Assets\Scripts\IInputSource.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\CharacterMotor.cs" />
+    <Compile Include="Assets\Script_Legacy\Base\SingleMonoBase.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_DerivedClassExtensionsWrap.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_DerivedClassWrap.cs" />
-    <Compile Include="Assets\Scripts\Player\State\CharacterState.cs" />
     <Compile Include="Assets\XLua\Gen\XLuaGenAutoRegister.cs" />
     <Compile Include="Assets\XLua\Src\CodeEmit.cs" />
-    <Compile Include="Assets\Scripts\Player\CharacterAnimator.cs" />
     <Compile Include="Assets\XLua\Src\ObjectTranslatorPool.cs" />
     <Compile Include="Assets\XLua\Src\DelegateBridge.cs" />
-    <Compile Include="Assets\Scripts\WeaponController.cs" />
+    <Compile Include="Assets\Script_Legacy\WeaponController.cs" />
+    <Compile Include="Assets\Script_Legacy\EnemyEntity.cs" />
+    <Compile Include="Assets\Scripts\Bootstrap\BootstrapConfigInstaller.cs" />
+    <Compile Include="Assets\Script_Legacy\Managers\InputManager.cs" />
     <Compile Include="Assets\XLua\Src\CopyByValue.cs" />
-    <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\Loader\CustomLoader.cs" />
-    <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
+    <Compile Include="Assets\Script_Legacy\Hitbox.cs" />
+    <Compile Include="Assets\Script_Legacy\Managers\GameManager.cs" />
+    <Compile Include="Assets\Script_Legacy\Managers\LuaManager.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\State\CharacterState.cs" />
+    <Compile Include="Assets\Script_Legacy\Config\XLuaConfig.cs" />
+    <Compile Include="Assets\Script_Legacy\Legacy\Projectile.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\State\CharacterJumpState.cs" />
     <Compile Include="Assets\XLua\Src\TypeExtensions.cs" />
+    <Compile Include="Assets\Script_Legacy\Legacy\RecoilComponent.cs" />
     <Compile Include="Assets\XLua\Src\GenAttributes.cs" />
     <Compile Include="Assets\XLua\Src\MethodWarpsCache.cs" />
     <Compile Include="Assets\XLua\Src\RawObject.cs" />
+    <Compile Include="Assets\Script_Legacy\Managers\CameraController.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\ByFile.cs" />
     <Compile Include="Assets\XLua\Src\GenericDelegateBridge.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_BaseClassWrap.cs" />
     <Compile Include="Assets\XLua\Src\LuaTable.cs" />
+    <Compile Include="Assets\Script_Legacy\Player\TPSCharacterController.cs" />
     <Compile Include="Assets\XLua\Src\Utils.cs" />
-    <Compile Include="Assets\Scripts\Player\State\CharacterIdleState.cs" />
-    <Compile Include="Assets\Scripts\Managers\CameraController.cs" />
-    <Compile Include="Assets\Scripts\AICharacterInputSource.cs" />
+    <Compile Include="Assets\Script_Legacy\IInputSource.cs" />
+    <Compile Include="Assets\Script_Legacy\GameObjectPool.cs" />
+    <Compile Include="Assets\Script_Legacy\VisualProjectile.cs" />
     <Compile Include="Assets\XLua\Gen\InputManagerWrap.cs" />
     <Compile Include="Assets\XLua\Gen\Tutorial_CSCallLua_ItfDBridge.cs" />
-    <Compile Include="Assets\Scripts\Player\CharacterMotor.cs" />
+    <Compile Include="Assets\Script_Legacy\Legacy\HitMessage.cs" />
     <Compile Include="Assets\XLua\Gen\EnumWrap.cs" />
-    <Compile Include="Assets\Scripts\Config\XLuaConfig.cs" />
-    <Compile Include="Assets\Scripts\Managers\LuaManager.cs" />
-    <Compile Include="Assets\Scripts\EnemyEntity.cs" />
+    <Compile Include="Assets\Script_Legacy\Managers\TeamController.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\ByString\ByString.cs" />
+    <Compile Include="Assets\Script_Legacy\WeaponView.cs" />
     <Compile Include="Assets\XLua\Tutorial\LuaCallCSharp\LuaCallCs.cs" />
     <Compile Include="Assets\XLua\Src\ObjectTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\LuaScripts\Config\Config_Character.lua.txt" />
     <None Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\LuaScripts\Config\Config_Common.lua.txt" />
     <None Include="Assets\LuaScripts\Config\Config_Ammo.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Art\Effects\Hurt\Tips &amp; Documentations HitSplatterEffectPack1.txt" />
     <None Include="Assets\XLua\Resources\xlua\util.lua.txt" />
     <None Include="Assets\LuaScripts\System\TeamManager.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\LuaScripts\Data\CharacterData.lua.txt" />
+    <None Include="Assets\Art\Effects\Bullet\Tips &amp; DocumentationsStylizedProjectilePack1.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\LuaScripts\Config\Config_Throwable.lua.txt" />
     <None Include="Assets\LuaScripts\System\InventoryManager.lua.txt" />
     <None Include="Assets\XLua\Gen\link.xml" />
+    <None Include="Assets\LuaScripts\Config\Config_Curve.lua.txt" />
     <None Include="Assets\LuaScripts\System\ElementCalculator.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\XLua\Resources\perf\profiler.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\LuaScripts\Config\Config_Monster.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\LuaScripts\System\CombatManager.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\LuaScripts\Data\ItemData.lua.txt" />
     <None Include="Assets\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\LuaScripts\System\DamageManager.lua.txt" />
     <None Include="Assets\LuaScripts\Config\Config_Consumable.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\LuaScripts\Config\Config_Item.lua.txt" />
     <None Include="Assets\LuaScripts\System\EntityManager.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\LuaScripts\main.lua.txt" />
     <None Include="Assets\LuaScripts\System\WeaponManager.lua.txt" />
     <None Include="Assets\XLua\Resources\tdr\tdr.lua.txt" />
     <None Include="Assets\XLua\CHANGELOG.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\LuaScripts\Config\Config_Weapon.lua.txt" />
+    <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1018,6 +1047,10 @@
       <HintPath>Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.AI.Navigation">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1078,12 +1111,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Netcode.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.Netcode.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.PlasticSCM.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Netcode.Editor.PackageChecker">
@@ -1104,6 +1137,10 @@
     </Reference>
     <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
       <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
@@ -1202,6 +1239,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.AI.Navigation.Updater">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1220,6 +1261,10 @@
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Searcher.Editor">
@@ -1247,6 +1292,22 @@
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{1276B3EC-53FF-EEA8-8A03-1EF7772C6FEF}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Gameplay.csproj">
+      <Project>{DF20E843-3B51-9F4F-9D01-CA9117B5E479}</Project>
+      <Name>Game.Gameplay</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Presentation.csproj">
+      <Project>{01115D8D-C387-FCD1-B580-68C54DC05864}</Project>
+      <Name>Game.Presentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Definition.csproj">
+      <Project>{74410520-7A3B-D8F9-76B6-115D9F006991}</Project>
+      <Name>Game.Definition</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Foundation.csproj">
+      <Project>{F28BA59D-4902-9C84-A04F-4281E1058710}</Project>
+      <Name>Game.Foundation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

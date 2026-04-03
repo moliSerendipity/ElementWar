@@ -21,14 +21,15 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(TPSCharacterController);
-			Utils.BeginObjectRegister(type, L, translator, 0, 6, 15, 9);
+			Utils.BeginObjectRegister(type, L, translator, 0, 7, 15, 9);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPlayerControl", _m_SetPlayerControl);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SwitchState", _m_SwitchState);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "CalculateMoveDirectionAndRotation", _m_CalculateMoveDirectionAndRotation);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetTargetSpeed", _m_GetTargetSpeed);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ForceReload", _m_ForceReload);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ForceFire", _m_ForceFire);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ForceFireHitscan", _m_ForceFireHitscan);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ChangeWeaponModel", _m_ChangeWeaponModel);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Motor", _g_get_Motor);
@@ -246,7 +247,7 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_ForceFire(RealStatePtr L)
+        static int _m_ForceFireHitscan(RealStatePtr L)
         {
 		    try {
             
@@ -259,8 +260,37 @@ namespace XLua.CSObjectWrap
                 
                 {
                     int __ammoConfigID = LuaAPI.xlua_tointeger(L, 2);
+                    int __elementType = LuaAPI.xlua_tointeger(L, 3);
                     
-                    gen_to_be_invoked.ForceFire( __ammoConfigID );
+                    gen_to_be_invoked.ForceFireHitscan( __ammoConfigID, __elementType );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_ChangeWeaponModel(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                TPSCharacterController gen_to_be_invoked = (TPSCharacterController)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    UnityEngine.GameObject __weaponPrefab = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
+                    
+                    gen_to_be_invoked.ChangeWeaponModel( __weaponPrefab );
                     
                     
                     

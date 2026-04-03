@@ -21,11 +21,10 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(TeamController);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 1, 1);
+			Utils.BeginObjectRegister(type, L, translator, 0, 1, 1, 1);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetCurrentPlayer", _m_GetCurrentPlayer);
 			
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnCharacterSwapped", _e_OnCharacterSwapped);
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "teamMembers", _g_get_teamMembers);
             
@@ -139,40 +138,6 @@ namespace XLua.CSObjectWrap
         
 		
 		
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _e_OnCharacterSwapped(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			    int gen_param_count = LuaAPI.lua_gettop(L);
-			TeamController gen_to_be_invoked = (TeamController)translator.FastGetCSObj(L, 1);
-                System.Action<int> gen_delegate = translator.GetDelegate<System.Action<int>>(L, 3);
-                if (gen_delegate == null) {
-                    return LuaAPI.luaL_error(L, "#3 need System.Action<int>!");
-                }
-				
-				if (gen_param_count == 3)
-				{
-					
-					if (LuaAPI.xlua_is_eq_str(L, 2, "+")) {
-						gen_to_be_invoked.OnCharacterSwapped += gen_delegate;
-						return 0;
-					} 
-					
-					
-					if (LuaAPI.xlua_is_eq_str(L, 2, "-")) {
-						gen_to_be_invoked.OnCharacterSwapped -= gen_delegate;
-						return 0;
-					} 
-					
-				}
-			} catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-			LuaAPI.luaL_error(L, "invalid arguments to TeamController.OnCharacterSwapped!");
-            return 0;
-        }
-        
 		
 		
     }

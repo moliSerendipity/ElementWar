@@ -7,8 +7,28 @@ local TeamManager = require("System.TeamManager")
 
 local WeaponManager = {}
 
+-- 现在变成单纯让每个角色的武器冷却随帧倒流的管理器
 function WeaponManager.Update(_deltaTime)
-	local activeCharacter = TeamManager.GetCurrentPlayer()
+	for i = 1, 4 do
+		local character = TeamManager.Characters[i]
+		if character then
+			local weapon = character:GetActiveWeapon()
+			-- 仅扣减当前持有武器的内置 CD
+			if weapon and weapon.FireCooldown > 0 then
+				weapon.FireCooldown = weapon.FireCooldown - _deltaTime
+			end
+		end
+	end
+end
+
+function WeaponManager.Init()
+	-- C#事件的强解耦不再依赖 CS.InputManager，而是依靠底层全局桥接函数
+	print("[WeaponManager] 战斗控制管线已切换为高速 Push 推送模式")
+end
+
+-- C# 层意图判断完毕，传过来的开火请求事件
+function WeaponManager.OnFireInputPush(_characterID, _isHeld, _wasPressedThisFrame)
+	local activeCharacter = TeamManager.GetCharacter(_characterID)
 	if not activeCharacter then
 		return
 	end
@@ -17,120 +37,194 @@ function WeaponManager.Update(_deltaTime)
 	if not weapon then
 		return
 	end
+	if weapon.FireCooldown > 0 then
+		return
+	end -- 还在卡 CD，直接抛弃本次扣留事件
 
 	local weaponSubType = weapon.Config.WeaponSubType
-	-- 只处理枪械和近战，投掷物走单独的按键或立刻释放，不在 Update 里轮询
-	if weaponSubType ~= Config_Common.WeaponSubType.Ranged and weaponSubType ~= Config_Common.WeaponSubType.Melee then
-		return
-	end
-
-	-- 更新冷却
-	if weapon.FireCooldown > 0 then
-		weapon.FireCooldown = weapon.FireCooldown - _deltaTime
-		return
-	end
-
-	local inputFrame = CS.InputManager.Instance.Frame
-
-	-- 拦截手动换弹请求 - 优先级高于开火
-	if weaponSubType == Config_Common.WeaponSubType.Ranged then
-		-- 只有当弹匣空了且背包里还有这种子弹时，才触发自动换弹
-        local needAutoReload = (weapon.CurrentAmmoCount <= 0) and (InventoryManager.GetItemCount(weapon.CurrentAmmoType) > 0)
-		
-		-- 手动按 R 键，或者满足安全自动换弹条件
-		if inputFrame.reloadButton.wasPressedThisFrame or needAutoReload then
-			local success = CombatManager.Reload(activeCharacter)
-
-			if success then
-				-- 如果换弹成功，把武器冷却时间设为配置表里的 ReloadTime
-				weapon.FireCooldown = weapon.Config.ReloadTime
-
-				-- 通知 C# 表现层播放换弹动画
-				if CS.TeamController.Instance then
-					local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
-					if tpsController then
-						tpsController:ForceReload()
-					end
-				end
-				-- 换弹动作开始，直接结束本帧轮询，跳过下方的开火判定
-				return
-			end
-		end
-	end
-
 	local attemptToFire = false
 
-	-- 判断开火意图
 	if weaponSubType == Config_Common.WeaponSubType.Ranged then
 		if weapon.Config.IsAuto then
-			attemptToFire = inputFrame.fireButton.isHeld
+			attemptToFire = _isHeld
 		else
-			attemptToFire = inputFrame.fireButton.wasPressedThisFrame
+			attemptToFire = _wasPressedThisFrame
 		end
 	elseif weaponSubType == Config_Common.WeaponSubType.Melee then
-		attemptToFire = inputFrame.fireButton.isHeld
+		attemptToFire = _isHeld
 	end
 
-	-- 意图与冷却碰撞
-	if attemptToFire and weapon.FireCooldown <= 0 then
-		local success = CombatManager.Fire(activeCharacter)
-
-		if success then
-			-- 成功执行动作，重置冷却
-            if weaponSubType == Config_Common.WeaponSubType.Ranged then
-                weapon.FireCooldown = weapon.Config.FireRate
-            elseif weaponSubType == Config_Common.WeaponSubType.Melee then
-                weapon.FireCooldown = weapon.Config.AttackRate
+	-- CD准备就绪且触发逻辑有效，打进实际消耗子弹环节
+	if attemptToFire then
+		if weaponSubType == Config_Common.WeaponSubType.Ranged and weapon.CurrentAmmoCount <= 0 then
+            local reserveAmmo = InventoryManager.GetItemCount(weapon.CurrentAmmoType)
+            if reserveAmmo > 0 then
+                print("[WeaponManager] 弹匣为空且有备弹，截获开火指令，自动转入换弹流程！")
+                -- 核心：在内部直接复用并呼叫换弹管道！
+                WeaponManager.OnReloadInputPush(_characterID)
+            else
+                print("[WeaponManager] 咔嗒...没子弹了，背包也没备弹了！")
+                -- 给予一个极短的“卡壳冷却”，防止每帧疯狂 print 刷爆控制台
+                weapon.FireCooldown = 0.2
             end
-        else
-            weapon.FireCooldown = 0.2
+            
+            return -- 既然是空枪，立刻终止，不用再走真实开火消耗逻辑了
         end
-    end
+		
+    	local success, elementType = CombatManager.Fire(activeCharacter)
+		if success then
+        	if weaponSubType == Config_Common.WeaponSubType.Ranged then
+            	weapon.FireCooldown = weapon.Config.FireRate
+        	elseif weaponSubType == Config_Common.WeaponSubType.Melee then
+            	weapon.FireCooldown = weapon.Config.AttackRate
+        	end
+    	end
+	end
 end
 
-function WeaponManager.Init()
-	-- XLua 绑定 C# 事件的语法：CS.命名空间.类名.Instance:事件名('+', 回调函数)
-	if CS.InputManager.Instance then
-		CS.InputManager.Instance:OnSwitchAmmoType('-', WeaponManager.OnSwitchAmmoTypePressed)
-        CS.InputManager.Instance:OnSwitchAmmoType('+', WeaponManager.OnSwitchAmmoTypePressed)
-		print("[WeaponManager] 成功监听 C# 的切换子弹按键事件")
-    else
-        print("[Error] InputManager C# 实例未找到！")
-    end
-end
-
-function WeaponManager.OnSwitchAmmoTypePressed()
-	-- 获取当前主控角色
-	local activeCharacter = TeamManager.GetCurrentPlayer()
+-- C# 传过来的换弹请求事件
+function WeaponManager.OnReloadInputPush(_characterID)
+	local activeCharacter = TeamManager.GetCharacter(_characterID)
 	if not activeCharacter then
 		return
 	end
 
-	-- 获取当前手持武器
-	local weapon = activeCharacter:GetActiveWeapon()
-	if not weapon or not weapon.Config.WeaponSubType or weapon.Config.WeaponSubType ~= Config_Common.WeaponSubType.Ranged then
-		print("[WeaponManager] 无法切弹")
+	local success = CombatManager.Reload(activeCharacter)
+	if success then
+    	local weapon = activeCharacter:GetActiveWeapon()
+    	-- 设置换弹无敌霸体真空期（武器进入硬锁定倒数时间）
+    	weapon.FireCooldown = weapon.Config.ReloadTime
+
+    	if CS.TeamController.Instance then
+        	local tpsCC = CS.TeamController.Instance.teamMembers[_characterID - 1] -- Lua转C# List 0索引起点
+        	if tpsCC then
+        		tpsCC:ForceReload()
+        	end
+    	end
+	end
+end
+
+-- C# 传过来的切子弹类型请求事件
+function WeaponManager.OnSwitchAmmoInputPush(_characterID)
+	local activeCharacter = TeamManager.GetCharacter(_characterID)
+	if not activeCharacter then
 		return
 	end
 
-	-- 获取下一种可用子弹
-	local nextAmmoID = WeaponManager.GetNextAvailableAmmo(weapon)
+	local weapon = activeCharacter:GetActiveWeapon()
+	if not weapon or weapon.Config.WeaponSubType ~= Config_Common.WeaponSubType.Ranged then
+		return
+	end
 
+	local nextAmmoID = WeaponManager.GetNextAvailableAmmo(weapon)
 	if nextAmmoID and nextAmmoID ~= weapon.CurrentAmmoType then
 		local success = CombatManager.SwitchAmmoType(activeCharacter, nextAmmoID)
-		-- 如果逻辑执行成功，反向调用 C# 播放动画
 		if success then
-			-- 切子弹等同于换弹，必须立刻把武器锁死 ReloadTime 的时间
 			weapon.FireCooldown = weapon.Config.ReloadTime
-			local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
-			if tpsController then
-				tpsController:ForceReload()
-			end
+        	if CS.TeamController.Instance then
+            	local tpsCC = CS.TeamController.Instance.teamMembers[_characterID - 1]
+            	if tpsCC then
+            		tpsCC:ForceReload()
+            	end
+        	end
 		end
 	else
-		print("[WeaponManager] 背包中没有其他适用当前枪械的元素子弹。")
-    end
+		print("[WeaponManager] 背包中没有其他适用的元素子弹。")
+	end
 end
+
+-- function WeaponManager.Update(_deltaTime)
+-- 	local activeCharacter = TeamManager.GetCurrentPlayer()
+-- 	if not activeCharacter then
+-- 		return
+-- 	end
+
+-- 	local weapon = activeCharacter:GetActiveWeapon()
+-- 	if not weapon then
+-- 		return
+-- 	end
+
+-- 	local weaponSubType = weapon.Config.WeaponSubType
+-- 	-- 只处理枪械和近战，投掷物走单独的按键或立刻释放，不在 Update 里轮询
+-- 	if weaponSubType ~= Config_Common.WeaponSubType.Ranged and weaponSubType ~= Config_Common.WeaponSubType.Melee then
+-- 		return
+-- 	end
+
+-- 	-- 更新冷却
+-- 	if weapon.FireCooldown > 0 then
+-- 		weapon.FireCooldown = weapon.FireCooldown - _deltaTime
+-- 		return
+-- 	end
+
+-- 	local inputFrame = CS.InputManager.Instance.Frame
+
+-- 	-- 拦截手动换弹请求 - 优先级高于开火
+-- 	if weaponSubType == Config_Common.WeaponSubType.Ranged then
+-- 		-- 只有当弹匣空了且背包里还有这种子弹时，才触发自动换弹
+--         local needAutoReload = (weapon.CurrentAmmoCount <= 0) and (InventoryManager.GetItemCount(weapon.CurrentAmmoType) > 0)
+		
+-- 		-- 手动按 R 键，或者满足安全自动换弹条件
+-- 		if inputFrame.reloadButton.wasPressedThisFrame or needAutoReload then
+-- 			local success = CombatManager.Reload(activeCharacter)
+
+-- 			if success then
+-- 				-- 如果换弹成功，把武器冷却时间设为配置表里的 ReloadTime
+-- 				weapon.FireCooldown = weapon.Config.ReloadTime
+
+-- 				-- 通知 C# 表现层播放换弹动画
+-- 				if CS.TeamController.Instance then
+-- 					local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
+-- 					if tpsController then
+-- 						tpsController:ForceReload()
+-- 					end
+-- 				end
+-- 				-- 换弹动作开始，直接结束本帧轮询，跳过下方的开火判定
+-- 				return
+-- 			end
+-- 		end
+-- 	end
+
+-- 	local attemptToFire = false
+
+-- 	-- 判断开火意图
+-- 	if weaponSubType == Config_Common.WeaponSubType.Ranged then
+-- 		if weapon.Config.IsAuto then
+-- 			attemptToFire = inputFrame.fireButton.isHeld
+-- 		else
+-- 			attemptToFire = inputFrame.fireButton.wasPressedThisFrame
+-- 		end
+-- 	elseif weaponSubType == Config_Common.WeaponSubType.Melee then
+-- 		attemptToFire = inputFrame.fireButton.isHeld
+-- 	end
+
+-- 	-- 意图与冷却碰撞
+-- 	if attemptToFire and weapon.FireCooldown <= 0 then
+-- 		local success = CombatManager.Fire(activeCharacter)
+
+-- 		if success then
+-- 			-- 成功执行动作，重置冷却
+--             if weaponSubType == Config_Common.WeaponSubType.Ranged then
+--                 weapon.FireCooldown = weapon.Config.FireRate
+--             elseif weaponSubType == Config_Common.WeaponSubType.Melee then
+--                 weapon.FireCooldown = weapon.Config.AttackRate
+--             end
+--         else
+--             weapon.FireCooldown = 0.2
+--         end
+--     end
+-- end
+
+-- function WeaponManager.Init()
+-- 	-- XLua 绑定 C# 事件的语法：CS.命名空间.类名.Instance:事件名('+', 回调函数)
+-- 	if CS.InputManager.Instance then
+-- 		CS.InputManager.Instance:OnSwitchAmmoType('-', WeaponManager.OnSwitchAmmoTypePressed)
+--         CS.InputManager.Instance:OnSwitchAmmoType('+', WeaponManager.OnSwitchAmmoTypePressed)
+-- 		print("[WeaponManager] 成功监听 C# 的切换子弹按键事件")
+--     else
+--         print("[Error] InputManager C# 实例未找到！")
+--     end
+-- end
+                                  
 
 -- 在背包中寻找下一种可用的子弹
 function WeaponManager.GetNextAvailableAmmo(_weapon)
@@ -159,21 +253,12 @@ function WeaponManager.GetNextAvailableAmmo(_weapon)
     return currentAmmoID
 end
 
-function WeaponManager.OnFirePressed()
-	local activeCharacter = TeamManager.GetCurrentPlayer()
-	if not activeCharacter then
-		return
-	end
-
-	local success = CombatManager.Fire(activeCharacter)
-end
-
 -- 清理函数：注销所有 C# 事件
 function WeaponManager.Dispose()
-	if CS.InputManager.Instance then
-		CS.InputManager.Instance:OnSwitchAmmoType('-', WeaponManager.OnSwitchAmmoTypePressed)
-        print("[WeaponManager] 成功解绑 C# 的 OnSwitchAmmoType 事件")
-    end
+	-- if CS.InputManager.Instance then
+	-- 	CS.InputManager.Instance:OnSwitchAmmoType('-', WeaponManager.OnSwitchAmmoTypePressed)
+    --     print("[WeaponManager] 成功解绑 C# 的 OnSwitchAmmoType 事件")
+    -- end
 end
 
 

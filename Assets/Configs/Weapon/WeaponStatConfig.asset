@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d83e5373da8ecc44ab2c33dc13d5b99, type: 3}
+  m_Name: WeaponStatConfig
+  m_EditorClassIdentifier: 
+  configId: WeaponStatConfig
+  displayName: 
+  description: 
+  isEnabled: 1
+  damage: 20
+  headShotDamageMultiplier: 2
+  weakPointDamageMultiplier: 1.5
+  fireInterval: 0.1
+  burstCount: 1
+  burstInterval: 0.08
+  magazineSize: 999999
+  reserveAmmoCapacity: 999999
+  range: 1000
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 411
+  hitTriggerInteraction: 1
+  penetrationCount: 0
+  penetrationDamageDecay: 0

@@ -1,5 +1,6 @@
 -- 负责管理场景中所有怪物实体的数据、生命值与元素衰减
 
+local Config_Common = require("Config.Config_Common")
 local Config_Monster = require("Config.Config_Monster")
 
 local EntityManager = {}
@@ -13,7 +14,7 @@ function EntityManager.Init()
 end
 
 -- 获取实体数据（如果不存在，说明是第一次被打中，自动注册进池子）
-function EntityManager.GetOrAddEntity(_uid, _configID)
+function EntityManager.GetOrAddEntity(_uid, _configID, _level)
 	if not EntityManager.Entities[_uid] then
 		local config = Config_Monster[_configID]
 		if not config then 
@@ -21,15 +22,34 @@ function EntityManager.GetOrAddEntity(_uid, _configID)
             return nil 
         end
 
+    	local levelMultiplier = 1.0 + (_level * 0.1)
+        local actualHP = config.BaseHP * levelMultiplier
+
         local entity = {
-        	UID = _uid,
-        	Config = config,
-        	IsDead = false,
-        	HP = config.BaseHP,
-        	MaxHP = config.BaseHP,
-        	-- 元素挂载池: Elements[ElementType] = { GU = 剩余元素量, DecayRate = 每秒衰减率 }
-        	Elements = {},
-        	-- ICD 追踪器: 记录[攻击者_武器_元素] 对此怪物的攻击频率，用于 2.5s / 3hits 计算
+            UID = _uid,
+            Config = config,
+            IsDead = false,
+            
+            -- RPG 属性
+            Level = _level,
+            MaxHP = actualHP,
+            HP = actualHP,
+            
+            -- 怪物的独立状态修饰器 (如被队友套了脆弱减防 Debuff)
+            Modifiers = {
+                DefReduce = 0.0, -- 减防百分比 (范围 0~1)
+                ResReduce = {}   -- 减抗百分比 (各元素减抗)
+            },
+
+            -- 将抗性表移入这里，方便修饰器进行计算
+            BaseRES = {
+                [Config_Common.ElementType.Physical] = 0.10,
+                [Config_Common.ElementType.Fire] = 0.10,
+                [Config_Common.ElementType.Thunder] = 0.10,
+                [Config_Common.ElementType.Ice] = 0.10
+            },
+
+            Elements = {},
             ICD_Tracker = {}
         }
 

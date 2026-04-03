@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 767130b50d16678408b472e1838f3e5d, type: 3}
+  m_Name: WeaponPresentationConfig
+  m_EditorClassIdentifier: 
+  configId: WeaponPresentationConfig
+  displayName: 
+  description: 
+  isEnabled: 1
+  muzzleFlashPrefab: {fileID: 1000012903210382, guid: e165b34d6402b6449bce6c32e18c8419,
+    type: 3}
+  muzzleFlashPoolKey: MuzzleFlash
+  muzzleFlashLifeTime: 0.4
+  bulletProjectilePrefab: {fileID: 1238843893459588, guid: df1a1922af2b37e4f9ade4203d8566bd,
+    type: 3}
+  bulletProjectilePoolKey: BulletProjectile
+  bulletProjectileLifeTime: 10
+  worldImpactPrefab: {fileID: 0}
+  worldImpactPoolKey: 
+  worldImpactLifeTime: 1.5
+  actorImpactPrefab: {fileID: 0}
+  actorImpactPoolKey: 
+  actorImpactLifeTime: 1.5
+  fireAudio: {fileID: 0}
+  dryFireAudio: {fileID: 0}
+  worldHitAudio: {fileID: 0}
+  actorHitAudio: {fileID: 0}
+  weakPointHitAudio: {fileID: 0}
+  criticalHitAudio: {fileID: 0}
+  killHitAudio: {fileID: 0}
+  reloadAudio: {fileID: 0}
+  equipAudio: {fileID: 0}
+  crosshairStyleId: 
+  uiIcon: {fileID: 0}

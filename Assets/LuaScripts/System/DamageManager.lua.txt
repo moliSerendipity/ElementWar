@@ -1,6 +1,5 @@
 -- 负责接收物理层的命中信息，计算最终伤害与元素结算
 
-local Config_Weapon = require("Config.Config_Weapon")
 local Config_Ammo = require("Config.Config_Ammo")
 local TeamManager = require("System.TeamManager")
 local EntityManager = require("System.EntityManager")
@@ -9,12 +8,11 @@ local ElementCalculator = require("System.ElementCalculator")
 local DamageManager = {}
 
 -- 接收来自 C# 的命中信息
--- msg 结构: { instigatorID (int), targetUID (int), ammoID (int), hitMultiplier (float) }
-function DamageManager.ProcessHit(msg)
+function DamageManager.ProcessHit(_instigatorID, _targetUID, _targetConfigID, _targetLevel, _ammoID, _hitMultiplier)
 	-- 获取攻击者信息
-	local attacker = TeamManager.GetCharacter(msg.instigatorID)
+	local attacker = TeamManager.GetCharacter(_instigatorID)
 	if not attacker then
-        print("[DamageManager] 无法找到 Instigator ID 为 " .. tostring(msg.instigatorID) .. " 的角色实体！")
+        print("[DamageManager] 无法找到 Instigator ID 为 " .. tostring(_instigatorID) .. " 的角色实体！")
         return 
     end
 	local weapon = attacker:GetActiveWeapon()
@@ -23,31 +21,106 @@ function DamageManager.ProcessHit(msg)
 		return
 	end
 	-- 获取怪物实体
-    local targetEntity = EntityManager.GetOrAddEntity(msg.targetUID)
-    if targetEntity.IsDead then
+    local target = EntityManager.GetOrAddEntity(_targetUID, _targetConfigID, _targetLevel)
+    if not target or target.IsDead then
     	return
     end
 
-	-- 获取基础数值
-	local baseDamage = weapon.Config.BaseDamage
-	local ammoConfig = Config_Ammo[msg.ammoID]
-	local ammoDamageMultiplier = ammoConfig and ammoConfig.DamageMultiplier or 1.0
+	local ammoConfig = Config_Ammo[_ammoID]
 	local elementType = ammoConfig and ammoConfig.ElementType or 1
 
-	-- 初始理论伤害 = 武器基础伤害 * 子弹倍率 * 命中部位倍率
-    local initialDamage  = baseDamage * ammoDamageMultiplier * msg.hitMultiplier
+	-- 先结算反应区 (提前知道有没有免疫，有没有融化倍率，有没有超载附加伤害)
+    local reactData = ElementCalculator.ProcessHit(target, attacker, elementType)
+    if reactData.IsImmune then
+        print("[免疫]")
+        return
+    end
 
-    -- 计算元素反应与最终伤害
-    local finalDamage, reactionType = ElementCalculator.ProcessHit(targetEntity, elementType, initialDamage)
+    -- ========================================================
+    --[1. 基础区] 总攻击力 = (白字) * (1 + 攻击百分比) + 绿字
+    -- ========================================================
+    local weaponATK = weapon.Config.WeaponATK or 0
+    local baseATK = attacker.BaseATK_Char + weaponATK
+    local totalATK = baseATK * (1 + attacker.Modifiers.ATK_Percent or 0) + (attacker.Modifiers.ATK_Flat or 0)
 
-    -- 打印最终战报
-    local isHeadshot = msg.hitMultiplier > 1.0
+    -- 基础伤害 = 总攻击力 * 技能倍率(子弹倍率) * 爆头部位倍率
+    local skillMult = (ammoConfig and ammoConfig.DamageMultiplier or 1.0)
+    local baseDamage = totalATK * skillMult * _hitMultiplier
+
+    -- ========================================================
+    -- [2. 增伤区] 1 + 元素增伤 + 武器类别增伤
+    -- ========================================================
+    local dmgBonusTable = attacker.Modifiers.DamageBonus or {}
+    local elemBonus = dmgBonusTable[elementType] or 0
+    local weaponBonus = attacker.WeaponClassBonus[weapon.Config.WeaponClass] or 0
+    local totalBonusMult = 1 + elemBonus + weaponBonus
+
+    -- ========================================================
+    -- [3. 双爆区] 1 + (是否暴击 * 暴伤)
+    -- ========================================================
+    local isCrit = math.random() <= attacker.CritRate
+    local critMult = isCrit and (1 + attacker.CritDMG) or 1.0
+
+    -- ========================================================
+    --[4. 防御区] (攻Lvl+100)/[(攻Lvl+100) + (防Lvl+100)*(1-减防)*(1-无视防御)]
+    -- ========================================================
+    local ignoreDef = attacker.Modifiers.DefIgnore or 0
+    local reduceDef = target.Modifiers.DefReduce or 0
+
+    local defDivisor = (attacker.Level + 100) + (target.Level + 100) * (1 - reduceDef) * (1 - ignoreDef)
+    local defMult = (attacker.Level + 100) / defDivisor
+
+    -- ========================================================
+    -- [5. 抗性区] 核心分段函数
+    -- ========================================================
+    local baseRes = target.BaseRES[elementType] or 0
+    local resReduce = target.Modifiers.ResReduce[elementType] or 0
+    local finalRes = baseRes - resReduce
+    
+    local resMult = 1.0
+    if finalRes < 0 then
+        resMult = 1 - (finalRes * 0.5) -- res为负，减去负数等于加
+    elseif finalRes <= 0.75 then
+        resMult = 1 - finalRes
+    else
+        resMult = 1 / (1 + 4 * finalRes)
+    end
+
+    -- ========================================================
+    -- 最终计算合并
+    -- ========================================================
+    -- 最终直接伤害 = 基础区 * 增伤区 * 双爆区 * 反应增幅 * 防御区 * 抗性区
+    local finalDirectDamage = baseDamage * totalBonusMult * critMult * reactData.AmpMultiplier * defMult * resMult
+
+    -- 剧变反应伤害 = 剧变原始伤害 * 抗性区 (不受双爆、增伤、防御影响)
+    local finalTransformDamage = reactData.TransformDamage * resMult
+
+    local totalOutput = finalDirectDamage + finalTransformDamage
+
+    EntityManager.ApplyDamage(target.UID, totalOutput)
+
+    -- 从 ElementCalculator 获取完后它已经写入 target.Elements 了
+    if target.Elements[elementType] ~= nil and target.Elements[elementType].GU > 0 then
+        -- 存在这个类型的附着！调它的发光
+        CS.EnemyEntity.SetElementShaderState(_targetUID, elementType, target.Elements[elementType].GU / 2.0)
+    elseif reactData.ReactionName ~= "None" then
+        -- 说明此发子弹虽然耗光了没有残留，但是引发了元素反应，触发特效
+        CS.EnemyEntity.TriggerReactionShader(_targetUID, reactData.ReactionName)
+    end
+
+    -- ========================================================
+    -- 输出战报与应用
+    -- ========================================================
+    local critTag = isCrit and "[暴击!]" or ""
+    local reactTag = (reactData.ReactionName ~= "None") and string.format("[%s]", reactData.ReactionName) or ""
+    
+    print(string.format("💥 命中(UID:%d) | %s%s 直伤:%.1f + 剧变:%.1f = 总计: %.1f", 
+        _targetUID, critTag, reactTag, finalDirectDamage, finalTransformDamage, totalOutput))
+
+    -- 命中部位
+    local isHeadshot = _hitMultiplier > 1.0
     local headshotText = isHeadshot and " 【爆头！】" or ""
-
-    print(string.format("[DamageManager] 命中怪物[%d] | 基础伤害: %.1f -> 最终结算伤害: %.1f %s", 
-        msg.targetUID, initialDamage, finalDamage, headshotText))
-
-    EntityManager.ApplyDamage(targetEntity.UID, finalDamage)
+    print(string.format("[DamageManager] 命中怪物[%d] | %s", _targetUID, headshotText))
 end
 
 

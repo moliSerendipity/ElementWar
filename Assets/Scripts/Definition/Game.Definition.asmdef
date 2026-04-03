@@ -1,0 +1,16 @@
+{
+    "name": "Game.Definition",
+    "rootNamespace": "Game.Definition",
+    "references": [
+        "GUID:71f16ab3d0976b848b81eef0e81c810c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

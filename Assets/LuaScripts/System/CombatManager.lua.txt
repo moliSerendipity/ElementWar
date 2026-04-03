@@ -9,7 +9,7 @@ function CombatManager.Fire(_character)
 	local weapon = _character:GetActiveWeapon()
 	if not weapon then
 		print("[CombatManager] 开火失败: 没有装备武器")
-		return false
+		return false, 1
 	end
 
 	local weaponType = weapon.Config.WeaponSubType
@@ -19,20 +19,21 @@ function CombatManager.Fire(_character)
         if weapon.CurrentAmmoCount > 0 then
             weapon.CurrentAmmoCount = weapon.CurrentAmmoCount - 1
             local ammoID = weapon.CurrentAmmoType
+            local elementType = Config_Item[ammoID].ElementType
 
             print(string.format("[CombatManager] 砰！枪械开火。弹匣剩余: %d/%d (当前子弹: %s)",
                 weapon.CurrentAmmoCount, weapon.Config.MagazineCapacity, Config_Item[weapon.CurrentAmmoType].Name))
             
             if CS.TeamController.Instance then
-            	local tpsController = CS.TeamController.Instance:GetCurrentPlayer()
+            	local tpsController = CS.TeamController.Instance.teamMembers[_character.CharacterID - 1]
             	if tpsController then
-            		tpsController:ForceFire(ammoID)
+            		tpsController:ForceFireHitscan(ammoID, elementType)
             	end
             end
-            return true
+            return true, elementType
         else
             print("[CombatManager] 咔嗒！弹匣空了, 请换弹")
-            return false
+            return false, 1
         end
 
     -- 2. 投掷物逻辑 (用完即弃)
@@ -46,15 +47,15 @@ function CombatManager.Fire(_character)
             print("[CombatManager] 手雷已耗尽！自动切回主武器。")
             _character:SwitchWeapon(Config_Common.EquipSlot.MainWeapon)
         end
-        return true
+        return true, 1
 
     -- 3. 近战武器逻辑 (无消耗)
     elseif weaponType == Config_Common.WeaponSubType.Melee then
         print(string.format("[CombatManager] 挥舞近战武器: %s", weapon.Config.Name))
-        return true
+        return true, 1
     end
 
-    return false
+    return false, 1
 end
 
 -- 换弹

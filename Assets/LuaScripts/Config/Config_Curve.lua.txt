@@ -1,0 +1,14 @@
+-- 数值成长曲线
+
+local Config_Curve = {}
+
+-- 剧变反应(超载/感电)的等级基础伤害表 (简易平滑版)
+-- 公式参考：随等级指数级上升，90级时大约达到峰值
+Config_Curve.TransformativeBaseByLevel = {}
+for i = 1, 100 do
+    -- 这是一个模拟原神增长趋势的二次方拟合公式
+    -- 1级大概是 10，90级大概是 1400
+    Config_Curve.TransformativeBaseByLevel[i] = 10 + (i * i) * 0.17
+end
+
+return Config_Curve

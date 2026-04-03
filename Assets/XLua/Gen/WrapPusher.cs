@@ -55,7 +55,7 @@ namespace XLua
 				
             }
 			
-            IntPtr buff = LuaAPI.xlua_pushstruct(L, 20, HitMessage_TypeID);
+            IntPtr buff = LuaAPI.xlua_pushstruct(L, 24, HitMessage_TypeID);
             if (!CopyByValue.Pack(buff, 0, val))
             {
                 throw new Exception("pack fail fail for HitMessage ,value="+val);

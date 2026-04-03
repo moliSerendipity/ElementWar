@@ -10,6 +10,29 @@ local CombatManager = require("System.CombatManager")
 local DamageManager = require("System.DamageManager")
 local EntityManager = require("System.EntityManager")
 
+--[增加在顶层的桥接转接口，对接给 LuaManager 的 Delegate ]
+function OnLuaFireInput(charID, isHeld, wasPressed)
+    WeaponManager.OnFireInputPush(charID, isHeld, wasPressed)
+end
+
+function OnLuaReloadInput(charID)
+    WeaponManager.OnReloadInputPush(charID)
+end
+
+function OnLuaSwitchAmmoInput(charID)
+    WeaponManager.OnSwitchAmmoInputPush(charID)
+end
+
+function OnLuaCharacterSwapped(csIndex)
+    TeamManager.SyncActiveCharacter(csIndex)
+end
+
+--[全新展开的接收接口 (彻底零垃圾生成, 对应 flattened delegate)]
+function OnReceiveHitMessageFlat(instigatorID, targetUID, targetConfigID, targetLevel, ammoID, hitMultiplier)
+        -- 交回专门管业务的底层去做大乘区算术计算！
+    DamageManager.ProcessHitFlat(instigatorID, targetUID, targetConfigID, targetLevel, ammoID, hitMultiplier)
+end
+
 -- 模拟游戏流程 (Test Case)
 function StartGame()
     -- ==========================================

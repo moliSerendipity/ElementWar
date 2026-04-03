@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3d3c0a1fc2e444d8f0215f798a8ee2, type: 3}
+  m_Name: ConfigRegistry_Default
+  m_EditorClassIdentifier: 
+  characterDefinitions:
+  - {fileID: 11400000, guid: a158eef6d223d9b4b8cbf7f1c254929d, type: 2}
+  characterBaseStats:
+  - {fileID: 11400000, guid: 5178e91c772ddad4280e7d6f3479874b, type: 2}
+  characterMovements:
+  - {fileID: 11400000, guid: 8d75dd2c1b38c3447a9addd46edaab71, type: 2}
+  characterJumps:
+  - {fileID: 11400000, guid: 63ace8f17c94e314c9411e05ec13ec0b, type: 2}
+  characterAims:
+  - {fileID: 11400000, guid: 720a9a864f9448f45b9a047fbcb90346, type: 2}
+  characterSwitches:
+  - {fileID: 11400000, guid: a3fe90f4369f94c4dae3feadc544590b, type: 2}
+  actorAiProfiles:
+  - {fileID: 11400000, guid: e29a715a1d1c45b42a099af42b5c8342, type: 2}
+  damageRules:
+  - {fileID: 11400000, guid: 7de0c1d9d39d2e64e85a117cd4cc0e09, type: 2}
+  resistanceSets:
+  - {fileID: 11400000, guid: dee68760815bed64888521f60f81fef1, type: 2}
+  elementReactions: []
+  buffDefinitions: []
+  areaEffects: []
+  weaponDefinitions:
+  - {fileID: 11400000, guid: c117cf48fe32baf49ac26a4fd4397e4c, type: 2}
+  weaponLoadouts:
+  - {fileID: 11400000, guid: 2b68ea8211ddabd4c827ec297d960abb, type: 2}
+  weaponStats:
+  - {fileID: 11400000, guid: 269f00cffbfd3e64583c93e6d17265b4, type: 2}
+  weaponSpreads:
+  - {fileID: 11400000, guid: 8584e0466eef1be4dacf58ca31f040f4, type: 2}
+  weaponRecoils:
+  - {fileID: 11400000, guid: 2efc7c3cbb316994498aaaeaa073be95, type: 2}
+  weaponReloads:
+  - {fileID: 11400000, guid: 27c0389c470b74243b6a2c0612ae54d8, type: 2}
+  skillLoadouts: []
+  weaponPresentations:
+  - {fileID: 11400000, guid: 5fc7a42687beef743aa501d7acb20142, type: 2}
+  vfxSets: []
+  audioEvents: []
+  cameraProfiles:
+  - {fileID: 11400000, guid: 5cf12a4a09171f84385bbd8623aa1de7, type: 2}
+  cameraBlends: []
+  poolConfigs: []
+  enemyDefinitions:
+  - {fileID: 11400000, guid: 4b9a8dd4d4dee1e408820e9cf78c84e7, type: 2}
+  enemyBaseStats:
+  - {fileID: 11400000, guid: 34c806e2d9a83fe43833c8134c11e676, type: 2}
+  enemyMovements:
+  - {fileID: 11400000, guid: 7172c4a2fbb12054a9d52aa617a99360, type: 2}
+  stageDefinitions: []
+  hudConfigs: []
+  debugConfigs: []

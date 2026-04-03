@@ -7,141 +7,654 @@ AvatarMask:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: UpperBody Avatar Mask
-  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
+  m_Mask: 00000000000000000000000000000000000000000100000001000000010000000100000000000000000000000000000000000000
   m_Elements:
   - m_Path: 
     m_Weight: 1
-  - m_Path: Beta_Joints
+  - m_Path: Face
     m_Weight: 1
-  - m_Path: Beta_Surface
+  - m_Path: FN IWS
     m_Weight: 1
-  - m_Path: mixamorig:Hips
+  - m_Path: FN IWS/FN IWS Rig
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:LeftUpLeg
+  - m_Path: FN IWS/FN IWS Rig/FN IWS Primary
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg
+  - m_Path: FN IWS/FN IWS Rig/root
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot
+  - m_Path: FN IWS/FN IWS Rig/root/bolt
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot/mixamorig:LeftToeBase
+  - m_Path: FN IWS/FN IWS Rig/root/bolt/bolt_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot/mixamorig:LeftToeBase/mixamorig:LeftToe_End
+  - m_Path: FN IWS/FN IWS Rig/root/charging cover.L
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:RightUpLeg
+  - m_Path: FN IWS/FN IWS Rig/root/charging cover.L/charging cover.L_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg
+  - m_Path: FN IWS/FN IWS Rig/root/charging cover.R
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot
+  - m_Path: FN IWS/FN IWS Rig/root/charging cover.R/charging cover.R_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot/mixamorig:RightToeBase
+  - m_Path: FN IWS/FN IWS Rig/root/charging handle.L
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot/mixamorig:RightToeBase/mixamorig:RightToe_End
+  - m_Path: FN IWS/FN IWS Rig/root/charging handle.L/charging handle.L_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine
+  - m_Path: FN IWS/FN IWS Rig/root/charging handle.R
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1
+  - m_Path: FN IWS/FN IWS Rig/root/charging handle.R/charging handle.R_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2
+  - m_Path: FN IWS/FN IWS Rig/root/fire selector
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder
+  - m_Path: FN IWS/FN IWS Rig/root/fire selector/fire selector_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm
+  - m_Path: FN IWS/FN IWS Rig/root/trigger
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm
+  - m_Path: FN IWS/FN IWS Rig/root/trigger/trigger_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand
+  - m_Path: Glasses
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1
+  - m_Path: Headset
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1/mixamorig:LeftHandIndex2
+  - m_Path: Headset.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1/mixamorig:LeftHandIndex2/mixamorig:LeftHandIndex3
+  - m_Path: Item
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1/mixamorig:LeftHandIndex2/mixamorig:LeftHandIndex3/mixamorig:LeftHandIndex4
+  - m_Path: IWS mag Cryo.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1
+  - m_Path: IWS mag Dendro.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1/mixamorig:LeftHandMiddle2
+  - m_Path: IWS mag Dendro.001/IWS mag bullets Dendro.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1/mixamorig:LeftHandMiddle2/mixamorig:LeftHandMiddle3
+  - m_Path: IWS mag Dendro.002
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1/mixamorig:LeftHandMiddle2/mixamorig:LeftHandMiddle3/mixamorig:LeftHandMiddle4
+  - m_Path: IWS mag Electro.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandPinky1
+  - m_Path: IWS mag Electro.001/IWS mag bullets Electro.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandPinky1/mixamorig:LeftHandPinky2
+  - m_Path: IWS mag loaded.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandPinky1/mixamorig:LeftHandPinky2/mixamorig:LeftHandPinky3
+  - m_Path: IWS mag loaded.001/IWS mag bullets loaded.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandPinky1/mixamorig:LeftHandPinky2/mixamorig:LeftHandPinky3/mixamorig:LeftHandPinky4
+  - m_Path: Lumine EyeStar
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1
+  - m_Path: Lumine Knife
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1/mixamorig:LeftHandRing2
+  - m_Path: lumine knife holder
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1/mixamorig:LeftHandRing2/mixamorig:LeftHandRing3
+  - m_Path: Lumine Rig
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1/mixamorig:LeftHandRing2/mixamorig:LeftHandRing3/mixamorig:LeftHandRing4
+  - m_Path: Lumine Rig/root.002
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1
+  - m_Path: Lumine Rig/root.002/DEF-spine
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1/mixamorig:LeftHandThumb2
+  - m_Path: Lumine Rig/root.002/DEF-spine/+PelvisTwist CF A01
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1/mixamorig:LeftHandThumb2/mixamorig:LeftHandThumb3
+  - m_Path: Lumine Rig/root.002/DEF-spine/+PelvisTwist CF A01/+PelvisTwist CF A01_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1/mixamorig:LeftHandThumb2/mixamorig:LeftHandThumb3/mixamorig:LeftHandThumb4
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/+HipsBackLA
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck/mixamorig:Head
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/+HipsBackLA/+HipsBackLA_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck/mixamorig:Head/mixamorig:HeadTop_End
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/+HipsBackLB
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/+HipsBackLB/+HipsBackLB_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/+HipsBackLC
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/+HipsBackLC/+HipsBackLC_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/+ChestbagRB
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/+ChestbagRB/+ChestbagRB_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2/mixamorig:RightHandIndex3
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2/mixamorig:RightHandIndex3/mixamorig:RightHandIndex4
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+Chestbag.003
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+Chestbag.003/+Chestbag.003_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1/mixamorig:RightHandMiddle2
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1/mixamorig:RightHandMiddle2/mixamorig:RightHandMiddle3
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+ChestbagFB
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1/mixamorig:RightHandMiddle2/mixamorig:RightHandMiddle3/mixamorig:RightHandMiddle4
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+ChestbagFB/+ChestbagFB_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandPinky1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+ChestbagLA
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandPinky1/mixamorig:RightHandPinky2
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+ChestbagLA/+ChestbagLA_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandPinky1/mixamorig:RightHandPinky2/mixamorig:RightHandPinky3
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+ChestbagRA
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandPinky1/mixamorig:RightHandPinky2/mixamorig:RightHandPinky3/mixamorig:RightHandPinky4
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+ChestbagRA/+ChestbagRA_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+TabletFB
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1/mixamorig:RightHandRing2
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/+ChestbagFA/+TabletFB/+TabletFB_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1/mixamorig:RightHandRing2/mixamorig:RightHandRing3
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/breast.L
+    m_Weight: 0
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/breast.L/breast.L_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1/mixamorig:RightHandRing2/mixamorig:RightHandRing3/mixamorig:RightHandRing4
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/breast.R
+    m_Weight: 0
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/breast.R/breast.R_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L
+    m_Weight: 0
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1/mixamorig:RightHandThumb2
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/+UpperArmTwistA01.L
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1/mixamorig:RightHandThumb2/mixamorig:RightHandThumb3
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/+UpperArmTwistA01.L/+UpperArmTwistA01.L_end
     m_Weight: 1
-  - m_Path: mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1/mixamorig:RightHandThumb2/mixamorig:RightHandThumb3/mixamorig:RightHandThumb4
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/+UpperArmTwistA02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/+UpperArmTwistA02.L/+UpperArmTwistA02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-f_index.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-f_index.01.L/DEF-f_index.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-f_index.01.L/DEF-f_index.02.L/DEF-f_index.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-f_index.01.L/DEF-f_index.02.L/DEF-f_index.03.L/DEF-f_index.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-palm.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-palm.01.L/DEF-palm.01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-thumb.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-thumb.01.L/DEF-thumb.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-thumb.01.L/DEF-thumb.02.L/DEF-thumb.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/DEF-thumb.01.L/DEF-thumb.02.L/DEF-thumb.03.L/DEF-thumb.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01.L/MCH-f_index.01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L/MCH-f_index.02_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L/MCH-f_index.02_drv.L/MCH-f_index.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L/MCH-f_index.02_drv.L/MCH-f_index.02.L/MCH-f_index.02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L/MCH-f_index.02_drv.L/MCH-f_index.03_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L/MCH-f_index.02_drv.L/MCH-f_index.03_drv.L/MCH-f_index.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-f_index.01_drv.L/MCH-f_index.02_drv.L/MCH-f_index.03_drv.L/MCH-f_index.03.L/MCH-f_index.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01.L/MCH-thumb.01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L/MCH-thumb.02_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L/MCH-thumb.02_drv.L/MCH-thumb.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L/MCH-thumb.02_drv.L/MCH-thumb.02.L/MCH-thumb.02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L/MCH-thumb.02_drv.L/MCH-thumb.03_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L/MCH-thumb.02_drv.L/MCH-thumb.03_drv.L/MCH-thumb.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/MCH-thumb.01_drv.L/MCH-thumb.02_drv.L/MCH-thumb.03_drv.L/MCH-thumb.03.L/MCH-thumb.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-f_index.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-f_index.01.L/ORG-f_index.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-f_index.01.L/ORG-f_index.02.L/ORG-f_index.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-f_index.01.L/ORG-f_index.02.L/ORG-f_index.03.L/ORG-f_index.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-thumb.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-thumb.01.L/ORG-thumb.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-thumb.01.L/ORG-thumb.02.L/ORG-thumb.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.01.L/ORG-thumb.01.L/ORG-thumb.02.L/ORG-thumb.03.L/ORG-thumb.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/DEF-f_middle.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/DEF-f_middle.01.L/DEF-f_middle.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/DEF-f_middle.01.L/DEF-f_middle.02.L/DEF-f_middle.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/DEF-f_middle.01.L/DEF-f_middle.02.L/DEF-f_middle.03.L/DEF-f_middle.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/DEF-palm.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/DEF-palm.02.L/DEF-palm.02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01.L/MCH-f_middle.01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L/MCH-f_middle.02_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L/MCH-f_middle.02_drv.L/MCH-f_middle.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L/MCH-f_middle.02_drv.L/MCH-f_middle.02.L/MCH-f_middle.02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L/MCH-f_middle.02_drv.L/MCH-f_middle.03_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L/MCH-f_middle.02_drv.L/MCH-f_middle.03_drv.L/MCH-f_middle.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/MCH-f_middle.01_drv.L/MCH-f_middle.02_drv.L/MCH-f_middle.03_drv.L/MCH-f_middle.03.L/MCH-f_middle.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/ORG-f_middle.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/ORG-f_middle.01.L/ORG-f_middle.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/ORG-f_middle.01.L/ORG-f_middle.02.L/ORG-f_middle.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.02.L/ORG-f_middle.01.L/ORG-f_middle.02.L/ORG-f_middle.03.L/ORG-f_middle.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/DEF-f_ring.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/DEF-f_ring.01.L/DEF-f_ring.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/DEF-f_ring.01.L/DEF-f_ring.02.L/DEF-f_ring.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/DEF-f_ring.01.L/DEF-f_ring.02.L/DEF-f_ring.03.L/DEF-f_ring.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/DEF-palm.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/DEF-palm.03.L/DEF-palm.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01.L/MCH-f_ring.01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L/MCH-f_ring.02_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L/MCH-f_ring.02_drv.L/MCH-f_ring.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L/MCH-f_ring.02_drv.L/MCH-f_ring.02.L/MCH-f_ring.02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L/MCH-f_ring.02_drv.L/MCH-f_ring.03_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L/MCH-f_ring.02_drv.L/MCH-f_ring.03_drv.L/MCH-f_ring.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/MCH-f_ring.01_drv.L/MCH-f_ring.02_drv.L/MCH-f_ring.03_drv.L/MCH-f_ring.03.L/MCH-f_ring.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/ORG-f_ring.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/ORG-f_ring.01.L/ORG-f_ring.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/ORG-f_ring.01.L/ORG-f_ring.02.L/ORG-f_ring.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.03.L/ORG-f_ring.01.L/ORG-f_ring.02.L/ORG-f_ring.03.L/ORG-f_ring.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/DEF-f_pinky.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/DEF-f_pinky.01.L/DEF-f_pinky.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/DEF-f_pinky.01.L/DEF-f_pinky.02.L/DEF-f_pinky.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/DEF-f_pinky.01.L/DEF-f_pinky.02.L/DEF-f_pinky.03.L/DEF-f_pinky.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/DEF-palm.04.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/DEF-palm.04.L/DEF-palm.04.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01.L/MCH-f_pinky.01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L/MCH-f_pinky.02_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L/MCH-f_pinky.02_drv.L/MCH-f_pinky.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L/MCH-f_pinky.02_drv.L/MCH-f_pinky.02.L/MCH-f_pinky.02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L/MCH-f_pinky.02_drv.L/MCH-f_pinky.03_drv.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L/MCH-f_pinky.02_drv.L/MCH-f_pinky.03_drv.L/MCH-f_pinky.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/MCH-f_pinky.01_drv.L/MCH-f_pinky.02_drv.L/MCH-f_pinky.03_drv.L/MCH-f_pinky.03.L/MCH-f_pinky.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/ORG-f_pinky.01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/ORG-f_pinky.01.L/ORG-f_pinky.02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/ORG-f_pinky.01.L/ORG-f_pinky.02.L/ORG-f_pinky.03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001/DEF-forearm.L/DEF-forearm.L.001/DEF-hand.L/ORG-palm.04.L/ORG-f_pinky.01.L/ORG-f_pinky.02.L/ORG-f_pinky.03.L/ORG-f_pinky.03.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R
+    m_Weight: 0
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/+UpperArmTwistA01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/+UpperArmTwistA01.R/+ArmScalfR
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/+UpperArmTwistA01.R/+ArmScalfR/+ArmScalfR_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/+UpperArmTwistA02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/+UpperArmTwistA02.R/+UpperArmTwistA02.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-f_index.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-f_index.01.R/DEF-f_index.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-f_index.01.R/DEF-f_index.02.R/DEF-f_index.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-f_index.01.R/DEF-f_index.02.R/DEF-f_index.03.R/DEF-f_index.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-thumb.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-thumb.01.R/DEF-thumb.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-thumb.01.R/DEF-thumb.02.R/DEF-thumb.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/DEF-thumb.01.R/DEF-thumb.02.R/DEF-thumb.03.R/DEF-thumb.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-f_index.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-f_index.01.R/ORG-f_index.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-f_index.01.R/ORG-f_index.02.R/ORG-f_index.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-f_index.01.R/ORG-f_index.02.R/ORG-f_index.03.R/ORG-f_index.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-thumb.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-thumb.02.R/ORG-thumb.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.01.R/ORG-thumb.02.R/ORG-thumb.03.R/ORG-thumb.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/DEF-f_middle.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/DEF-f_middle.01.R/DEF-f_middle.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/DEF-f_middle.01.R/DEF-f_middle.02.R/DEF-f_middle.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/DEF-f_middle.01.R/DEF-f_middle.02.R/DEF-f_middle.03.R/DEF-f_middle.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/MCH-f_middle.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/MCH-f_middle.01.R/MCH-f_middle.01.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/MCH-f_middle.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/MCH-f_middle.03.R/MCH-f_middle.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/ORG-f_middle.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/ORG-f_middle.01.R/ORG-f_middle.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/ORG-f_middle.01.R/ORG-f_middle.02.R/ORG-f_middle.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.02.R/ORG-f_middle.01.R/ORG-f_middle.02.R/ORG-f_middle.03.R/ORG-f_middle.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/DEF-f_ring.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/DEF-f_ring.01.R/DEF-f_ring.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/DEF-f_ring.01.R/DEF-f_ring.02.R/DEF-f_ring.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/DEF-f_ring.01.R/DEF-f_ring.02.R/DEF-f_ring.03.R/DEF-f_ring.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/ORG-f_ring.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/ORG-f_ring.01.R/ORG-f_ring.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/ORG-f_ring.01.R/ORG-f_ring.02.R/ORG-f_ring.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.03.R/ORG-f_ring.01.R/ORG-f_ring.02.R/ORG-f_ring.03.R/ORG-f_ring.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/DEF-f_pinky.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/DEF-f_pinky.01.R/DEF-f_pinky.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/DEF-f_pinky.01.R/DEF-f_pinky.02.R/DEF-f_pinky.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/DEF-f_pinky.01.R/DEF-f_pinky.02.R/DEF-f_pinky.03.R/DEF-f_pinky.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/ORG-f_pinky.01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/ORG-f_pinky.01.R/ORG-f_pinky.02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/ORG-f_pinky.01.R/ORG-f_pinky.02.R/ORG-f_pinky.03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001/DEF-forearm.R/DEF-forearm.R.001/DEF-hand.R/ORG-palm.04.R/ORG-f_pinky.01.R/ORG-f_pinky.02.R/ORG-f_pinky.03.R/ORG-f_pinky.03.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+EyeBone
+      L A01
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+EyeBone
+      L A01/+EyeBoneA02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+EyeBone
+      L A01/+EyeBoneA02.L/+EyeBoneA02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+EyeBone
+      R A01
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+EyeBone
+      R A01/+EyeBoneA02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+EyeBone
+      R A01/+EyeBoneA02.R/+EyeBoneA02.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairB
+      CB A01
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairB
+      CB A01/+HairB CB A02
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairB
+      CB A01/+HairB CB A02/+HairB CB A02_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairBA01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairBA01.L/+HairBA02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairBA01.L/+HairBA02.L/+HairBA02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairBA01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairBA01.R/+HairBA02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairBA01.R/+HairBA02.R/+HairBA02.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.L/+HairSB02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.L/+HairSB02.L/+HairSB03.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.L/+HairSB02.L/+HairSB03.L/+HairSB04.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.L/+HairSB02.L/+HairSB03.L/+HairSB04.L/+HairSB04.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.R/+HairSB02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.R/+HairSB02.R/+HairSB03.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.R/+HairSB02.R/+HairSB03.R/+HairSB04.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSB01.R/+HairSB02.R/+HairSB03.R/+HairSB04.R/+HairSB04.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSC01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSC01.L/+HairSC01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSC01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSC01.R/+HairSC01.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSD01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSD01.L/+HairSD02.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSD01.L/+HairSD02.L/+HairSD02.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSD01.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSD01.R/+HairSD02.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSD01.R/+HairSD02.R/+HairSD02.R_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSE01.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+HairSE01.L/+HairSE01.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+ToothBone
+      D A01
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+ToothBone
+      D A01/+ToothBone D A01_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+ToothBone
+      U A01
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/+ToothBone
+      U A01/+ToothBone U A01_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/+LegBagLA
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/+LegBagLA/+LegBagLA_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/+LegBagLB
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/+LegBagLB/+LegBagLB_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/DEF-thigh.L.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/DEF-thigh.L.001/DEF-shin.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/DEF-thigh.L.001/DEF-shin.L/DEF-shin.L.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/DEF-thigh.L.001/DEF-shin.L/DEF-shin.L.001/DEF-foot.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/DEF-thigh.L.001/DEF-shin.L/DEF-shin.L.001/DEF-foot.L/DEF-toe.L
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.L/DEF-thigh.L.001/DEF-shin.L/DEF-shin.L.001/DEF-foot.L/DEF-toe.L/DEF-toe.L_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/+LegBackRA
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/+LegBackRA/+LegBackRA_end
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/DEF-thigh.R.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/DEF-thigh.R.001/DEF-shin.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/DEF-thigh.R.001/DEF-shin.R/DEF-shin.R.001
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/DEF-thigh.R.001/DEF-shin.R/DEF-shin.R.001/DEF-foot.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/DEF-thigh.R.001/DEF-shin.R/DEF-shin.R.001/DEF-foot.R/DEF-toe.R
+    m_Weight: 1
+  - m_Path: Lumine Rig/root.002/DEF-spine/DEF-thigh.R/DEF-thigh.R.001/DEF-shin.R/DEF-shin.R.001/DEF-foot.R/DEF-toe.R/DEF-toe.R_end
+    m_Weight: 1
+  - m_Path: Outfit
+    m_Weight: 1
+  - m_Path: shield device
+    m_Weight: 1
+  - m_Path: shield device/shield device bolt
+    m_Weight: 1
+  - m_Path: shield device/shield device.001
+    m_Weight: 1
+  - m_Path: shield device/shield trigger
+    m_Weight: 1
+  - m_Path: shield geo core
+    m_Weight: 1
+  - m_Path: vp9 light
+    m_Weight: 1
+  - m_Path: vp9 mag.001
+    m_Weight: 1
+  - m_Path: vp9 mag.002
+    m_Weight: 1
+  - m_Path: vp9 mag.003
+    m_Weight: 1
+  - m_Path: vp9 mag.004
+    m_Weight: 1
+  - m_Path: vp9 mag.005
+    m_Weight: 1
+  - m_Path: VP9 Rig
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base/Bone_Muzzle
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base/Bone_Muzzle/Bone_Muzzle_end
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base/Bone_Slider
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base/Bone_Slider/Bone_Slider_end
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base/Bone_Trigger
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Base/Bone_Trigger/Bone_Trigger_end
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Magazine
+    m_Weight: 1
+  - m_Path: VP9 Rig/Bone_Magazine/Bone_Magazine_end
+    m_Weight: 1
+  - m_Path: VP9 Rig/vp9
     m_Weight: 1

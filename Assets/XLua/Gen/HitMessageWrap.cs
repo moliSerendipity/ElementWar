@@ -21,19 +21,21 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(HitMessage);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 5, 5);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 6, 6);
 			
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "instigatorID", _g_get_instigatorID);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "targetUID", _g_get_targetUID);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "targetConfigID", _g_get_targetConfigID);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "targetLevel", _g_get_targetLevel);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "ammoID", _g_get_ammoID);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "hitMultiplier", _g_get_hitMultiplier);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "instigatorID", _s_set_instigatorID);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "targetUID", _s_set_targetUID);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "targetConfigID", _s_set_targetConfigID);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "targetLevel", _s_set_targetLevel);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "ammoID", _s_set_ammoID);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "hitMultiplier", _s_set_hitMultiplier);
             
@@ -125,6 +127,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_targetLevel(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                HitMessage gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.targetLevel);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_ammoID(RealStatePtr L)
         {
 		    try {
@@ -196,6 +212,23 @@ namespace XLua.CSObjectWrap
 			
                 HitMessage gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
                 gen_to_be_invoked.targetConfigID = LuaAPI.xlua_tointeger(L, 2);
+            
+                translator.UpdateHitMessage(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_targetLevel(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                HitMessage gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                gen_to_be_invoked.targetLevel = LuaAPI.xlua_tointeger(L, 2);
             
                 translator.UpdateHitMessage(L, 1, gen_to_be_invoked);
             

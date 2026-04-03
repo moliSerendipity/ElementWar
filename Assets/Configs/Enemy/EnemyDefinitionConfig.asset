@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da42fc27320aa44787cf95ba18af308, type: 3}
+  m_Name: EnemyDefinitionConfig
+  m_EditorClassIdentifier: 
+  configId: EnemyDefinitionConfig
+  displayName: 
+  description: 
+  isEnabled: 1
+  enemyBaseStatConfig: {fileID: 11400000, guid: 34c806e2d9a83fe43833c8134c11e676,
+    type: 2}
+  enemyMovementConfig: {fileID: 11400000, guid: 7172c4a2fbb12054a9d52aa617a99360,
+    type: 2}
+  enemyResistanceSetConfig: {fileID: 11400000, guid: dee68760815bed64888521f60f81fef1,
+    type: 2}
+  aiProfileConfig: {fileID: 11400000, guid: e29a715a1d1c45b42a099af42b5c8342, type: 2}
+  weaponLoadoutConfig: {fileID: 11400000, guid: 2b68ea8211ddabd4c827ec297d960abb,
+    type: 2}
+  skillLoadoutConfig: {fileID: 0}

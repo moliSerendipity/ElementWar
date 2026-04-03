@@ -17,6 +17,12 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b8e70cf7e2d6c7243b0652d44838cdba
   m_SerializeEntries:
+  - m_GUID: 007d8d3368c1adb4fb150ccd02249c97
+    m_Address: Lua/Config/Config_Character.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 07481df48af688645bc6bfa1e3d2cef4
     m_Address: Lua/Config/Config_Throwable.lua.txt
     m_ReadOnly: 0
@@ -77,6 +83,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - LuaScript
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87fbdef1d81da3d428baa0f52d05e576
+    m_Address: Lua/Config/Config_Curve.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8a7936d0d2d8fab4dbdd52c37d370036
     m_Address: Lua/System/DamageManager.lua.txt
     m_ReadOnly: 0
@@ -109,6 +121,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f72683cffd7feb145acd64c20f32d7ca
     m_Address: Lua/System/ElementCalculator.lua.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LuaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f8875994fcec1b646ba2d79bf5a14f22
+    m_Address: Lua/Config/Config_Monster.lua.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - LuaScript

@@ -46,6 +46,14 @@ namespace XLua
             }
             LuaAPI.lua_pop(L, 1);
 			
+			if (Utils.LoadField(L, idx, "targetLevel"))
+            {
+			    
+                translator.Get(L, top + 1, out val.targetLevel);
+				
+            }
+            LuaAPI.lua_pop(L, 1);
+			
 			if (Utils.LoadField(L, idx, "ammoID"))
             {
 			    
@@ -82,12 +90,17 @@ namespace XLua
                 return false;
             }
             
-            if(!Pack(buff, offset + 12, field.ammoID))
+            if(!Pack(buff, offset + 12, field.targetLevel))
             {
                 return false;
             }
             
-            if(!Pack(buff, offset + 16, field.hitMultiplier))
+            if(!Pack(buff, offset + 16, field.ammoID))
+            {
+                return false;
+            }
+            
+            if(!Pack(buff, offset + 20, field.hitMultiplier))
             {
                 return false;
             }
@@ -113,12 +126,17 @@ namespace XLua
                 return false;
             }
             
-            if(!UnPack(buff, offset + 12, out field.ammoID))
+            if(!UnPack(buff, offset + 12, out field.targetLevel))
             {
                 return false;
             }
             
-            if(!UnPack(buff, offset + 16, out field.hitMultiplier))
+            if(!UnPack(buff, offset + 16, out field.ammoID))
+            {
+                return false;
+            }
+            
+            if(!UnPack(buff, offset + 20, out field.hitMultiplier))
             {
                 return false;
             }

@@ -1,0 +1,36 @@
+local Config_Character = {
+    [1] = { 
+        ID = 1,
+        Name = "主角_阿尔法", 
+        BaseATK_Lvl1 = 50,
+        BaseATK_Lvl90 = 300,  -- 1级和90级的基础白字
+        CritRate = 0.05,
+        CritDMG = 0.50          -- 默认自带 5% 暴击, 50% 爆伤
+    },
+    [2] = {
+        ID = 2,
+        Name = "主角_贝塔", 
+        BaseATK_Lvl1 = 50,
+        BaseATK_Lvl90 = 300,  -- 1级和90级的基础白字
+        CritRate = 0.05,
+        CritDMG = 0.50          -- 默认自带 5% 暴击, 50% 爆伤
+    },
+    [3] = {
+        ID = 3,
+        Name = "主角_伽马", 
+        BaseATK_Lvl1 = 50,
+        BaseATK_Lvl90 = 300,  -- 1级和90级的基础白字
+        CritRate = 0.05,
+        CritDMG = 0.50          -- 默认自带 5% 暴击, 50% 爆伤
+    },
+    [4] = {
+        ID = 4,
+        Name = "主角_德尔塔", 
+        BaseATK_Lvl1 = 50,
+        BaseATK_Lvl90 = 300,  -- 1级和90级的基础白字
+        CritRate = 0.05,
+        CritDMG = 0.50          -- 默认自带 5% 暴击, 50% 爆伤
+    }
+}
+
+return Config_Character
