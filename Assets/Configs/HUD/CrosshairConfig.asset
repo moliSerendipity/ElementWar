@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c7aaae08b0d2847af7cd858da24142, type: 3}
+  m_Name: CrosshairConfig
+  m_EditorClassIdentifier: 
+  configId: 
+  displayName: 
+  description: 
+  isEnabled: 1
+  baseGap: 30
+  maxGap: 200
+  lineThickness: 3
+  lineLength: 50
+  showCenterDot: 1
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  blockingHitColor: {r: 1, g: 0, b: 0, a: 1}
+  fallbackPointColor: {r: 0, g: 0, b: 1, a: 1}
+  hitConfirmColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  weakPointHitConfirmColor: {r: 1, g: 0.55, b: 0.1, a: 1}
+  criticalHitConfirmColor: {r: 1, g: 0.8, b: 0.2, a: 1}
+  killHitConfirmColor: {r: 1, g: 0.25, b: 0.25, a: 1}
+  hitPulseScale: 1.15
+  criticalHitPulseScale: 1.22
+  killHitPulseScale: 1.3

@@ -10,14 +10,14 @@ namespace Game.Definition.Weapon
     [CreateAssetMenu(fileName = "WeaponSpreadConfig", menuName = "Game/Configs/Weapon/Weapon Spread Config")]
     public sealed class WeaponSpreadConfig : ConfigBase
     {
-        [Min(0f)][SerializeField] private float baseSpread = 0f;
-        [Min(0f)][SerializeField] private float aimSpread = 0f;
-        [Min(0f)][SerializeField] private float maxSpread = 5f;
-        [Min(0f)][SerializeField] private float spreadIncreasePerShot = 0.2f;
-        [Min(0f)][SerializeField] private float spreadRecoverSpeed = 5f;
-        [Min(0f)][SerializeField] private float movingSpreadPenalty = 0.5f;
-        [Min(0f)][SerializeField] private float airborneSpreadPenalty = 1f;
-        [Range(0f, 1f)][SerializeField] private float firstShotAccuracy = 0f;
+        [Min(0f)][SerializeField] private float baseSpread = 1f;
+        [Min(0f)][SerializeField] private float aimSpread = 0.35f;
+        [Min(0f)][SerializeField] private float maxSpread = 4.2f;
+        [Min(0f)][SerializeField] private float spreadIncreasePerShot = 0.45f;
+        [Min(0f)][SerializeField] private float spreadRecoverSpeed = 15f;
+        [Min(0f)][SerializeField] private float movingSpreadPenalty = 1.4f;
+        [Min(0f)][SerializeField] private float airborneSpreadPenalty = 2.2f;
+        [Range(0f, 1f)][SerializeField] private float firstShotAccuracy = 0.7f;
 
         public float BaseSpread => baseSpread;
         public float AimSpread => aimSpread;

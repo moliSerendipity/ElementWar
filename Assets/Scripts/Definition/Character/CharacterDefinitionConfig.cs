@@ -2,7 +2,6 @@ using UnityEngine;
 using Game.Definition.ConfigSystem.Core;
 using Game.Definition.Weapon;
 using Game.Definition.Combat;
-using Game.Definition.AI;
 using Game.Definition.Skill;
 
 namespace Game.Definition.Character
@@ -21,7 +20,6 @@ namespace Game.Definition.Character
         [SerializeField] private WeaponLoadoutConfig weaponLoadoutConfig;
         [SerializeField] private SkillLoadoutConfig skillLoadoutConfig;
         [SerializeField] private ResistanceSetConfig characterResistanceSetConfig;
-        [SerializeField] private ActorAIProfileConfig aiProfileConfig;
         [SerializeField] private bool isPlayerControllable = true;
         [SerializeField] private bool isAiControllable;
 
@@ -33,7 +31,6 @@ namespace Game.Definition.Character
         public WeaponLoadoutConfig WeaponLoadoutConfig => weaponLoadoutConfig;
         public SkillLoadoutConfig SkillLoadoutConfig => skillLoadoutConfig;
         public ResistanceSetConfig CharacterResistanceSetConfig => characterResistanceSetConfig;
-        public ActorAIProfileConfig AiProfileConfig => aiProfileConfig;
         public bool IsPlayerControllable => isPlayerControllable;
         public bool IsAiControllable => isAiControllable;
 
@@ -74,11 +71,6 @@ namespace Game.Definition.Character
             if (characterResistanceSetConfig == null)
             {
                 _context.AddError(ConfigId, $"字段 {nameof(characterResistanceSetConfig)} 不能为空。");
-            }
-
-            if (isAiControllable && aiProfileConfig == null)
-            {
-                _context.AddError(ConfigId, $"字段 {nameof(aiProfileConfig)} 不能为空。");
             }
         }
     }

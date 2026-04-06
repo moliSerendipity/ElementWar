@@ -7,18 +7,22 @@ using UnityEngine;
 namespace Game.Gameplay.Character
 {
     /// <summary>
-    /// 角色域唯一主驱动
+    /// 角色域唯一主驱动。
     ///
-    /// 主链固定为
-    /// 1. 收集原始输入
-    /// 2. 裁决当前帧计划
-    /// 3. 显式执行 Facing / Movement / Action
-    /// 4. 统一提交长期事实
-    /// 5. 同步只读表现态
+    /// 主链固定顺序：
+    /// 1. 推进武器已提交事实（避免换弹完成滞后一帧）
+    /// 2. 收集原始输入
+    /// 3. 裁决当前帧计划
+    /// 4. 显式执行 Facing / Movement / Action
+    /// 5. 消费已提交后坐力增量
+    /// 6. 统一写回长期事实
+    /// 7. 同步只读表现态
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class CharacterRoot : MonoBehaviour
     {
+        #region Inspector References
+
         [Header("Core References")]
         [SerializeField] private CharacterController characterController;
         [SerializeField] private CharacterInputRouter inputRouter;
@@ -29,7 +33,11 @@ namespace Game.Gameplay.Character
         [SerializeField] private CharacterFacingController facingController;
         [SerializeField] private CharacterMovementController movementController;
         [SerializeField] private CharacterActionController actionController;
-        [SerializeField] private Game.Gameplay.Combat.HealthComponent damageReceiver;
+        [SerializeField] private Game.Gameplay.Combat.HealthComponent healthComponent;
+
+        #endregion
+
+        #region Public Accessors
 
         public CharacterController CharacterController => characterController;
         public CharacterFacts Facts => facts;
@@ -37,6 +45,10 @@ namespace Game.Gameplay.Character
         public CharacterViewState ViewState => viewState;
         public CharacterFacingController FacingController => facingController;
         public CharacterActionController ActionController => actionController;
+
+        #endregion
+
+        #region Unity Lifecycle
 
         private void Awake()
         {
@@ -47,7 +59,7 @@ namespace Game.Gameplay.Character
         private void Start()
         {
             stat.TryInitialize(ConfigService.Active);
-            damageReceiver.TryInitialize(ConfigService.Active);
+            healthComponent.TryInitialize();
         }
 
         private void Update()
@@ -57,26 +69,41 @@ namespace Game.Gameplay.Character
                 return;
             }
 
-            // 先推进 Weapon 已提交事实，再裁决 Character 本帧计划，避免“换弹刚完成但 Character 还按旧状态裁决”的一帧滞后。
-            actionController.PreTickCurrentWeapon(Time.time);
+            // ① 先推进 Weapon 已提交事实，让本帧裁决拿到最新的换弹完成状态。
+            actionController.PreTickCurrentWeapon(Time.time, Time.deltaTime);
 
+            // ② 收集统一语义化输入。
             InputContext rawInput = CollectRawInput();
+
+            // ③ 裁决本帧执行计划。
             CharacterFramePlan plan = decisionResolver.Resolve(rawInput);
 
+            // ④ 按固定顺序执行。
             facingController.Execute(plan);
             movementController.Execute(plan, facts);
             actionController.Execute(plan, facts, Time.time);
 
-            // 当前帧只消费一次已提交增量；若没有开火成立，就不会拿到任何真实后坐力。
-            if (actionController.CurrentWeaponRuntime.ConsumePendingRecoil(out float recoilPitch, out float recoilYaw))
+            // ⑤ 消费本帧已提交的真实后坐力增量（如果有的话）。
+            if (actionController.CurrentWeaponRuntime != null
+                && actionController.CurrentWeaponRuntime.ConsumePendingRecoil(out float recoilPitch, out float recoilYaw))
             {
                 facingController.ApplyRecoil(recoilPitch, recoilYaw);
             }
 
+            // ⑥ 统一写回长期事实。
             WriteBackFacts(plan);
+
+            // ⑦ 同步只读表现态。
             SyncViewState(plan);
         }
 
+        #endregion
+
+        #region Setup
+
+        /// <summary>
+        /// 检查角色主链所需的核心引用是否全部就位。
+        /// </summary>
         public bool CheckSetupReady()
         {
             return characterController != null
@@ -91,6 +118,13 @@ namespace Game.Gameplay.Character
                 && actionController != null;
         }
 
+        #endregion
+
+        #region Main Chain Steps
+
+        /// <summary>
+        /// 通过 InputRouter 收集本帧统一语义化输入。
+        /// </summary>
         private InputContext CollectRawInput()
         {
             if (inputRouter == null)
@@ -105,13 +139,10 @@ namespace Game.Gameplay.Character
 
         /// <summary>
         /// 角色域唯一事实提交点。
-        /// 执行器只暴露少量执行结果；最终长期事实统一在这里收口，避免同一帧被多处来回改写。
+        /// 执行器只暴露少量只读执行结果；最终长期事实统一在这里收口，避免同一帧被多处来回改写。
         /// </summary>
         private void WriteBackFacts(CharacterFramePlan _plan)
         {
-            bool wasAiming = facts.IsAiming;
-            bool wasSprinting = facts.IsSprinting;
-
             // Grounded 必须在 Move 后读取 CharacterController 结果，才能拿到最新碰撞解算后的落地事实。
             bool isGrounded = characterController.isGrounded && !movementController.JumpStartedThisFrame;
             bool isReloading = actionController.IsWeaponReloading;
@@ -126,10 +157,11 @@ namespace Game.Gameplay.Character
             facts.SetAiming(_plan.AimActive && !isReloading);
             facts.SetSprinting(_plan.SprintActive && isGrounded && !isReloading);
             facts.SetJumping(!isGrounded && verticalSpeed > 0.05f);
-
-            //PublishFactEvents(wasAiming, wasSprinting);
         }
 
+        /// <summary>
+        /// 同步只读表现态，供 Camera / Animation / HUD 统一消费。
+        /// </summary>
         private void SyncViewState(CharacterFramePlan _plan)
         {
             viewState.Sync(
@@ -141,24 +173,9 @@ namespace Game.Gameplay.Character
                 actionController.IsFiring);
         }
 
-        //private void PublishFactEvents(bool _wasAiming, bool _wasSprinting)
-        //{
-        //    GameEventBus eventBus = GameEventBus.Instance;
-        //    if (eventBus == null)
-        //    {
-        //        return;
-        //    }
+        #endregion
 
-        //    if (_wasAiming != facts.IsAiming)
-        //    {
-        //        eventBus.Publish(new AimStateChangedEvent(gameObject, facts.IsAiming));
-        //    }
-
-        //    if (_wasSprinting != facts.IsSprinting)
-        //    {
-        //        eventBus.Publish(new SprintStateChangedEvent(gameObject, facts.IsSprinting));
-        //    }
-        //}
+        #region Reference Resolution
 
         private void ResolveReferences()
         {
@@ -207,10 +224,12 @@ namespace Game.Gameplay.Character
                 actionController = GetComponent<CharacterActionController>();
             }
 
-            if (damageReceiver == null)
+            if (healthComponent == null)
             {
-                damageReceiver = GetComponent<Game.Gameplay.Combat.HealthComponent>();
+                healthComponent = GetComponent<Game.Gameplay.Combat.HealthComponent>();
             }
         }
+
+        #endregion
     }
 }

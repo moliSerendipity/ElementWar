@@ -16,11 +16,11 @@ MonoBehaviour:
   displayName: 
   description: 
   isEnabled: 1
-  baseSpread: 0
-  aimSpread: 0
-  maxSpread: 5
-  spreadIncreasePerShot: 0.2
-  spreadRecoverSpeed: 5
-  movingSpreadPenalty: 0.5
-  airborneSpreadPenalty: 1
-  firstShotAccuracy: 0
+  baseSpread: 1
+  aimSpread: 0.35
+  maxSpread: 4.2
+  spreadIncreasePerShot: 0.45
+  spreadRecoverSpeed: 15
+  movingSpreadPenalty: 1.4
+  airborneSpreadPenalty: 2.2
+  firstShotAccuracy: 1

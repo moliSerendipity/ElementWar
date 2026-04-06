@@ -37,7 +37,6 @@ namespace Game.Presentation.Animation
         [SerializeField] private Transform aimTarget;
         [SerializeField] private Transform aimOrigin;
         [SerializeField] private MonoBehaviour cameraAimPointProviderBehaviour;
-        [SerializeField, Min(0.1f)] private float minAimTargetDistance = 1.5f;
 
         [Header("Rig")]
         [SerializeField] private TwoBoneIKConstraint rightHandIKConstraint;
@@ -173,22 +172,7 @@ namespace Game.Presentation.Animation
                 return;
             }
 
-            Vector3 targetPoint = aimPointContext.AimPoint;
-            Transform referenceOrigin = aimOrigin != null ? aimOrigin : transform;
-            Vector3 fromOrigin = targetPoint - referenceOrigin.position;
-
-            // 防止瞄点落在角色身边或身体内部时，Rig 为了强行对准近点产生明显抖动。
-            if (fromOrigin.sqrMagnitude < minAimTargetDistance * minAimTargetDistance)
-            {
-                if (fromOrigin.sqrMagnitude <= 0.0001f)
-                {
-                    fromOrigin = referenceOrigin.forward;
-                }
-
-                targetPoint = referenceOrigin.position + fromOrigin.normalized * minAimTargetDistance;
-            }
-
-            aimTarget.position = targetPoint;
+            aimTarget.position = aimPointContext.AimPoint;
         }
 
         private void UpdateAimConstraintWeights(CharacterViewState _state)
@@ -218,7 +202,7 @@ namespace Game.Presentation.Animation
             else if (_state.PlanarSpeed > 0.1f)
             {
                 targetRightHandIkWeight = 0f;
-                targetBodyAimConstraintWeight = 1;
+                targetBodyAimConstraintWeight = 0;
                 targetRightHandAimConstraintWeight = 1;
             }
             else

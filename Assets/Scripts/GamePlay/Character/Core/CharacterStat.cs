@@ -29,6 +29,10 @@ namespace Game.Gameplay.Character
         [SerializeField] private float runSpeed = 4.5f;
         [SerializeField] private float sprintSpeed = 6.5f;
         [SerializeField] private float aimMoveSpeedMultiplier = 0.7f;
+        [SerializeField] private float normalYawSensitivity = 0.18f;
+        [SerializeField] private float normalPitchSensitivity = 0.12f;
+        [SerializeField] private float aimYawSensitivity = 0.12f;
+        [SerializeField] private float aimPitchSensitivity = 0.08f;
         [SerializeField] private float jumpHeight = 1.2f;
         [SerializeField] private float gravity = -25f;
         [SerializeField] private float maxFallSpeed = -30f;
@@ -48,6 +52,10 @@ namespace Game.Gameplay.Character
         public float RunSpeed => runSpeed;
         public float SprintSpeed => sprintSpeed;
         public float AimMoveSpeedMultiplier => aimMoveSpeedMultiplier;
+        public float NormalYawSensitivity => normalYawSensitivity;
+        public float NormalPitchSensitivity => normalPitchSensitivity;
+        public float AimYawSensitivity => aimYawSensitivity;
+        public float AimPitchSensitivity => aimPitchSensitivity;
         public float JumpHeight => jumpHeight;
         public float Gravity => gravity;
         public float MaxFallSpeed => maxFallSpeed;
@@ -131,6 +139,10 @@ namespace Game.Gameplay.Character
             runSpeed = Mathf.Max(0f, characterMovementConfig.RunSpeed);
             sprintSpeed = Mathf.Max(0f, characterMovementConfig.SprintSpeed);
             aimMoveSpeedMultiplier = Mathf.Max(0f, characterAimConfig.AimMoveSpeedMultiplier);
+            normalYawSensitivity = Mathf.Max(0.0001f, characterAimConfig.NormalYawSensitivity);
+            normalPitchSensitivity = Mathf.Max(0.0001f, characterAimConfig.NormalPitchSensitivity);
+            aimYawSensitivity = Mathf.Max(0.0001f, characterAimConfig.AimYawSensitivity);
+            aimPitchSensitivity = Mathf.Max(0.0001f, characterAimConfig.AimPitchSensitivity);
             jumpHeight = Mathf.Max(0.01f, characterJumpConfig.JumpHeight);
             gravity = Mathf.Min(-0.01f, characterJumpConfig.Gravity);
             maxFallSpeed = Mathf.Min(-0.01f, characterJumpConfig.MaxFallSpeed);
@@ -151,6 +163,10 @@ namespace Game.Gameplay.Character
             runSpeed = 0f;
             sprintSpeed = 0f;
             aimMoveSpeedMultiplier = 0f;
+            normalYawSensitivity = 0.18f;
+            normalPitchSensitivity = 0.12f;
+            aimYawSensitivity = 0.12f;
+            aimPitchSensitivity = 0.08f;
             jumpHeight = 0f;
             gravity = -25f;
             maxFallSpeed = -30f;
@@ -163,6 +179,10 @@ namespace Game.Gameplay.Character
         public void SetRunSpeed(float _value) => runSpeed = Mathf.Max(0f, _value);
         public void SetSprintSpeed(float _value) => sprintSpeed = Mathf.Max(0f, _value);
         public void SetAimMoveSpeedMultiplier(float _value) => aimMoveSpeedMultiplier = Mathf.Max(0f, _value);
+        public void SetNormalYawSensitivity(float _value) => normalYawSensitivity = Mathf.Max(0.0001f, _value);
+        public void SetNormalPitchSensitivity(float _value) => normalPitchSensitivity = Mathf.Max(0.0001f, _value);
+        public void SetAimYawSensitivity(float _value) => aimYawSensitivity = Mathf.Max(0.0001f, _value);
+        public void SetAimPitchSensitivity(float _value) => aimPitchSensitivity = Mathf.Max(0.0001f, _value);
         public void SetJumpHeight(float _value) => jumpHeight = Mathf.Max(0.01f, _value);
         public void SetGravity(float _value) => gravity = Mathf.Min(-0.01f, _value);
         public void SetMaxFallSpeed(float _value) => maxFallSpeed = Mathf.Min(-0.01f, _value);

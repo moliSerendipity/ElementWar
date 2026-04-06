@@ -1,3 +1,4 @@
+using Game.Definition.Combat;
 using UnityEngine;
 
 namespace Game.Gameplay.Combat

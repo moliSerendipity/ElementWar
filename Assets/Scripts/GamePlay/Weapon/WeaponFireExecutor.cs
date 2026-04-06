@@ -1,4 +1,5 @@
 using Game.Definition.Weapon;
+using Game.Definition.Combat;
 using Game.Foundation.Events;
 using Game.Gameplay.Character;
 using Game.Gameplay.Combat;
@@ -27,18 +28,12 @@ namespace Game.Gameplay.Weapon
 
         #region Unity Lifecycle
 
-        /// <summary>
-        /// 解析当前执行器依赖的运行时引用。
-        /// </summary>
         private void Awake()
         {
             ResolveReferences();
         }
 
 #if UNITY_EDITOR
-        /// <summary>
-        /// 在编辑器下同步自动补齐引用。
-        /// </summary>
         private void OnValidate()
         {
             ResolveReferences();
@@ -53,7 +48,7 @@ namespace Game.Gameplay.Weapon
         /// 执行已经裁决完成的武器计划。
         /// 返回值表示本帧是否真正完成了一次扣弹与逻辑开火。
         /// </summary>
-        public bool Execute(WeaponFramePlan _plan, float _currentTime)
+        public bool Execute(WeaponFramePlan _plan, CharacterFacts _characterFacts, in CharacterFramePlan _characterPlan, float _currentTime)
         {
             if (_plan.DryFireTriggered)
             {
@@ -76,14 +71,13 @@ namespace Game.Gameplay.Weapon
             CommitSingleShotRecoil();
 
             // 扣弹与运行时事实提交完成后，立即进入命中查询与 Combat 主链。
-            ResolveHitAndDamage(_currentTime);
+            ResolveHitAndDamage(_characterFacts, _characterPlan, _currentTime);
             return true;
         }
 
         #endregion
 
         #region Private Methods
-
 
         /// <summary>
         /// 根据当前武器后坐力配置提交一次单发真实后坐力增量。
@@ -113,15 +107,17 @@ namespace Game.Gameplay.Weapon
         /// 成功开火后，立即走逻辑射线与 Combat 主链。
         /// 当前阶段不再让 Weapon 域自己直写目标生命，而是统一把请求交给 DamageResolver。
         /// </summary>
-        private void ResolveHitAndDamage(float _currentTime)
+        private void ResolveHitAndDamage(CharacterFacts _characterFacts, in CharacterFramePlan _characterPlan, float _currentTime)
         {
             if (hitScanService == null || weaponRuntime == null)
             {
                 return;
             }
 
+            float spreadAngle = weaponRuntime.GetCurrentShotSpreadAngle(_characterPlan, _characterFacts);
+
             // 先完成命中查询，并拿到最终射线与命中上下文。
-            bool hadHit = hitScanService.TryHit(weaponRuntime, out HitScanHitContext hitContext, out Ray shotRay, out _);
+            bool hadHit = hitScanService.TryHit(weaponRuntime, spreadAngle, out HitScanHitContext hitContext, out Ray shotRay, out _);
             Vector3 resolvedImpactPoint = hadHit
                 ? hitContext.HitPoint
                 : shotRay.origin + shotRay.direction * weaponRuntime.Range;
@@ -132,16 +128,13 @@ namespace Game.Gameplay.Weapon
             // 先把“已提交的一枪”广播给表现层，视觉链不参与 Combat 裁决。
             PublishWeaponFiredEvent(shotRay, hadHit, hitContext, resolvedImpactPoint, resolvedImpactNormal);
 
-            if (hadHit == false || hitContext.DamageReceiver == null)
+            if (hadHit == false || hitContext.HealthComponent == null)
             {
-                // 命中世界遮挡或完全未命中时，到此为止，不进入伤害链。
                 return;
             }
 
-            // 命中合法受击目标后，统一把伤害请求交给 Combat 域裁决。
             CombatDamageRequestContext damageRequestContext = new(
                 gameObject,
-                weaponRuntime,
                 CombatDamageKind.Physical,
                 weaponRuntime.Damage,
                 characterStat.CritChance,
@@ -156,10 +149,6 @@ namespace Game.Gameplay.Weapon
             DamageResolver.ResolveAndApply(damageRequestContext);
         }
 
-        /// <summary>
-        /// 发布已提交的开火事件。
-        /// 该事件只代表真正完成扣弹与命中查询的一枪。
-        /// </summary>
         private void PublishWeaponFiredEvent(
             in Ray _shotRay,
             bool _hadHit,
@@ -172,7 +161,6 @@ namespace Game.Gameplay.Weapon
                 return;
             }
 
-            // 开火事件只描述已成立事实，同时把世界命中和受击目标命中区分清楚，供表现层直接消费。
             GameEventBus.Instance.Publish(new WeaponFiredEvent(
                 gameObject,
                 weaponRuntime.WeaponDefinitionConfigId,
@@ -181,7 +169,7 @@ namespace Game.Gameplay.Weapon
                 _shotRay.direction,
                 weaponRuntime.Range,
                 _hadHit,
-                _hitContext.DamageReceiver != null,
+                _hitContext.HealthComponent != null,
                 _hitContext.HitPartType,
                 _resolvedImpactPoint,
                 _resolvedImpactNormal,
@@ -190,10 +178,6 @@ namespace Game.Gameplay.Weapon
                 weaponRuntime.WeaponRecoilConfig != null ? weaponRuntime.WeaponRecoilConfig.CrosshairKick : 0f));
         }
 
-        /// <summary>
-        /// 发布已提交的空仓触发事件。
-        /// 当前规则下，它只对应 FirePressed 的那一次触发，不对持续按住重复生效。
-        /// </summary>
         private void PublishWeaponDryFireEvent()
         {
             if (GameEventBus.Instance == null || weaponRuntime == null)
@@ -201,36 +185,28 @@ namespace Game.Gameplay.Weapon
                 return;
             }
 
-            // 空仓反馈属于事实事件，但它不代表真正开火成功。
             GameEventBus.Instance.Publish(new WeaponDryFireEvent(gameObject, weaponRuntime.WeaponDefinitionConfigId));
         }
 
-        /// <summary>
-        /// 解析执行器需要的运行时组件引用。
-        /// </summary>
         private void ResolveReferences()
         {
             if (characterStat == null)
             {
-                // 角色面板属性由角色根对象提供，武器执行器只读它的结果。
                 characterStat = GetComponentInParent<CharacterStat>();
             }
 
             if (weaponRuntime == null)
             {
-                // 武器长期状态和配置引用都从 WeaponRuntime 统一读取。
                 weaponRuntime = GetComponent<WeaponRuntime>();
             }
 
             if (weaponAmmoComponent == null)
             {
-                // 弹药组件仍然是当前版本的弹匣与备弹事实持有者。
                 weaponAmmoComponent = GetComponent<WeaponAmmoComponent>();
             }
 
             if (hitScanService == null)
             {
-                // Hitscan 服务负责命中查询，不在执行器里自行拼射线逻辑。
                 hitScanService = GetComponent<HitScanService>();
             }
         }

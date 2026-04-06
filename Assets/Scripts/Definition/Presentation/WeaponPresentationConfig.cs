@@ -1,11 +1,13 @@
 using Game.Definition.ConfigSystem.Core;
+using Game.Definition.HUD;
 using UnityEngine;
 
 namespace Game.Definition.Presentation
 {
     /// <summary>
     /// 武器表现资源配置。
-    /// 当前版本只保留对象池 key、寿命与音频配置，预制体唯一来源交给对象池服务维护。
+    /// 当前版本只保留对象池 key、寿命、音频与准星表现配置。
+    /// 预制体唯一来源交给对象池服务维护。
     /// </summary>
     [CreateAssetMenu(fileName = "WeaponPresentationConfig", menuName = "Game/Configs/Presentation/Weapon Presentation Config")]
     public sealed class WeaponPresentationConfig : ConfigBase
@@ -38,7 +40,7 @@ namespace Game.Definition.Presentation
         [SerializeField] private AudioEventConfig equipAudio;
 
         [Header("UI")]
-        [SerializeField] private string crosshairStyleId;
+        [SerializeField] private CrosshairConfig crosshairConfig;
         [SerializeField] private Sprite uiIcon;
 
         #endregion
@@ -62,7 +64,7 @@ namespace Game.Definition.Presentation
         public AudioEventConfig KillHitAudio => killHitAudio;
         public AudioEventConfig ReloadAudio => reloadAudio;
         public AudioEventConfig EquipAudio => equipAudio;
-        public string CrosshairStyleId => crosshairStyleId;
+        public CrosshairConfig CrosshairConfig => crosshairConfig;
         public Sprite UiIcon => uiIcon;
 
         #endregion

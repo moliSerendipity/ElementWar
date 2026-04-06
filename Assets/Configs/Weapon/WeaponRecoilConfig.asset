@@ -16,12 +16,10 @@ MonoBehaviour:
   displayName: 
   description: 
   isEnabled: 1
-  recoilPitchMin: -1.25
-  recoilPitchMax: -0.75
-  recoilYawMin: -0.35
-  recoilYawMax: 0.35
-  recoilKickDuration: 0.06
-  recoilRecoverDuration: 0.12
-  useRecoilPattern: 0
-  recoilPatternId: 
-  cameraShakeConfigId: 
+  recoilPitchPerShotMin: -1.25
+  recoilPitchPerShotMax: -0.75
+  recoilYawPerShotMin: -0.35
+  recoilYawPerShotMax: 0.35
+  cameraKickPitch: -0.25
+  cameraKickYaw: 0.12
+  crosshairKick: 0.12

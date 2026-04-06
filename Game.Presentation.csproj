@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Presentation\Camera\CameraAimPointResolver.cs" />
     <Compile Include="Assets\Scripts\Presentation\HUD\DamageNumberPresenter.cs" />
+    <Compile Include="Assets\Scripts\Presentation\Animation\EnemyAnimationBridge.cs" />
     <Compile Include="Assets\Scripts\Presentation\Animation\AnimatorParameterWriter.cs" />
     <Compile Include="Assets\Scripts\Presentation\HUD\CrosshairPresenter.cs" />
     <Compile Include="Assets\Scripts\Presentation\HUD\AmmoHudPresenter.cs" />
@@ -428,6 +429,10 @@
       <HintPath>E:\Unity\2022.3.62f2c1\Editor\Data\PlaybackEngines\MetroSupport\UnityEditor.UWP.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MMD4Mecanim">
+      <HintPath>Assets\MMD4Mecanim\Scripts\MMD4Mecanim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -478,6 +483,10 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MMD4MecanimEditor">
+      <HintPath>Assets\MMD4Mecanim\Editor\MMD4MecanimEditor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">

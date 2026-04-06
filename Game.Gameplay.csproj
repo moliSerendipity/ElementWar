@@ -61,14 +61,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GamePlay\Character\Core\CharacterStat.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyContext.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\Combat\CombatDamageKind.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Core\CharacterFacts.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Controller\CharacterActionController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Input\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Combat\Events\EntityDiedEvent.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Controller\CharacterMovementController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Input\ICharacterInputSource.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyLocomotion.cs" />
     <Compile Include="Assets\Scripts\GamePlay\ActorStatBase.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Camera\CameraViewContext.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Weapon\WeaponFramePlan.cs" />
@@ -92,6 +91,7 @@
     <Compile Include="Assets\Scripts\GamePlay\Combat\CombatDamageResult.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Combat\CombatHitBoxComponent.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Input\PlayerInputFrame.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyAttack.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Combat\HitScanService.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Weapon\WeaponViewState.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Input\InputContext.cs" />
@@ -101,12 +101,11 @@
     <Compile Include="Assets\Scripts\GamePlay\Character\Events\AimStateChangedEvent.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyStat.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Weapon\WeaponCommandResolver.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyAttackController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyBrain.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Combat\HealthComponent.cs" />
+    <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemySensor.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Combat\WeakSpotComponent.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Core\CharacterRoot.cs" />
-    <Compile Include="Assets\Scripts\GamePlay\Enemy\EnemyMovementController.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Combat\CombatDamageRequestContext.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Character\Input\PlayerCharacterInputSource.cs" />
     <Compile Include="Assets\Scripts\GamePlay\Weapon\WeaponRuntime.cs" />
@@ -469,6 +468,10 @@
       <HintPath>E:\Unity\2022.3.62f2c1\Editor\Data\PlaybackEngines\MetroSupport\UnityEditor.UWP.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MMD4Mecanim">
+      <HintPath>Assets\MMD4Mecanim\Scripts\MMD4Mecanim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -519,6 +522,10 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MMD4MecanimEditor">
+      <HintPath>Assets\MMD4Mecanim\Editor\MMD4MecanimEditor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">

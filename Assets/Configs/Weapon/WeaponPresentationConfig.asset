@@ -16,20 +16,14 @@ MonoBehaviour:
   displayName: 
   description: 
   isEnabled: 1
-  muzzleFlashPrefab: {fileID: 1000012903210382, guid: e165b34d6402b6449bce6c32e18c8419,
-    type: 3}
   muzzleFlashPoolKey: MuzzleFlash
   muzzleFlashLifeTime: 0.4
-  bulletProjectilePrefab: {fileID: 1238843893459588, guid: df1a1922af2b37e4f9ade4203d8566bd,
-    type: 3}
   bulletProjectilePoolKey: BulletProjectile
   bulletProjectileLifeTime: 10
-  worldImpactPrefab: {fileID: 0}
-  worldImpactPoolKey: 
-  worldImpactLifeTime: 1.5
-  actorImpactPrefab: {fileID: 0}
-  actorImpactPoolKey: 
-  actorImpactLifeTime: 1.5
+  worldImpactPoolKey: WorldImpact
+  worldImpactLifeTime: 0.7
+  actorImpactPoolKey: ActorImpact
+  actorImpactLifeTime: 0.5
   fireAudio: {fileID: 0}
   dryFireAudio: {fileID: 0}
   worldHitAudio: {fileID: 0}
@@ -39,5 +33,5 @@ MonoBehaviour:
   killHitAudio: {fileID: 0}
   reloadAudio: {fileID: 0}
   equipAudio: {fileID: 0}
-  crosshairStyleId: 
+  crosshairConfig: {fileID: 11400000, guid: 78dda96ad3a6fc44b87e0aa7be4b5498, type: 2}
   uiIcon: {fileID: 0}

@@ -60,7 +60,17 @@
     <Analyzer Include="E:\Unity\2022.3.62f2c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimImporterInspector.cs" />
     <Compile Include="Assets\XLua\Editor\ExampleConfig.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimPreProcessBuild.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimBulletPhysicsInspector.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimAssignMaterialModel.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimImporter.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimAnimMorphHelperInspector.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimBoneInspector.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimRigidBodyInspector.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimModelInspector.cs" />
+    <Compile Include="Assets\MMD4Mecanim\Editor\MMD4MecanimAnimationClipNameFixer.cs" />
     <Compile Include="Assets\XLua\Src\Editor\Generator.cs" />
     <Compile Include="Assets\XLua\Src\Editor\Hotfix.cs" />
     <Compile Include="Assets\XLua\Src\Editor\TemplateRef.cs" />
@@ -68,12 +78,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\XLua\Src\Editor\Template\LuaInterfaceBridge.tpl.txt" />
+    <None Include="Assets\MMD4Mecanim\Editor\PMX2FBX\pmx2fbx.xml" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaWrapPusher.tpl.txt" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaDelegateWrap.tpl.txt" />
+    <None Include="Assets\MMD4Mecanim\Editor\PMX2FBX\readme.txt" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaRegister.tpl.txt" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaClassWrap.tpl.txt" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaRegisterGCM.tpl.txt" />
     <None Include="Assets\XLua\Src\Editor\Unity.Cecil.dll" />
+    <None Include="Assets\MMD4Mecanim\Editor\Revision.txt" />
+    <None Include="Assets\MMD4Mecanim\Editor\PMX2FBX\libfbxsdk.dll" />
     <None Include="Assets\XLua\Src\Editor\Unity.Cecil.Mdb.dll" />
     <None Include="Assets\XLua\Src\Editor\Unity.Cecil.Pdb.dll" />
     <None Include="Assets\XLua\Src\Editor\LinkXmlGen\LinkXmlGen.tpl.txt" />
@@ -81,7 +95,9 @@
     <None Include="Assets\XLua\Src\Editor\Template\LuaEnumWrapGCM.tpl.txt" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaClassWrapGCM.tpl.txt" />
     <None Include="Assets\XLua\Src\Editor\Template\TemplateCommon.lua.txt" />
+    <None Include="Assets\MMD4Mecanim\Editor\PMX2FBX\mecab.dll" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaDelegateBridge.tpl.txt" />
+    <None Include="Assets\MMD4Mecanim\Editor\MMD4MecanimEditor.dll" />
     <None Include="Assets\XLua\Src\Editor\Template\LuaEnumWrap.tpl.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -441,6 +457,10 @@
       <HintPath>E:\Unity\2022.3.62f2c1\Editor\Data\PlaybackEngines\MetroSupport\UnityEditor.UWP.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MMD4Mecanim">
+      <HintPath>Assets\MMD4Mecanim\Scripts\MMD4Mecanim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -491,6 +511,10 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MMD4MecanimEditor">
+      <HintPath>Assets\MMD4Mecanim\Editor\MMD4MecanimEditor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -1286,6 +1310,10 @@
     <ProjectReference Include="Game.Definition.csproj">
       <Project>{74410520-7A3B-D8F9-76B6-115D9F006991}</Project>
       <Name>Game.Definition</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Editor.csproj">
+      <Project>{2E2CF43E-9812-1CF4-F7B2-42EF02CF8DAA}</Project>
+      <Name>Game.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Game.Foundation.csproj">
       <Project>{F28BA59D-4902-9C84-A04F-4281E1058710}</Project>

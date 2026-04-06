@@ -415,6 +415,10 @@
       <HintPath>E:\Unity\2022.3.62f2c1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MMD4Mecanim">
+      <HintPath>Assets\MMD4Mecanim\Scripts\MMD4Mecanim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
       <Private>False</Private>
@@ -1200,6 +1204,10 @@
     <ProjectReference Include="Game.Definition.csproj">
       <Project>{74410520-7A3B-D8F9-76B6-115D9F006991}</Project>
       <Name>Game.Definition</Name>
+    </ProjectReference>
+    <ProjectReference Include="Game.Editor.csproj">
+      <Project>{2E2CF43E-9812-1CF4-F7B2-42EF02CF8DAA}</Project>
+      <Name>Game.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Game.Foundation.csproj">
       <Project>{F28BA59D-4902-9C84-A04F-4281E1058710}</Project>

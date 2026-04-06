@@ -61,9 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Definition\Presentation\AudioEventConfig.cs" />
-    <Compile Include="Assets\Scripts\Definition\AI\ActorAIProfileConfig.cs" />
     <Compile Include="Assets\Scripts\Definition\UI\HUDConfig.cs" />
     <Compile Include="Assets\Scripts\Definition\Weapon\WeaponLoadoutConfig.cs" />
+    <Compile Include="Assets\Scripts\Definition\Enemy\EnemyAttackConfig.cs" />
     <Compile Include="Assets\Scripts\Definition\ConfigSystem\Validation\ConfigValidationRunner.cs" />
     <Compile Include="Assets\Scripts\Definition\Enemy\EnemyMovementConfig.cs" />
     <Compile Include="Assets\Scripts\Definition\GameTags.cs" />
@@ -92,7 +92,9 @@
     <Compile Include="Assets\Scripts\Definition\ConfigSystem\Core\ConfigBase.cs" />
     <Compile Include="Assets\Scripts\Definition\Skill\SkillLoadoutConfig.cs" />
     <Compile Include="Assets\Scripts\Definition\Presentation\WeaponPresentationConfig.cs" />
+    <Compile Include="Assets\Scripts\Definition\HUD\CrosshairConfig.cs" />
     <Compile Include="Assets\Scripts\Definition\AreaEffect\AreaEffectConfig.cs" />
+    <Compile Include="Assets\Scripts\Definition\Combat\CombatDamageKind.cs" />
     <Compile Include="Assets\Scripts\Definition\ConfigSystem\Core\ConfigValidationSeverity.cs" />
     <Compile Include="Assets\Scripts\Definition\ConfigSystem\Core\ConfigService.cs" />
     <Compile Include="Assets\Scripts\Definition\ConfigSystem\Core\ConfigValidationContext.cs" />
@@ -459,6 +461,10 @@
       <HintPath>E:\Unity\2022.3.62f2c1\Editor\Data\PlaybackEngines\MetroSupport\UnityEditor.UWP.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MMD4Mecanim">
+      <HintPath>Assets\MMD4Mecanim\Scripts\MMD4Mecanim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
@@ -509,6 +515,10 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MMD4MecanimEditor">
+      <HintPath>Assets\MMD4Mecanim\Editor\MMD4MecanimEditor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">

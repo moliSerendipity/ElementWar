@@ -2,6 +2,7 @@ using Game.Foundation.Events;
 using Game.Gameplay.Camera;
 using Game.Gameplay.Combat;
 using Game.Gameplay.Combat.Events;
+using Game.Gameplay.Weapon;
 using Game.Gameplay.Weapon.Events;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,61 +10,86 @@ using UnityEngine.UI;
 namespace Game.Presentation.HUD
 {
     /// <summary>
-    /// 最小准星展示器。
-    /// 当前阶段负责三件事：
-    /// 1）维持中心准星基础显示；
-    /// 2）根据相机逻辑瞄点结果切换基础颜色；
-    /// 3）收到真实命中确认与伤害结果后给出短时反馈。
+    /// 准星展示器。
+    ///
+    /// 当前版本正式职责：
+    /// 1. 只从 WeaponViewState 读取当前散布与准星最终展示参数；
+    /// 2. 从 CameraAimPointContext 读取基础瞄点阻挡状态；
+    /// 3. 从已提交事件读取开火/命中反馈；
+    /// 4. 只负责 HUD 展示，不解释 Weapon 配置，不通过 ActionController 中转取状态。
+    ///
+    /// 约束：
+    /// 1. 四向准星臂为正式必需装配，不再保留旧单图缩放降级路径；
+    /// 2. 如果核心引用缺失，则直接隐藏并报错，不伪造第二套显示语义；
+    /// 3. 所有颜色、间距、长度、脉冲参数统一来自 WeaponViewState。
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class CrosshairPresenter : MonoBehaviour
     {
+        #region Inspector
+
         [Header("References")]
         [SerializeField] private MonoBehaviour cameraAimPointProviderBehaviour;
+        [SerializeField] private WeaponViewState weaponViewState;
         [SerializeField] private RectTransform crosshairRoot;
-        [SerializeField] private Graphic crosshairGraphic;
+        [SerializeField] private RectTransform topArm;
+        [SerializeField] private RectTransform bottomArm;
+        [SerializeField] private RectTransform leftArm;
+        [SerializeField] private RectTransform rightArm;
+        [SerializeField] private Graphic centerDotGraphic;
 
-        [Header("Display")]
-        [SerializeField] private bool hideWhenProviderInvalid = false;
-        [SerializeField] private Color defaultColor = Color.white;
-        [SerializeField] private Color blockingHitColor = Color.red;
-        [SerializeField] private Color fallbackPointColor = Color.blue;
-        [SerializeField] private Color hitConfirmColor = Color.yellow;
-        [SerializeField] private Color weakPointHitConfirmColor = new(1f, 0.55f, 0.1f, 1f);
-        [SerializeField] private Color criticalHitConfirmColor = new(1f, 0.8f, 0.2f, 1f);
-        [SerializeField] private Color killHitConfirmColor = new(1f, 0.25f, 0.25f, 1f);
+        [Header("Behaviour")]
+        [SerializeField] private bool hideWhenProviderInvalid;
         [SerializeField] private float hitConfirmDuration = 0.08f;
-        [SerializeField] private float hitPulseScale = 1.15f;
-        [SerializeField] private float criticalHitPulseScale = 1.22f;
-        [SerializeField] private float killHitPulseScale = 1.3f;
+        [SerializeField] private float fireKickDuration = 0.08f;
+        [SerializeField] private float fireKickSpreadMultiplier = 8f;
+
+        #endregion
+
+        #region Runtime State
 
         private ICameraAimPointProvider cameraAimPointProvider;
+        private Graphic topArmGraphic;
+        private Graphic bottomArmGraphic;
+        private Graphic leftArmGraphic;
+        private Graphic rightArmGraphic;
         private float hitConfirmEndTime;
         private float fireKickEndTime;
+        private float currentFireKickOffset;
         private Vector3 defaultScale = Vector3.one;
-        private Color activeHitFeedbackColor;
+        private Color activeHitFeedbackColor = Color.white;
         private float activeHitPulseScale = 1f;
-        private float fireKickScale = 1f;
+        private bool isBindingValid;
 
-        /// <summary>
-        /// 在 Awake 阶段自动解析准星展示所需的最小依赖。
-        /// </summary>
+        #endregion
+
+        #region Unity Lifecycle
+
         private void Awake()
         {
             ResolveReferences();
+            ValidateBindings();
+
             if (crosshairRoot != null)
             {
-                // 记录默认缩放，用于命中脉冲结束后恢复准星原始尺寸。
                 defaultScale = crosshairRoot.localScale;
             }
 
-            // 默认命中反馈颜色从普通命中开始，后续由事件覆盖。
-            activeHitFeedbackColor = hitConfirmColor;
-            activeHitPulseScale = hitPulseScale;
+            if (weaponViewState != null)
+            {
+                activeHitFeedbackColor = weaponViewState.CrosshairHitConfirmColor;
+                activeHitPulseScale = weaponViewState.CrosshairHitPulseScale;
+            }
         }
 
         private void OnEnable()
         {
+            // Presenter 允许晚于事件总线装配；总线未就绪时不做硬崩。
+            if (GameEventBus.Instance == null)
+            {
+                return;
+            }
+
             GameEventBus.Instance.Subscribe<WeaponFiredEvent>(OnWeaponFired);
             GameEventBus.Instance.Subscribe<HitConfirmedEvent>(OnHitConfirmed);
             GameEventBus.Instance.Subscribe<DamageAppliedEvent>(OnDamageApplied);
@@ -79,19 +105,15 @@ namespace Game.Presentation.HUD
             }
         }
 
-        /// <summary>
-        /// 在 LateUpdate 阶段刷新准星可见性与基础颜色。
-        /// 使用 LateUpdate 是为了读取当帧已经完成解析的相机逻辑瞄点结果，避免 UI 抢在相机链之前刷新。
-        /// </summary>
         private void LateUpdate()
         {
             RefreshCrosshair();
         }
 
-        /// <summary>
-        /// 刷新当前帧准星展示状态。
-        /// 当前阶段准星固定停留在屏幕中心，只通过逻辑瞄点有效性与命中反馈切换显示。
-        /// </summary>
+        #endregion
+
+        #region Refresh
+
         public void RefreshCrosshair()
         {
             if (crosshairRoot == null)
@@ -99,47 +121,40 @@ namespace Game.Presentation.HUD
                 return;
             }
 
-            // 当前版本准星始终停在屏幕中心，不在 HUD 层直接表达真实散布偏移。
-            KeepCrosshairCentered();
-
-            if (Time.unscaledTime < hitConfirmEndTime)
+            if (isBindingValid == false)
             {
-                // 命中反馈窗口内优先显示命中颜色与脉冲，不被普通瞄点颜色覆盖。
-                SetCrosshairVisible(true);
-                ApplyCrosshairColor(activeHitFeedbackColor);
-                crosshairRoot.localScale = defaultScale * activeHitPulseScale;
-                Debug.Log("Crosshair showing hit feedback color: " + activeHitFeedbackColor);
+                SetCrosshairVisible(false);
                 return;
             }
 
-            // 命中反馈结束后，仍然允许保留一小段开火脉冲缩放。
-            if (Time.unscaledTime < fireKickEndTime)
+            KeepCrosshairCentered();
+            float spreadGap = ResolveCurrentGap();
+            ApplyCrosshairGeometry(spreadGap);
+
+            if (Time.unscaledTime < hitConfirmEndTime)
             {
-                crosshairRoot.localScale = defaultScale * fireKickScale;
+                SetCrosshairVisible(true);
+                ApplyCrosshairColor(activeHitFeedbackColor);
+                crosshairRoot.localScale = defaultScale * activeHitPulseScale;
+                return;
             }
-            else
-            {
-                crosshairRoot.localScale = defaultScale;
-            }
+
+            crosshairRoot.localScale = defaultScale;
 
             if (cameraAimPointProvider != null
                 && cameraAimPointProvider.TryGetCameraAimPointContext(out CameraAimPointContext cameraAimPointContext))
             {
-                // 相机逻辑瞄点有效时，根据阻挡状态切换基础颜色。
                 SetCrosshairVisible(true);
-                ApplyCrosshairColor(cameraAimPointContext.HasBlockingHit ? blockingHitColor : fallbackPointColor);
+                ApplyCrosshairColor(cameraAimPointContext.HasBlockingHit
+                    ? weaponViewState.CrosshairBlockingHitColor
+                    : weaponViewState.CrosshairDefaultColor);
                 return;
             }
 
-            // 相机提供者失效时，只按当前显示策略保留或隐藏准星。
             SetCrosshairVisible(!hideWhenProviderInvalid);
-            ApplyCrosshairColor(defaultColor);
+            ApplyCrosshairColor(weaponViewState.CrosshairFallbackPointColor);
         }
 
-        /// <summary>
-        /// 维持准星锚点位于屏幕中心。
-        /// 当前阶段不做扩散偏移与动态散布动画，避免 UI 逻辑先于武器链路提前膨胀。
-        /// </summary>
         public void KeepCrosshairCentered()
         {
             if (crosshairRoot == null)
@@ -147,17 +162,12 @@ namespace Game.Presentation.HUD
                 return;
             }
 
-            // 始终把锚点、枢轴和偏移收回到屏幕中心，避免其他 UI 修改残留位置漂移。
             crosshairRoot.anchorMin = new Vector2(0.5f, 0.5f);
             crosshairRoot.anchorMax = new Vector2(0.5f, 0.5f);
             crosshairRoot.pivot = new Vector2(0.5f, 0.5f);
             crosshairRoot.anchoredPosition = Vector2.zero;
         }
 
-        /// <summary>
-        /// 设置准星显示状态。
-        /// </summary>
-        /// <param name="_visible">是否显示准星。</param>
         public void SetCrosshairVisible(bool _visible)
         {
             if (crosshairRoot != null && crosshairRoot.gameObject.activeSelf != _visible)
@@ -166,61 +176,136 @@ namespace Game.Presentation.HUD
             }
         }
 
-        /// <summary>
-        /// 设置准星图形颜色。
-        /// </summary>
-        /// <param name="_color">目标颜色。</param>
         public void ApplyCrosshairColor(Color _color)
         {
-            if (crosshairGraphic != null)
-            {
-                crosshairGraphic.color = _color;
-            }
+            ApplyGraphicColor(centerDotGraphic, _color);
+            ApplyGraphicColor(topArmGraphic, _color);
+            ApplyGraphicColor(bottomArmGraphic, _color);
+            ApplyGraphicColor(leftArmGraphic, _color);
+            ApplyGraphicColor(rightArmGraphic, _color);
         }
 
+        #endregion
+
+        #region Events
 
         private void OnWeaponFired(WeaponFiredEvent _eventArgs)
         {
-            // 开火脉冲只消费已提交事件里的 crosshairKick，不在 HUD 自己发明另一套武器参数。
-            fireKickScale = 1f + Mathf.Max(0f, _eventArgs.CrosshairKick);
-            fireKickEndTime = Time.unscaledTime + hitConfirmDuration;
+            if (weaponViewState == null)
+            {
+                return;
+            }
+
+            currentFireKickOffset = Mathf.Max(currentFireKickOffset, Mathf.Max(0f, _eventArgs.CrosshairKick) * fireKickSpreadMultiplier);
+            fireKickEndTime = Time.unscaledTime + fireKickDuration;
         }
 
         private void OnHitConfirmed(HitConfirmedEvent _eventArgs)
         {
-            // 命中确认先提供基础反馈；弱点命中在这一步直接提升颜色层级。
+            if (weaponViewState == null)
+            {
+                return;
+            }
+
             activeHitFeedbackColor = _eventArgs.HitPartType == CombatHitPartType.WeakPoint
-                ? weakPointHitConfirmColor
-                : hitConfirmColor;
+                ? weaponViewState.CrosshairWeakPointHitConfirmColor
+                : weaponViewState.CrosshairHitConfirmColor;
             activeHitPulseScale = _eventArgs.HitPartType == CombatHitPartType.WeakPoint
-                ? criticalHitPulseScale
-                : hitPulseScale;
+                ? weaponViewState.CrosshairCriticalHitPulseScale
+                : weaponViewState.CrosshairHitPulseScale;
             hitConfirmEndTime = Time.unscaledTime + hitConfirmDuration;
         }
 
         private void OnDamageApplied(DamageAppliedEvent _eventArgs)
         {
+            if (weaponViewState == null)
+            {
+                return;
+            }
+
             CombatDamageResult damageResult = _eventArgs.DamageResult;
 
-            // 击杀反馈优先级最高，其次是暴击；普通伤害不覆盖已有弱点颜色。
             if (damageResult.WasKilled)
             {
-                activeHitFeedbackColor = killHitConfirmColor;
-                activeHitPulseScale = killHitPulseScale;
+                activeHitFeedbackColor = weaponViewState.CrosshairKillHitConfirmColor;
+                activeHitPulseScale = weaponViewState.CrosshairKillHitPulseScale;
             }
             else if (damageResult.IsCritical)
             {
-                activeHitFeedbackColor = criticalHitConfirmColor;
-                activeHitPulseScale = criticalHitPulseScale;
+                activeHitFeedbackColor = weaponViewState.CrosshairCriticalHitConfirmColor;
+                activeHitPulseScale = weaponViewState.CrosshairCriticalHitPulseScale;
             }
 
-            // 伤害结果事件比命中确认更靠后，用它把反馈窗口重新向后推一小段，避免弱点/暴击感受过短。
             hitConfirmEndTime = Time.unscaledTime + hitConfirmDuration;
         }
 
-        /// <summary>
-        /// 自动解析相机瞄点提供者与当前节点上的 UI 引用。
-        /// </summary>
+        #endregion
+
+        #region Geometry
+
+        private float ResolveCurrentGap()
+        {
+            float gap = Mathf.Lerp(
+                weaponViewState.CrosshairBaseGap,
+                weaponViewState.CrosshairMaxGap,
+                weaponViewState.NormalizedSpread);
+
+            if (Time.unscaledTime < fireKickEndTime)
+            {
+                gap += currentFireKickOffset;
+            }
+            else
+            {
+                currentFireKickOffset = Mathf.MoveTowards(currentFireKickOffset, 0f, 100f * Time.unscaledDeltaTime);
+            }
+
+            return gap;
+        }
+
+        private void ApplyCrosshairGeometry(float _gap)
+        {
+            SetGraphicVisible(centerDotGraphic, weaponViewState.CrosshairShowCenterDot);
+
+            ApplyArm(topArm, new Vector2(0f, _gap), new Vector2(weaponViewState.CrosshairLineThickness, weaponViewState.CrosshairLineLength));
+            ApplyArm(bottomArm, new Vector2(0f, -_gap), new Vector2(weaponViewState.CrosshairLineThickness, weaponViewState.CrosshairLineLength));
+            ApplyArm(leftArm, new Vector2(-_gap, 0f), new Vector2(weaponViewState.CrosshairLineLength, weaponViewState.CrosshairLineThickness));
+            ApplyArm(rightArm, new Vector2(_gap, 0f), new Vector2(weaponViewState.CrosshairLineLength, weaponViewState.CrosshairLineThickness));
+        }
+
+        private static void ApplyArm(RectTransform _arm, Vector2 _anchoredPosition, Vector2 _size)
+        {
+            if (_arm == null)
+            {
+                return;
+            }
+
+            _arm.anchorMin = new Vector2(0.5f, 0.5f);
+            _arm.anchorMax = new Vector2(0.5f, 0.5f);
+            _arm.pivot = new Vector2(0.5f, 0.5f);
+            _arm.anchoredPosition = _anchoredPosition;
+            _arm.sizeDelta = _size;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private static void ApplyGraphicColor(Graphic _graphic, Color _color)
+        {
+            if (_graphic != null)
+            {
+                _graphic.color = _color;
+            }
+        }
+
+        private static void SetGraphicVisible(Graphic _graphic, bool _visible)
+        {
+            if (_graphic != null)
+            {
+                _graphic.enabled = _visible;
+            }
+        }
+
         private void ResolveReferences()
         {
             cameraAimPointProvider = cameraAimPointProviderBehaviour as ICameraAimPointProvider;
@@ -230,21 +315,44 @@ namespace Game.Presentation.HUD
                 crosshairRoot = GetComponent<RectTransform>();
             }
 
-            if (crosshairGraphic == null)
+            topArmGraphic = topArm != null ? topArm.GetComponent<Graphic>() : null;
+            bottomArmGraphic = bottomArm != null ? bottomArm.GetComponent<Graphic>() : null;
+            leftArmGraphic = leftArm != null ? leftArm.GetComponent<Graphic>() : null;
+            rightArmGraphic = rightArm != null ? rightArm.GetComponent<Graphic>() : null;
+        }
+
+        /// <summary>
+        /// 校验正式准星装配是否完整。
+        /// 缺失即视为装配错误，不再降级到旧方案。
+        /// </summary>
+        private void ValidateBindings()
+        {
+            isBindingValid = crosshairRoot != null
+                && weaponViewState != null
+                && topArm != null
+                && bottomArm != null
+                && leftArm != null
+                && rightArm != null;
+
+            if (isBindingValid)
             {
-                crosshairGraphic = GetComponent<Graphic>();
+                return;
             }
+
+            Debug.LogError(
+                $"[{nameof(CrosshairPresenter)}] 准星正式装配不完整：必须绑定 WeaponViewState、CrosshairRoot、TopArm、BottomArm、LeftArm、RightArm。Object={name}",
+                this);
         }
 
 #if UNITY_EDITOR
-        /// <summary>
-        /// 在编辑器中参数变动后自动重新解析引用，减少装配遗漏。
-        /// </summary>
         private void OnValidate()
         {
             ResolveReferences();
+            ValidateBindings();
             KeepCrosshairCentered();
         }
 #endif
+
+        #endregion
     }
 }

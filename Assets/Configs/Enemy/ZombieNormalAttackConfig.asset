@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47ebbff4feb351346aca1fd5d6781aef, type: 3}
+  m_Name: ZombieNormalAttackConfig
+  m_EditorClassIdentifier: 
+  configId: ZombieNormalAttackConfig
+  displayName: 
+  description: 
+  isEnabled: 1
+  animationClip: {fileID: -203655887218126122, guid: dae5216ed26faf1469bf5332167c55c5,
+    type: 3}
+  animationTriggerName: NormalAttackTrigger
+  damageNormalizedTime: 0.49
+  damageMultiplier: 1
+  damageKind: 0
+  isAreaOfEffect: 0
+  shapeType: 0
+  offsetDistance: 1.2
+  radius: 1.2
+  sectorHalfAngle: 60
+  boxHalfDepth: 1
+  boxHalfWidth: 0.5
+  boxHalfHeight: 0.8
+  maxUseRange: 2
+  minUseRange: 0
+  selectionWeight: 10

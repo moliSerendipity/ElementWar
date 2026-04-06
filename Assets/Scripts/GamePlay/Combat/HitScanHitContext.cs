@@ -11,7 +11,7 @@ namespace Game.Gameplay.Combat
         public HitScanHitContext(
             bool _hasHit,
             Collider _hitCollider,
-            HealthComponent _damageReceiver,
+            HealthComponent _healthComponent,
             Vector3 _hitPoint,
             Vector3 _hitNormal,
             float _hitDistance,
@@ -19,7 +19,7 @@ namespace Game.Gameplay.Combat
         {
             HasHit = _hasHit;
             HitCollider = _hitCollider;
-            DamageReceiver = _damageReceiver;
+            HealthComponent = _healthComponent;
             HitPoint = _hitPoint;
             HitNormal = _hitNormal;
             HitDistance = _hitDistance;
@@ -28,7 +28,7 @@ namespace Game.Gameplay.Combat
 
         public bool HasHit { get; }
         public Collider HitCollider { get; }
-        public HealthComponent DamageReceiver { get; }
+        public HealthComponent HealthComponent { get; }
         public Vector3 HitPoint { get; }
         public Vector3 HitNormal { get; }
         public float HitDistance { get; }

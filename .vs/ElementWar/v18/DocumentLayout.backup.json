@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "E:\\Unity Project\\ElementWar\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|e:\\unity project\\elementwar\\assets\\scripts\\gameplay\\weapon\\weaponviewstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\weapon\\weaponviewstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Editor\\EnemyAttackConfigEditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Editor\\EnemyAttackConfigEditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|e:\\unity project\\elementwar\\assets\\scripts\\gameplay\\character\\core\\characterstat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\character\\core\\characterstat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74410520-7A3B-D8F9-76B6-115D9F006991}|Game.Definition.csproj|E:\\Unity Project\\ElementWar\\assets\\scripts\\definition\\enemy\\enemyattackconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74410520-7A3B-D8F9-76B6-115D9F006991}|Game.Definition.csproj|solutionrelative:assets\\scripts\\definition\\enemy\\enemyattackconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|e:\\unity project\\elementwar\\assets\\scripts\\gameplay\\character\\controller\\characterfacingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\character\\controller\\characterfacingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{01115D8D-C387-FCD1-B580-68C54DC05864}|Game.Presentation.csproj|e:\\unity project\\elementwar\\assets\\scripts\\presentation\\animation\\enemyanimationbridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01115D8D-C387-FCD1-B580-68C54DC05864}|Game.Presentation.csproj|solutionrelative:assets\\scripts\\presentation\\animation\\enemyanimationbridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|e:\\unity project\\elementwar\\assets\\scripts\\gameplay\\character\\controller\\characteractioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\character\\controller\\characteractioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|E:\\Unity Project\\ElementWar\\assets\\scripts\\gameplay\\enemy\\enemyattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\enemy\\enemyattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{74410520-7A3B-D8F9-76B6-115D9F006991}|Game.Definition.csproj|e:\\unity project\\elementwar\\assets\\scripts\\definition\\character\\characteraimconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{74410520-7A3B-D8F9-76B6-115D9F006991}|Game.Definition.csproj|solutionrelative:assets\\scripts\\definition\\character\\characteraimconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|E:\\Unity Project\\ElementWar\\assets\\scripts\\gameplay\\enemy\\enemystat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\enemy\\enemystat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|e:\\unity project\\elementwar\\assets\\scripts\\gameplay\\weapon\\weaponruntime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\weapon\\weaponruntime.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|e:\\unity project\\elementwar\\assets\\scripts\\gameplay\\enemy\\enemybrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DF20E843-3B51-9F4F-9D01-CA9117B5E479}|Game.Gameplay.csproj|solutionrelative:assets\\scripts\\gameplay\\enemy\\enemybrain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,21 +34,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 6,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "WeaponRuntime.cs",
-              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Weapon\\WeaponRuntime.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Weapon\\WeaponRuntime.cs",
-              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Weapon\\WeaponRuntime.cs",
-              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Weapon\\WeaponRuntime.cs",
-              "ViewState": "AgIAAP8BAAAAAAAAAAAUwA8CAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-03T07:06:04.578Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0c720079-b2d5-4f29-840e-382783199460}"
@@ -60,66 +47,79 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "WeaponViewState.cs",
-              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Weapon\\WeaponViewState.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Weapon\\WeaponViewState.cs",
-              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Weapon\\WeaponViewState.cs",
-              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Weapon\\WeaponViewState.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA8AAAAAAAAAA==",
+              "Title": "EnemyAttackConfigEditor.cs",
+              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Editor\\EnemyAttackConfigEditor.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Editor\\EnemyAttackConfigEditor.cs",
+              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Editor\\EnemyAttackConfigEditor.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Editor\\EnemyAttackConfigEditor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-03T07:12:39.33Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CharacterStat.cs",
-              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Character\\Core\\CharacterStat.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Character\\Core\\CharacterStat.cs",
-              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Character\\Core\\CharacterStat.cs",
-              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Character\\Core\\CharacterStat.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-03T07:09:45.794Z",
+              "WhenOpened": "2026-04-06T08:05:56.5Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "CharacterFacingController.cs",
-              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterFacingController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterFacingController.cs",
-              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterFacingController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterFacingController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Title": "EnemyAnimationBridge.cs",
+              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Presentation\\Animation\\EnemyAnimationBridge.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Presentation\\Animation\\EnemyAnimationBridge.cs",
+              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Presentation\\Animation\\EnemyAnimationBridge.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Presentation\\Animation\\EnemyAnimationBridge.cs",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAAwAEAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-03T07:06:43.636Z",
+              "WhenOpened": "2026-04-06T07:41:35.365Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EnemyBrain.cs",
+              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Enemy\\EnemyBrain.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Enemy\\EnemyBrain.cs",
+              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Enemy\\EnemyBrain.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Enemy\\EnemyBrain.cs",
+              "ViewState": "AgIAACcBAAAAAAAAAAAUwEcBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T07:41:35.115Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "CharacterActionController.cs",
-              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterActionController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterActionController.cs",
-              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterActionController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Character\\Controller\\CharacterActionController.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAuwBYAAAAAAAAAAAAAAA==",
+              "Title": "EnemyAttack.cs",
+              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Enemy\\EnemyAttack.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Enemy\\EnemyAttack.cs",
+              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Enemy\\EnemyAttack.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Enemy\\EnemyAttack.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAYwAYCAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-03T07:02:29.01Z",
+              "WhenOpened": "2026-04-06T07:41:35.121Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "CharacterAimConfig.cs",
-              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Definition\\Character\\CharacterAimConfig.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Definition\\Character\\CharacterAimConfig.cs",
-              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Definition\\Character\\CharacterAimConfig.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Definition\\Character\\CharacterAimConfig.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Title": "EnemyStat.cs",
+              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Enemy\\EnemyStat.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GamePlay\\Enemy\\EnemyStat.cs",
+              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\GamePlay\\Enemy\\EnemyStat.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GamePlay\\Enemy\\EnemyStat.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAADwv94AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-03T07:00:03.726Z",
+              "WhenOpened": "2026-04-06T07:41:35.122Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EnemyAttackConfig.cs",
+              "DocumentMoniker": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Definition\\Enemy\\EnemyAttackConfig.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Definition\\Enemy\\EnemyAttackConfig.cs",
+              "ToolTip": "E:\\Unity Project\\ElementWar\\Assets\\Scripts\\Definition\\Enemy\\EnemyAttackConfig.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Definition\\Enemy\\EnemyAttackConfig.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAAwB0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T07:28:51.52Z",
               "EditorCaption": ""
             }
           ]

@@ -16,9 +16,15 @@ MonoBehaviour:
   displayName: 
   description: 
   isEnabled: 1
+  detectRange: 15
+  loseTargetRange: 20
+  targetMemoryDuration: 1.5
+  scanInterval: 0.15
   maxHealth: 9999999
   attackPower: 12
   defense: 2
   toughness: 120
+  attackRange: 2.5
+  attackCooldown: 0.5
   damageTakenMultiplier: 1
   weakPointDamageMultiplier: 1.5

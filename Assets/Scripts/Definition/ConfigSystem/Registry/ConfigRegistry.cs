@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Game.Definition.AI;
 using Game.Definition.Character;
 using Game.Definition.Combat;
 using Game.Definition.AreaEffect;
@@ -31,9 +30,6 @@ namespace Game.Definition.ConfigSystem.Registry
         [SerializeField] private List<CharacterJumpConfig> characterJumps = new();
         [SerializeField] private List<CharacterAimConfig> characterAims = new();
         [SerializeField] private List<CharacterSwitchConfig> characterSwitches = new();
-
-        [Header("AI")]
-        [SerializeField] private List<ActorAIProfileConfig> actorAiProfiles = new();
 
         [Header("Combat")]
         [SerializeField] private List<DamageRuleConfig> damageRules = new();
@@ -79,7 +75,6 @@ namespace Game.Definition.ConfigSystem.Registry
             foreach (ConfigBase config in Enumerate(characterJumps)) yield return config;
             foreach (ConfigBase config in Enumerate(characterAims)) yield return config;
             foreach (ConfigBase config in Enumerate(characterSwitches)) yield return config;
-            foreach (ConfigBase config in Enumerate(actorAiProfiles)) yield return config;
             foreach (ConfigBase config in Enumerate(damageRules)) yield return config;
             foreach (ConfigBase config in Enumerate(resistanceSets)) yield return config;
             foreach (ConfigBase config in Enumerate(elementReactions)) yield return config;

@@ -1,7 +1,6 @@
 using UnityEngine;
 using Game.Definition.ConfigSystem.Core;
 using Game.Definition.Combat;
-using Game.Definition.AI;
 using Game.Definition.Weapon;
 using Game.Definition.Skill;
 
@@ -16,14 +15,12 @@ namespace Game.Definition.Enemy
         [SerializeField] private EnemyBaseStatConfig enemyBaseStatConfig;
         [SerializeField] private EnemyMovementConfig enemyMovementConfig;
         [SerializeField] private ResistanceSetConfig enemyResistanceSetConfig;
-        [SerializeField] private ActorAIProfileConfig aiProfileConfig;
         [SerializeField] private WeaponLoadoutConfig weaponLoadoutConfig;
         [SerializeField] private SkillLoadoutConfig skillLoadoutConfig;
 
         public EnemyBaseStatConfig EnemyBaseStatConfig => enemyBaseStatConfig;
         public EnemyMovementConfig EnemyMovementConfig => enemyMovementConfig;
         public ResistanceSetConfig EnemyResistanceSetConfig => enemyResistanceSetConfig;
-        public ActorAIProfileConfig AiProfileConfig => aiProfileConfig;
         public WeaponLoadoutConfig WeaponLoadoutConfig => weaponLoadoutConfig;
         public SkillLoadoutConfig SkillLoadoutConfig => skillLoadoutConfig;
 
@@ -44,11 +41,6 @@ namespace Game.Definition.Enemy
             if (enemyResistanceSetConfig == null)
             {
                 _context.AddError(ConfigId, $"字段 {nameof(enemyResistanceSetConfig)} 不能为空。");
-            }
-
-            if (aiProfileConfig == null)
-            {
-                _context.AddError(ConfigId, $"字段 {nameof(aiProfileConfig)} 不能为空。");
             }
 
             if (weaponLoadoutConfig == null)
