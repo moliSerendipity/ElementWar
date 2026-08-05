@@ -15,6 +15,7 @@
 *.userprefs
 *.pidb.meta
 *.sln
+/Game.EditModeTests.csproj
 *.unityproj
 *.booproj
 *.svd
