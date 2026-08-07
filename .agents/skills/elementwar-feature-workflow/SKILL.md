@@ -15,6 +15,12 @@ description: 在 ElementWar 仓库中处理新增功能、跨文件重构、架�
 4. 仅在新增、修改或审查 C# 时读取 `Docs/CodingStandards.md`。
 5. 仅在设计或执行测试、构建、性能检查时读取 `references/verification-matrix.md`。
 6. 读取相关实现、asmdef、配置、场景、测试、文档、Git 状态和 scoped diff；不要预先加载无关文档。
+7. 涉及玩家可见玩法、战斗、关卡流程或网络规划时，先用 `Docs/GameDesign.md` 定位，再按需读取一份或少量细则：
+   - 角色、AI、移动、武器、弹药、技能、伤害、输入或 HUD：`Docs/Design/Combat.md`
+   - 元素附着、反应、控制或元素扩展：`Docs/Design/Elements.md`
+   - 场景、波次、敌人编排、Boss、补给或肉鸽强化：`Docs/Design/Run.md`
+   - 联机边界、网络实验或同步约束：`Docs/Design/Networking.md`
+8. 不得默认加载全部设计细则；文档拆分和唯一事实源规则以 `Docs/Workflow.md` 为准。
 
 如果这些文件仍位于候选包而未落到真实项目根，只把它们视为提案，不得声称对应规则、skill 或命令已经在实时工程生效。
 

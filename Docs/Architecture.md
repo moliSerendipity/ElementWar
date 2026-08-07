@@ -41,7 +41,7 @@ Input → Decision → Execution → Fact writeback → Event → Presentation
 ```text
 WeaponFireExecutor → HitScanService → DamageResolver
                    → HealthComponent → DamageAppliedEvent
-                   → Presentation / EnemyBrain / 其他消费者
+                   → Presentation / 其他消费者
 ```
 
 ## 当前主线
