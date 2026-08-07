@@ -6,6 +6,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/.vs/
 
 # 保存的场景
 *.csc
@@ -15,7 +16,7 @@
 *.userprefs
 *.pidb.meta
 *.sln
-/Game.EditModeTests.csproj
+/*.csproj
 *.unityproj
 *.booproj
 *.svd
