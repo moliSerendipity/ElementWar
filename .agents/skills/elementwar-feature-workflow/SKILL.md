@@ -11,20 +11,27 @@ description: 在 ElementWar 仓库中处理新增功能、跨文件重构、架�
 
 1. 完整遵守项目根 `AGENTS.md`。
 2. 对本 skill 触发的任务读取 `Docs/Workflow.md`。
-3. 仅在涉及程序集、状态所有权、scene/prefab、序列化、旧架构或迁移时读取 `Docs/Architecture.md`。
-4. 仅在新增、修改或审查 C# 时读取 `Docs/CodingStandards.md`。
-5. 仅在设计或执行测试、构建、性能检查时读取 `references/verification-matrix.md`。
-6. 读取相关实现、asmdef、配置、场景、测试、文档、Git 状态和 scoped diff；不要预先加载无关文档。
-7. 涉及玩家可见玩法、战斗、关卡流程或网络规划时，先用 `Docs/GameDesign.md` 定位，再按需读取一份或少量细则：
+3. 用户说“继续下一阶段”、询问开发顺序或没有点名具体功能时，读取 `Docs/DevelopmentRoadmap.md`，再只读取其中唯一 `Next` 指向的路线细则。用户明确指定功能时只核对该功能的路线任务和依赖。
+4. 仅在涉及程序集、状态所有权、scene/prefab、序列化、旧架构或迁移时读取 `Docs/Architecture.md`。
+5. 仅在新增、修改或审查 C# 时读取 `Docs/CodingStandards.md`。
+6. 仅在设计或执行测试、构建、性能检查时读取 `references/verification-matrix.md`。
+7. 读取相关实现、asmdef、配置、场景、测试、文档、Git 状态和 scoped diff；不要预先加载无关文档。
+8. 涉及玩家可见玩法、战斗、关卡流程或网络规划时，先用 `Docs/GameDesign.md` 定位，再按需读取一份或少量细则：
    - 角色、AI、移动、武器、弹药、技能、伤害、输入或 HUD：`Docs/Design/Combat.md`
    - 元素附着、反应、控制或元素扩展：`Docs/Design/Elements.md`
    - 场景、波次、敌人编排、Boss、补给或肉鸽强化：`Docs/Design/Run.md`
    - 联机边界、网络实验或同步约束：`Docs/Design/Networking.md`
-8. 不得默认加载全部设计细则；文档拆分和唯一事实源规则以 `Docs/Workflow.md` 为准。
+9. 不得默认加载全部设计细则；文档拆分和唯一事实源规则以 `Docs/Workflow.md` 为准。
 
 如果这些文件仍位于候选包而未落到真实项目根，只把它们视为提案，不得声称对应规则、skill 或命令已经在实时工程生效。
 
 ## 执行流程
+
+### 0. 选择适合当前风险的任务结构
+
+- 先按 `Docs/Workflow.md` 判断是局部闭环、标准垂直切片、高风险迁移还是探索任务，不预设所有工作必须合并或拆分。
+- 路线任务只定义依赖、行为和证据边界；Feature Spec 承载本次批准的具体切片。发现路线缺项或依赖错误时先修正路线提案，不绕过前置任务。
+- 把仓库和权威文档能够回答的内容一次性自行确认；只集中询问剩余的高影响选择。
 
 ### 1. 建立事实
 
@@ -54,11 +61,12 @@ description: 在 ElementWar 仓库中处理新增功能、跨文件重构、架�
 - 从最精确、最低成本的检查开始，再按 `Docs/Workflow.md` 提升验证等级。
 - 测试数为 0 必须失败；不得删弱测试只为得到绿色结果。
 - 保存原始 XML、日志、Player、截图/录像或 Profiler 证据。
-- 条件允许时建议另开只读 Codex 任务，基于 Feature Spec、diff 和原始证据做独立审查。
+- 根据公共契约、状态所有权、序列化、物理/计时、迁移、发布影响、测试可信度和 diff 复杂度决定是否需要独立只读审查，不把它作为每个切片的固定步骤。
+- 审查结论按“已确认缺陷、违反验收、证据缺口、可选增强”分类；只有前两类默认要求修复后重新验证，证据缺口先修正完成声明或补证据，可选增强进入路线或后续任务。
 
 ### 6. 证据化交付
 
-报告实际行为和文件、实际命令、测试数量与结果、证据路径、人工验收、未运行项、剩余风险、回滚方式和文档同步情况。严格区分 Implemented、Fast Verified、Full Verified 和 Accepted。
+报告实际行为和文件、实际命令、测试数量与结果、证据路径、人工验收、未运行项、剩余风险、回滚方式和文档同步情况。严格区分 Implemented、Fast Verified、Full Verified 和 Accepted。功能属于开发路线时，同步任务状态、证据链接、解锁项和新的唯一 `Next`。
 
 ## 必须暂停的情况
 

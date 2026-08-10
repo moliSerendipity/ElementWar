@@ -7,6 +7,8 @@
 
 本文只维护产品方向、首版范围和细则导航。它描述已经确认的目标设计，不证明对应功能已经实现；当前代码主线、旧架构和已知越界点以 [`Architecture.md`](Architecture.md) 为准，单项功能的实现与验证以对应 Feature Spec 和证据为准。
 
+开发顺序、当前下一项、依赖和裁剪边界以 [`DevelopmentRoadmap.md`](DevelopmentRoadmap.md) 为准；不要从本设计总览的章节顺序推导实施顺序。
+
 ## 产品定位
 
 - 中文名：元素战争；项目名：ElementWar。
@@ -52,6 +54,8 @@
 - [`Design/Elements.md`](Design/Elements.md)：元素附着、六种反应、Boss 处理和未来扩展边界。
 - [`Design/Run.md`](Design/Run.md)：场景、波次、敌人编排、Boss、补给、失败和九个强化。
 - [`Design/Networking.md`](Design/Networking.md)：首版单机边界、未来双人实验和同步约束。
+- [`DevelopmentRoadmap.md`](DevelopmentRoadmap.md)：当前实施状态、唯一下一项、依赖图和分域执行细则。
+- [`Workflow.md`](Workflow.md)：短指令入口、自适应任务组织、验证等级和完成标准。
 
 实现某项需求时，只读取本总览和直接相关的细则；跨领域行为再补读必要文档，不默认加载全部文件。
 

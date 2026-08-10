@@ -3,6 +3,7 @@
 状态：Draft / Clarifying / Approved / Implementing / Verified / Closed
 负责人：
 维护日期：
+关联 Roadmap 任务：
 关联 ADR / Issue / Commit / 授权记录：
 
 > 只保留适用且有实际信息的内容；项目级事实链接到权威文档，不复制正文。关闭后按 [`Docs/Workflow.md`](../Workflow.md) 删除时间线、被替代方案、重复授权和可由 Git/日志恢复的细节。
@@ -56,3 +57,4 @@ Draft/Approved 阶段填写计划证据；Closed 阶段替换为实际命令、�
 - [ ] 实际测试数量大于 0；失败、未运行和证据缺口均如实记录。
 - [ ] 最终行为、运行方式、证据路径、维护约束和回滚单位仍然有效。
 - [ ] 项目级事实与 ADR 使用引用，本 Spec 不保留重复正文或可恢复的过程细节。
+- [ ] 对应 Roadmap 任务已更新状态、证据链接、后续解锁项和新的唯一 `Next`。
