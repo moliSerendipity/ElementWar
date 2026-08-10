@@ -136,7 +136,7 @@ namespace Game.Presentation.Camera
         private bool ResolveUseAimingCamera()
         {
             CharacterFacts facts = characterRoot != null ? characterRoot.Facts : null;
-            return facts != null && facts.IsAiming && !facts.IsReloading && !facts.IsDead;
+            return facts != null && facts.IsAiming && !facts.IsReloading && !facts.IsHealthDepleted;
         }
 
         private void RefreshCurrentCamera(bool _useAimingCamera)

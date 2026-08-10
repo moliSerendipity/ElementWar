@@ -1,12 +1,13 @@
+using Game.Gameplay.Combat;
 using UnityEngine;
 
 namespace Game.Gameplay.Character
 {
     /// <summary>
-    /// 角色长期运行时事实。
-    /// 只保存已经提交的角色事实状态，不保存请求、计划和门控中间结果。
+    /// 保存已经提交的角色事实状态；生命耗尽只读引用 HealthComponent 的权威事实。
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(HealthComponent))]
     public sealed class CharacterFacts : MonoBehaviour
     {
         [SerializeField] private bool isGrounded = true;
@@ -15,12 +16,13 @@ namespace Game.Gameplay.Character
         [SerializeField] private bool isAiming;
         [SerializeField] private bool isReloading;
         [SerializeField] private bool isJumping;
-        [SerializeField] private bool isDead;
         [SerializeField] private bool isInputBlocked;
         [SerializeField] private bool isControlLocked;
         [SerializeField] private bool allowSprint;
         [SerializeField] private float planarSpeed;
         [SerializeField] private float verticalSpeed;
+
+        private HealthComponent healthComponent;
 
         public bool IsGrounded => isGrounded;
         public bool IsAirborne => !isGrounded;
@@ -29,26 +31,33 @@ namespace Game.Gameplay.Character
         public bool IsAiming => isAiming;
         public bool IsReloading => isReloading;
         public bool IsJumping => isJumping;
-        public bool IsDead => isDead;
+
+        /// <summary>读取 HealthComponent 派生出的唯一生命耗尽事实。</summary>
+        public bool IsHealthDepleted => healthComponent != null && healthComponent.IsHealthDepleted;
+
         public bool IsInputBlocked => isInputBlocked;
         public bool IsControlLocked => isControlLocked;
         public bool AllowSprint => allowSprint;
         public float PlanarSpeed => planarSpeed;
         public float VerticalSpeed => verticalSpeed;
 
+        private void Awake()
+        {
+            ResolveReferences();
+        }
+
         /// <summary>
-        /// 初始化默认事实。
-        /// 当前版本默认角色出生时处于地面可控状态。
+        /// 初始化默认角色事实，不创建或覆写生命状态。
         /// </summary>
         public void InitializeDefaults()
         {
+            ResolveReferences();
             isGrounded = true;
             isMoving = false;
             isSprinting = false;
             isAiming = false;
             isReloading = false;
             isJumping = false;
-            isDead = false;
             isInputBlocked = false;
             isControlLocked = false;
             allowSprint = true;
@@ -70,11 +79,18 @@ namespace Game.Gameplay.Character
         public void SetAiming(bool _value) => isAiming = _value;
         public void SetReloading(bool _value) => isReloading = _value;
         public void SetJumping(bool _value) => isJumping = _value;
-        public void SetDead(bool _value) => isDead = _value;
         public void SetInputBlocked(bool _value) => isInputBlocked = _value;
         public void SetControlLocked(bool _value) => isControlLocked = _value;
         public void SetAllowSprint(bool _value) => allowSprint = _value;
         public void SetPlanarSpeed(float _value) => planarSpeed = Mathf.Max(0f, _value);
         public void SetVerticalSpeed(float _value) => verticalSpeed = _value;
+
+        private void ResolveReferences()
+        {
+            if (healthComponent == null)
+            {
+                healthComponent = GetComponent<HealthComponent>();
+            }
+        }
     }
 }

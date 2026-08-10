@@ -192,7 +192,7 @@ namespace Game.Gameplay.Combat
             #region Step 6: 构建命中上下文
 
             HealthComponent healthComponent = hitInfo.collider.GetComponentInParent<HealthComponent>();
-            CombatHitPartType hitPartType = ResolveHitPartType(hitInfo.collider);
+            HitPartType hitPartType = ResolveHitPartType(hitInfo.collider);
 
             _hitContext = new HitScanHitContext(
                 true,
@@ -281,11 +281,11 @@ namespace Game.Gameplay.Combat
         /// <summary>
         /// 从碰撞体上解析命中部位类型：弱点 > HitBox 标记 > 默认。
         /// </summary>
-        private static CombatHitPartType ResolveHitPartType(Collider _collider)
+        private static HitPartType ResolveHitPartType(Collider _collider)
         {
             if (_collider == null)
             {
-                return CombatHitPartType.Default;
+                return HitPartType.Default;
             }
 
             // 先检查弱点组件。
@@ -293,13 +293,13 @@ namespace Game.Gameplay.Combat
                 ?? _collider.GetComponentInParent<WeakSpotComponent>();
             if (weakSpot != null && weakSpot.IsEnabled)
             {
-                return CombatHitPartType.WeakPoint;
+                return HitPartType.WeakPoint;
             }
 
             // 再检查通用 HitBox 标记。
-            CombatHitBoxComponent hitBox = _collider.GetComponent<CombatHitBoxComponent>()
-                ?? _collider.GetComponentInParent<CombatHitBoxComponent>();
-            return hitBox != null ? hitBox.HitPartType : CombatHitPartType.Default;
+            HitBoxComponent hitBox = _collider.GetComponent<HitBoxComponent>()
+                ?? _collider.GetComponentInParent<HitBoxComponent>();
+            return hitBox != null ? hitBox.HitPartType : HitPartType.Default;
         }
 
         #endregion

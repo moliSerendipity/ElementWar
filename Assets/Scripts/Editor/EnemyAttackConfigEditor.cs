@@ -31,7 +31,8 @@ namespace Game.Editor.Enemy
 
         // --- Damage ---
         private SerializedProperty propDamageMultiplier;
-        private SerializedProperty propDamageKind;
+        private SerializedProperty propElement;
+        private SerializedProperty propDelivery;
         private SerializedProperty propIsAreaOfEffect;
 
         // --- Shape ---
@@ -65,7 +66,8 @@ namespace Game.Editor.Enemy
 
             // Damage
             propDamageMultiplier = serializedObject.FindProperty("damageMultiplier");
-            propDamageKind = serializedObject.FindProperty("damageKind");
+            propElement = serializedObject.FindProperty("element");
+            propDelivery = serializedObject.FindProperty("delivery");
             propIsAreaOfEffect = serializedObject.FindProperty("isAreaOfEffect");
 
             // Shape
@@ -150,7 +152,8 @@ namespace Game.Editor.Enemy
         {
             EditorGUILayout.LabelField("Damage", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(propDamageMultiplier);
-            EditorGUILayout.PropertyField(propDamageKind);
+            EditorGUILayout.PropertyField(propElement);
+            EditorGUILayout.PropertyField(propDelivery);
             EditorGUILayout.PropertyField(propIsAreaOfEffect);
             EditorGUILayout.Space(8);
         }

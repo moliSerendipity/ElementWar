@@ -15,7 +15,7 @@ namespace Game.Gameplay.Combat
             Vector3 _hitPoint,
             Vector3 _hitNormal,
             float _hitDistance,
-            CombatHitPartType _hitPartType)
+            HitPartType _hitPartType)
         {
             HasHit = _hasHit;
             HitCollider = _hitCollider;
@@ -32,7 +32,7 @@ namespace Game.Gameplay.Combat
         public Vector3 HitPoint { get; }
         public Vector3 HitNormal { get; }
         public float HitDistance { get; }
-        public CombatHitPartType HitPartType { get; }
+        public HitPartType HitPartType { get; }
 
         public static HitScanHitContext None => new(
             false,
@@ -41,6 +41,6 @@ namespace Game.Gameplay.Combat
             Vector3.zero,
             Vector3.up,
             0f,
-            CombatHitPartType.Default);
+            HitPartType.Default);
     }
 }

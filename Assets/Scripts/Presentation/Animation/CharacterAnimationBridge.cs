@@ -132,7 +132,7 @@ namespace Game.Presentation.Animation
                 _state.IsGrounded,
                 _state.IsAiming);
 
-            parameterWriter.WriteIsDead(_state.IsDead);
+            parameterWriter.WriteIsDead(_state.IsHealthDepleted);
         }
 
         private void UpdateActionTriggers(CharacterViewState _state)

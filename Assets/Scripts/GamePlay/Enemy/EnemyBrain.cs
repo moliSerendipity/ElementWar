@@ -233,7 +233,7 @@ namespace Game.Gameplay.Enemy
 
         private bool CheckDeathTransition()
         {
-            if (healthComponent == null || healthComponent.IsDead == false)
+            if (healthComponent == null || healthComponent.IsHealthDepleted == false)
             {
                 return false;
             }

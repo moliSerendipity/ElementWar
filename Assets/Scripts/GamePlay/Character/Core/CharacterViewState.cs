@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Gameplay.Character
 {
@@ -20,7 +21,8 @@ namespace Game.Gameplay.Character
         [SerializeField] private bool isAiming;
         [SerializeField] private bool isFiring;
         [SerializeField] private bool isReloading;
-        [SerializeField] private bool isDead;
+        [FormerlySerializedAs("isDead")]
+        [SerializeField] private bool isHealthDepleted;
         [SerializeField] private bool jumpTriggeredThisFrame;
         [SerializeField] private bool fireTriggeredThisFrame;
 
@@ -35,7 +37,7 @@ namespace Game.Gameplay.Character
         public bool IsAiming => isAiming;
         public bool IsFiring => isFiring;
         public bool IsReloading => isReloading;
-        public bool IsDead => isDead;
+        public bool IsHealthDepleted => isHealthDepleted;
         public bool JumpTriggeredThisFrame => jumpTriggeredThisFrame;
         public bool FireTriggeredThisFrame => fireTriggeredThisFrame;
 
@@ -66,7 +68,7 @@ namespace Game.Gameplay.Character
             isAiming = _facts.IsAiming;
             isReloading = _facts.IsReloading;
             isFiring = _isFiring;
-            isDead = _facts.IsDead;
+            isHealthDepleted = _facts.IsHealthDepleted;
             jumpTriggeredThisFrame = _plan.JumpTriggered;
             fireTriggeredThisFrame = _fireTriggeredThisFrame;
         }

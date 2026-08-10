@@ -167,7 +167,7 @@ namespace Game.Gameplay.Weapon
 
             if (_characterFacts != null)
             {
-                if (_characterFacts.IsDead)
+                if (_characterFacts.IsHealthDepleted)
                 {
                     _failureReason = WeaponFireFailureReason.BlockedByCharacterState;
                     return false;

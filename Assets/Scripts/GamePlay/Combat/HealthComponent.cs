@@ -5,16 +5,8 @@ using UnityEngine;
 namespace Game.Gameplay.Combat
 {
     /// <summary>
-    /// Combat 域长期生命事实组件。
-    ///
-    /// 职责：
-    /// 1. 绑定实体运行时 Stat（由外部 Root 在 Inspector 或初始化阶段关联）
-    /// 2. 保存 currentHealth / maxHealth / isDead 等长期事实
-    /// 3. 接收并提交已由 DamageResolver 裁决完成的伤害结果
-    ///
-    /// 约束：
-    /// 1. 不自行计算伤害、不自行派发事件
-    /// 2. Combat 热路径统一通过 OwnerStat 读取战斗数值，不回查配置表
+    /// 保存实体生命数值并提交已由 <see cref="DamageResolver"/> 裁决的结果。
+    /// 当前生命值是唯一存储事实；生命耗尽状态由它派生。
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class HealthComponent : MonoBehaviour
@@ -25,23 +17,34 @@ namespace Game.Gameplay.Combat
         [Header("Runtime")]
         [SerializeField] private float currentHealth;
         [SerializeField] private float maxHealth;
-        [SerializeField] private bool isDead;
         [SerializeField] private bool isInitialized;
 
+        /// <summary>提供生命上限与防守侧数值的运行时所有者。</summary>
         public ActorStatBase OwnerStat => ownerStat;
+
+        /// <summary>当前已提交生命值。</summary>
         public float CurrentHealth => currentHealth;
+
+        /// <summary>本次初始化采用的生命上限。</summary>
         public float MaxHealth => maxHealth;
-        public bool IsDead => isDead;
-        public bool CanReceiveDamage => isInitialized && !isDead;
+
+        /// <summary>组件已初始化且当前生命值不大于零时为真。</summary>
+        public bool IsHealthDepleted => isInitialized && currentHealth <= 0f;
+
+        /// <summary>已初始化且生命尚未耗尽时可以接收伤害。</summary>
+        public bool CanReceiveDamage => isInitialized && IsHealthDepleted == false;
+
+        /// <summary>是否已经从 OwnerStat 建立运行时生命状态。</summary>
         public bool IsInitialized => isInitialized;
 
         /// <summary>
         /// 从已初始化的 OwnerStat 读取生命上限并重置为满血状态。
-        /// 调用前必须确保 OwnerStat 已经完成初始化。
         /// </summary>
+        /// <returns>OwnerStat 有效且已经初始化时返回 <see langword="true"/>。</returns>
         public bool TryInitialize()
         {
             ResetRuntimeState();
+            ResolveReferences();
 
             if (ownerStat == null)
             {
@@ -57,78 +60,80 @@ namespace Game.Gameplay.Combat
 
             maxHealth = Mathf.Max(1f, ownerStat.MaxHealth);
             currentHealth = maxHealth;
-            isDead = false;
             isInitialized = true;
             return true;
         }
 
         /// <summary>
-        /// 提交已由 DamageResolver 裁决完成的最终伤害。
-        /// 这里只做事实写入，不反向计算伤害。
+        /// 写入已裁决的最终伤害。该入口只供伤害域使用，不重新计算任何乘区。
         /// </summary>
-        public CombatDamageResult ApplyResolvedDamage(
-            GameObject _attacker,
-            CombatDamageKind _damageKind,
-            CombatHitPartType _hitPartType,
+        internal DamageResult ApplyResolvedDamage(
+            GameObject _instigator,
+            Object _sourceObject,
+            ElementType _element,
+            DamageDeliveryType _delivery,
+            HitPartType _hitPartType,
             float _finalDamage,
-            bool _isCritical,
             Vector3 _hitPoint,
             Vector3 _hitNormal,
             float _appliedTime)
         {
             if (CanReceiveDamage == false)
             {
-                return CombatDamageResult.None;
+                return DamageResult.None;
             }
 
+            float previousHealth = currentHealth;
             float appliedDamage = Mathf.Max(0f, _finalDamage);
             currentHealth = Mathf.Max(0f, currentHealth - appliedDamage);
+            bool didDepleteHealth = previousHealth > 0f && currentHealth <= 0f;
 
-            bool wasKilled = currentHealth <= 0f;
-            if (wasKilled)
-            {
-                isDead = true;
-            }
-
-            return new CombatDamageResult(
+            return new DamageResult(
                 true,
-                _attacker,
+                _instigator,
+                _sourceObject,
                 this,
-                _damageKind,
+                _element,
+                _delivery,
                 _hitPartType,
                 appliedDamage,
-                _isCritical,
                 currentHealth,
-                wasKilled,
+                didDepleteHealth,
                 _hitPoint,
                 _hitNormal,
                 _appliedTime);
         }
 
         /// <summary>
-        /// 重置为满血存活状态。用于复活或调试重置。
+        /// 把已初始化的生命状态重置为当前上限；不实现倒地或复活流程。
         /// </summary>
         public void RestoreFullHealth()
         {
-            if (isInitialized == false)
+            if (isInitialized == false || ownerStat == null)
             {
                 return;
             }
 
             maxHealth = Mathf.Max(1f, ownerStat.MaxHealth);
             currentHealth = maxHealth;
-            isDead = false;
         }
 
         /// <summary>
-        /// 清空全部运行时状态，回到未初始化。
+        /// 清空运行时生命状态并回到未初始化状态。
         /// </summary>
         public void ResetRuntimeState()
         {
             currentHealth = 0f;
             maxHealth = 0f;
-            isDead = false;
             isInitialized = false;
+        }
+
+        private void ResolveReferences()
+        {
+            if (ownerStat == null)
+            {
+                ownerStat = GetComponent<ActorStatBase>();
+            }
         }
     }
 }

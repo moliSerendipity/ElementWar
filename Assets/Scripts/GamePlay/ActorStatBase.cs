@@ -28,6 +28,7 @@ namespace Game.Gameplay.Character
         [Header("Resistances")]
         [SerializeField] private float physicalResistance;
         [SerializeField] private float fireResistance;
+        [SerializeField] private float waterResistance;
         [SerializeField] private float electricResistance;
         [SerializeField] private float iceResistance;
         [SerializeField] private float explosionResistance;
@@ -44,6 +45,7 @@ namespace Game.Gameplay.Character
         public float HealingTakenMultiplier => healingTakenMultiplier;
         public float PhysicalResistance => physicalResistance;
         public float FireResistance => fireResistance;
+        public float WaterResistance => waterResistance;
         public float ElectricResistance => electricResistance;
         public float IceResistance => iceResistance;
         public float ExplosionResistance => explosionResistance;
@@ -59,6 +61,7 @@ namespace Game.Gameplay.Character
             healingTakenMultiplier = 1f;
             physicalResistance = 0f;
             fireResistance = 0f;
+            waterResistance = 0f;
             electricResistance = 0f;
             iceResistance = 0f;
             explosionResistance = 0f;
@@ -75,6 +78,7 @@ namespace Game.Gameplay.Character
             float _healingTakenMultiplier,
             float _physicalResistance,
             float _fireResistance,
+            float _waterResistance,
             float _electricResistance,
             float _iceResistance,
             float _explosionResistance)
@@ -88,6 +92,7 @@ namespace Game.Gameplay.Character
             healingTakenMultiplier = Mathf.Max(0f, _healingTakenMultiplier);
             physicalResistance = _physicalResistance;
             fireResistance = _fireResistance;
+            waterResistance = _waterResistance;
             electricResistance = _electricResistance;
             iceResistance = _iceResistance;
             explosionResistance = _explosionResistance;
@@ -103,6 +108,7 @@ namespace Game.Gameplay.Character
         public void SetHealingTakenMultiplier(float _value) => healingTakenMultiplier = Mathf.Max(0f, _value);
         public void SetPhysicalResistance(float _value) => physicalResistance = _value;
         public void SetFireResistance(float _value) => fireResistance = _value;
+        public void SetWaterResistance(float _value) => waterResistance = _value;
         public void SetElectricResistance(float _value) => electricResistance = _value;
         public void SetIceResistance(float _value) => iceResistance = _value;
         public void SetExplosionResistance(float _value) => explosionResistance = _value;

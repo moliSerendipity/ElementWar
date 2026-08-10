@@ -207,11 +207,11 @@ namespace Game.Presentation.HUD
                 return;
             }
 
-            activeHitFeedbackColor = _eventArgs.HitPartType == CombatHitPartType.WeakPoint
+            activeHitFeedbackColor = _eventArgs.HitPartType == HitPartType.WeakPoint
                 ? weaponViewState.CrosshairWeakPointHitConfirmColor
                 : weaponViewState.CrosshairHitConfirmColor;
-            activeHitPulseScale = _eventArgs.HitPartType == CombatHitPartType.WeakPoint
-                ? weaponViewState.CrosshairCriticalHitPulseScale
+            activeHitPulseScale = _eventArgs.HitPartType == HitPartType.WeakPoint
+                ? weaponViewState.CrosshairWeakPointHitPulseScale
                 : weaponViewState.CrosshairHitPulseScale;
             hitConfirmEndTime = Time.unscaledTime + hitConfirmDuration;
         }
@@ -223,17 +223,12 @@ namespace Game.Presentation.HUD
                 return;
             }
 
-            CombatDamageResult damageResult = _eventArgs.DamageResult;
+            DamageResult damageResult = _eventArgs.DamageResult;
 
-            if (damageResult.WasKilled)
+            if (damageResult.DidDepleteHealth)
             {
                 activeHitFeedbackColor = weaponViewState.CrosshairKillHitConfirmColor;
                 activeHitPulseScale = weaponViewState.CrosshairKillHitPulseScale;
-            }
-            else if (damageResult.IsCritical)
-            {
-                activeHitFeedbackColor = weaponViewState.CrosshairCriticalHitConfirmColor;
-                activeHitPulseScale = weaponViewState.CrosshairCriticalHitPulseScale;
             }
 
             hitConfirmEndTime = Time.unscaledTime + hitConfirmDuration;

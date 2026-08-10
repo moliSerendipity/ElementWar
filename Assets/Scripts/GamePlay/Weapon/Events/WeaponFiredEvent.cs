@@ -21,7 +21,7 @@ namespace Game.Gameplay.Weapon.Events
             float _shotDistance,
             bool _hadHit,
             bool _hitDamageableTarget,
-            CombatHitPartType _hitPartType,
+            HitPartType _hitPartType,
             Vector3 _resolvedImpactPoint,
             Vector3 _resolvedImpactNormal,
             float _cameraKickPitch,
@@ -52,7 +52,7 @@ namespace Game.Gameplay.Weapon.Events
         public float ShotDistance { get; }
         public bool HadHit { get; }
         public bool HitDamageableTarget { get; }
-        public CombatHitPartType HitPartType { get; }
+        public HitPartType HitPartType { get; }
         public Vector3 ResolvedImpactPoint { get; }
         public Vector3 ResolvedImpactNormal { get; }
         public float CameraKickPitch { get; }

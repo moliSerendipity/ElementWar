@@ -45,7 +45,7 @@ namespace Game.Gameplay.Character
                 return CharacterFramePlan.Empty;
             }
 
-            if (characterFacts.IsDead || characterFacts.IsInputBlocked || characterFacts.IsControlLocked)
+            if (characterFacts.IsHealthDepleted || characterFacts.IsInputBlocked || characterFacts.IsControlLocked)
             {
                 return CharacterFramePlan.Empty;
             }

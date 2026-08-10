@@ -10,11 +10,9 @@ namespace Game.Definition.Combat
     [CreateAssetMenu(fileName = "DamageRuleConfig", menuName = "Game/Configs/Combat/Damage Rule Config")]
     public sealed class DamageRuleConfig : ConfigBase
     {
-        [SerializeField] private bool canCritical = true;
         [SerializeField] private bool canHeadShot = true;
         [SerializeField] private bool canWeakPoint = true;
 
-        public bool CanCritical => canCritical;
         public bool CanHeadShot => canHeadShot;
         public bool CanWeakPoint => canWeakPoint;
 

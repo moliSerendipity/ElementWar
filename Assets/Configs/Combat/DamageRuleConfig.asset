@@ -16,6 +16,5 @@ MonoBehaviour:
   displayName: 
   description: 
   isEnabled: 1
-  canCritical: 1
   canHeadShot: 1
   canWeakPoint: 1

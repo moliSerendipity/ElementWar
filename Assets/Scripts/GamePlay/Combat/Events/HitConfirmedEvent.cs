@@ -14,23 +14,37 @@ namespace Game.Gameplay.Combat.Events
     public readonly struct HitConfirmedEvent
     {
         public HitConfirmedEvent(
-            GameObject _attacker,
+            GameObject _instigator,
+            Object _sourceObject,
             GameObject _target,
-            CombatHitPartType _hitPartType,
+            HitPartType _hitPartType,
             Vector3 _hitPoint,
             Vector3 _hitNormal)
         {
-            Attacker = _attacker;
+            Instigator = _instigator;
+            SourceObject = _sourceObject;
             Target = _target;
             HitPartType = _hitPartType;
             HitPoint = _hitPoint;
             HitNormal = _hitNormal;
         }
 
-        public GameObject Attacker { get; }
+        /// <summary>承担命中归属的责任实体。</summary>
+        public GameObject Instigator { get; }
+
+        /// <summary>产生本次命中的具体来源对象。</summary>
+        public Object SourceObject { get; }
+
+        /// <summary>被命中的目标实体。</summary>
         public GameObject Target { get; }
-        public CombatHitPartType HitPartType { get; }
+
+        /// <summary>被命中的部位。</summary>
+        public HitPartType HitPartType { get; }
+
+        /// <summary>命中世界坐标。</summary>
         public Vector3 HitPoint { get; }
+
+        /// <summary>命中表面法线。</summary>
         public Vector3 HitNormal { get; }
     }
 }

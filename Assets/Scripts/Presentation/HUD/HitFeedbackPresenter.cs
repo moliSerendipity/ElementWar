@@ -17,7 +17,6 @@ namespace Game.Presentation.HUD
         [SerializeField] private Graphic hitMarkerGraphic;
         [SerializeField] private Color hitMarkerColor = Color.white;
         [SerializeField] private Color weakPointHitMarkerColor = new(1f, 0.55f, 0.1f, 1f);
-        [SerializeField] private Color criticalHitMarkerColor = new(1f, 0.8f, 0.2f, 1f);
         [SerializeField] private Color killHitMarkerColor = new(1f, 0.25f, 0.25f, 1f);
         [SerializeField] private float displayDuration = 0.08f;
         [SerializeField] private bool enableDebugLog;
@@ -73,7 +72,7 @@ namespace Game.Presentation.HUD
             }
 
             // 命中确认先给基础反馈；弱点命中在这一步直接提高颜色层级。
-            hitMarkerGraphic.color = _eventArgs.HitPartType == CombatHitPartType.WeakPoint
+            hitMarkerGraphic.color = _eventArgs.HitPartType == HitPartType.WeakPoint
                 ? weakPointHitMarkerColor
                 : hitMarkerColor;
             hideTime = Time.unscaledTime + displayDuration;
@@ -87,19 +86,15 @@ namespace Game.Presentation.HUD
                 return;
             }
 
-            CombatDamageResult damageResult = _eventArgs.DamageResult;
+            DamageResult damageResult = _eventArgs.DamageResult;
 
-            // 伤害结果会比命中确认更完整，所以在这里根据暴击/击杀再覆盖一次反馈层级。
-            if (damageResult.WasKilled)
+            // 生命耗尽结果会比命中确认更完整，所以在这里覆盖最终反馈层级。
+            if (damageResult.DidDepleteHealth)
             {
                 hitMarkerGraphic.color = killHitMarkerColor;
             }
-            else if (damageResult.IsCritical)
-            {
-                hitMarkerGraphic.color = criticalHitMarkerColor;
-            }
 
-            // 重新推进显示截止时间，保证暴击或击杀反馈不会被基础命中标记立即盖掉。
+            // 重新推进显示截止时间，保证最终反馈不会被基础命中标记立即盖掉。
             hideTime = Time.unscaledTime + displayDuration;
             ApplyVisible(true);
         }

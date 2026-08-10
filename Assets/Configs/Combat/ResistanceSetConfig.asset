@@ -18,6 +18,7 @@ MonoBehaviour:
   isEnabled: 1
   physicalResistance: 0
   fireResistance: 0
+  waterResistance: 0
   electricResistance: 0
   iceResistance: 0
   explosionResistance: 0

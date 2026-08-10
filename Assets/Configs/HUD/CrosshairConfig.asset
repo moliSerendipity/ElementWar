@@ -26,8 +26,7 @@ MonoBehaviour:
   fallbackPointColor: {r: 0, g: 0, b: 1, a: 1}
   hitConfirmColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   weakPointHitConfirmColor: {r: 1, g: 0.55, b: 0.1, a: 1}
-  criticalHitConfirmColor: {r: 1, g: 0.8, b: 0.2, a: 1}
   killHitConfirmColor: {r: 1, g: 0.25, b: 0.25, a: 1}
   hitPulseScale: 1.15
-  criticalHitPulseScale: 1.22
+  weakPointHitPulseScale: 1.22
   killHitPulseScale: 1.3

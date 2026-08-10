@@ -1602,7 +1602,6 @@ MonoBehaviour:
   ownerStat: {fileID: 925289280}
   currentHealth: 0
   maxHealth: 0
-  isDead: 0
   isInitialized: 0
 --- !u!114 &925289280
 MonoBehaviour:
@@ -1625,6 +1624,7 @@ MonoBehaviour:
   healingTakenMultiplier: 1
   physicalResistance: 0
   fireResistance: 0
+  waterResistance: 0
   electricResistance: 0
   iceResistance: 0
   explosionResistance: 0
@@ -2500,7 +2500,6 @@ MonoBehaviour:
   ownerStat: {fileID: 1297331261}
   currentHealth: 0
   maxHealth: 0
-  isDead: 0
   isInitialized: 0
 --- !u!114 &1297331261
 MonoBehaviour:
@@ -2523,6 +2522,7 @@ MonoBehaviour:
   healingTakenMultiplier: 1
   physicalResistance: 0
   fireResistance: 0
+  waterResistance: 0
   electricResistance: 0
   iceResistance: 0
   explosionResistance: 0
@@ -3051,7 +3051,6 @@ MonoBehaviour:
   hitMarkerGraphic: {fileID: 1474543158}
   hitMarkerColor: {r: 1, g: 1, b: 1, a: 1}
   weakPointHitMarkerColor: {r: 1, g: 0.55, b: 0.1, a: 1}
-  criticalHitMarkerColor: {r: 1, g: 0.8, b: 0.2, a: 1}
   killHitMarkerColor: {r: 1, g: 0.25, b: 0.25, a: 1}
   displayDuration: 0.08
   enableDebugLog: 1
@@ -3621,11 +3620,9 @@ MonoBehaviour:
   debugDamageText: {fileID: 1866107257}
   normalDamageColor: {r: 1, g: 1, b: 1, a: 1}
   weakPointDamageColor: {r: 1, g: 0.55, b: 0.1, a: 1}
-  criticalDamageColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   killDamageColor: {r: 1, g: 0, b: 0, a: 1}
   displayDuration: 0.5
   weakPointPrefix: 'WEAK '
-  criticalPrefix: 'CRIT '
   killSuffix: ' KILL'
 --- !u!222 &1866107259
 CanvasRenderer:
@@ -9959,10 +9956,9 @@ MonoBehaviour:
   crosshairFallbackPointColor: {r: 0, g: 0, b: 1, a: 1}
   crosshairHitConfirmColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   crosshairWeakPointHitConfirmColor: {r: 1, g: 0.55, b: 0.1, a: 1}
-  crosshairCriticalHitConfirmColor: {r: 1, g: 0.8, b: 0.2, a: 1}
   crosshairKillHitConfirmColor: {r: 1, g: 0.25, b: 0.25, a: 1}
   crosshairHitPulseScale: 1.15
-  crosshairCriticalHitPulseScale: 1.22
+  crosshairWeakPointHitPulseScale: 1.22
   crosshairKillHitPulseScale: 1.3
   currentSpread: 0
   pendingRecoilPitch: 0
@@ -13078,7 +13074,6 @@ MonoBehaviour:
   isAiming: 0
   isReloading: 0
   isJumping: 0
-  isDead: 0
   isInputBlocked: 0
   isControlLocked: 0
   allowSprint: 0
@@ -17820,7 +17815,7 @@ MonoBehaviour:
   isAiming: 0
   isFiring: 0
   isReloading: 0
-  isDead: 0
+  isHealthDepleted: 0
   jumpTriggeredThisFrame: 0
   fireTriggeredThisFrame: 0
 --- !u!1 &5979558924776368286
@@ -24535,10 +24530,9 @@ MonoBehaviour:
   crosshairFallbackPointColor: {r: 0, g: 0, b: 1, a: 1}
   crosshairHitConfirmColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   crosshairWeakPointHitConfirmColor: {r: 1, g: 0.55, b: 0.1, a: 1}
-  crosshairCriticalHitConfirmColor: {r: 1, g: 0.8, b: 0.2, a: 1}
   crosshairKillHitConfirmColor: {r: 1, g: 0.25, b: 0.25, a: 1}
   crosshairHitPulseScale: 1.15
-  crosshairCriticalHitPulseScale: 1.22
+  crosshairWeakPointHitPulseScale: 1.22
   crosshairKillHitPulseScale: 1.3
   firePoseHoldUntil: 0
   isFiring: 0
@@ -24595,7 +24589,6 @@ MonoBehaviour:
   ownerStat: {fileID: 8823707006449125372}
   currentHealth: 0
   maxHealth: 0
-  isDead: 0
   isInitialized: 0
 --- !u!114 &8823707006449125372
 MonoBehaviour:
@@ -24618,6 +24611,7 @@ MonoBehaviour:
   healingTakenMultiplier: 1
   physicalResistance: 0
   fireResistance: 0
+  waterResistance: 0
   electricResistance: 0
   iceResistance: 0
   explosionResistance: 0
@@ -24634,8 +24628,6 @@ MonoBehaviour:
   jumpHeight: 1.2
   gravity: -25
   maxFallSpeed: -30
-  critChance: 5
-  critDamageMultiplier: 1.5
 --- !u!4 &8827968188887300465
 Transform:
   m_ObjectHideFlags: 0

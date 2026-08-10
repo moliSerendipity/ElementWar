@@ -34,7 +34,6 @@ namespace Game.Definition.Presentation
         [SerializeField] private AudioEventConfig worldHitAudio;
         [SerializeField] private AudioEventConfig actorHitAudio;
         [SerializeField] private AudioEventConfig weakPointHitAudio;
-        [SerializeField] private AudioEventConfig criticalHitAudio;
         [SerializeField] private AudioEventConfig killHitAudio;
         [SerializeField] private AudioEventConfig reloadAudio;
         [SerializeField] private AudioEventConfig equipAudio;
@@ -60,7 +59,6 @@ namespace Game.Definition.Presentation
         public AudioEventConfig WorldHitAudio => worldHitAudio;
         public AudioEventConfig ActorHitAudio => actorHitAudio;
         public AudioEventConfig WeakPointHitAudio => weakPointHitAudio;
-        public AudioEventConfig CriticalHitAudio => criticalHitAudio;
         public AudioEventConfig KillHitAudio => killHitAudio;
         public AudioEventConfig ReloadAudio => reloadAudio;
         public AudioEventConfig EquipAudio => equipAudio;

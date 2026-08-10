@@ -13,6 +13,7 @@ namespace Game.Definition.Combat
     {
         [Range(-1f, 1f)][SerializeField] private float physicalResistance;
         [Range(-1f, 1f)][SerializeField] private float fireResistance;
+        [Range(-1f, 1f)][SerializeField] private float waterResistance;
         [Range(-1f, 1f)][SerializeField] private float electricResistance;
         [Range(-1f, 1f)][SerializeField] private float iceResistance;
         [Range(-1f, 1f)][SerializeField] private float explosionResistance;
@@ -22,6 +23,7 @@ namespace Game.Definition.Combat
 
         public float PhysicalResistance => physicalResistance;
         public float FireResistance => fireResistance;
+        public float WaterResistance => waterResistance;
         public float ElectricResistance => electricResistance;
         public float IceResistance => iceResistance;
         public float ExplosionResistance => explosionResistance;

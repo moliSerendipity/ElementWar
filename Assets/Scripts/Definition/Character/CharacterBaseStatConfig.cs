@@ -12,8 +12,6 @@ namespace Game.Definition.Character
         [SerializeField] private float maxHealth = 100f;
         [SerializeField] private float attackPower = 10f;
         [SerializeField] private float defense = 0f;
-        [SerializeField] private float critChance = 5f;
-        [SerializeField] private float critDamageMultiplier = 1.5f;
         [SerializeField] private float maxShield;
         [SerializeField] private float toughness = 100f;
         [SerializeField] private float damageTakenMultiplier = 1f;
@@ -22,8 +20,6 @@ namespace Game.Definition.Character
         public float MaxHealth => maxHealth;
         public float AttackPower => attackPower;
         public float Defense => defense;
-        public float CritChance => critChance;
-        public float CritDamageMultiplier => critDamageMultiplier;
         public float MaxShield => maxShield;
         public float Toughness => toughness;
         public float DamageTakenMultiplier => damageTakenMultiplier;

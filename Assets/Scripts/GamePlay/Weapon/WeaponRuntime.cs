@@ -74,10 +74,9 @@ namespace Game.Gameplay.Weapon
         [SerializeField] private Color crosshairFallbackPointColor = Color.blue;
         [SerializeField] private Color crosshairHitConfirmColor = Color.yellow;
         [SerializeField] private Color crosshairWeakPointHitConfirmColor = new(1f, 0.55f, 0.1f, 1f);
-        [SerializeField] private Color crosshairCriticalHitConfirmColor = new(1f, 0.8f, 0.2f, 1f);
         [SerializeField] private Color crosshairKillHitConfirmColor = new(1f, 0.25f, 0.25f, 1f);
         [SerializeField] private float crosshairHitPulseScale = 1.15f;
-        [SerializeField] private float crosshairCriticalHitPulseScale = 1.22f;
+        [SerializeField] private float crosshairWeakPointHitPulseScale = 1.22f;
         [SerializeField] private float crosshairKillHitPulseScale = 1.3f;
 
         #endregion
@@ -198,10 +197,9 @@ namespace Game.Gameplay.Weapon
         public Color CrosshairFallbackPointColor => crosshairFallbackPointColor;
         public Color CrosshairHitConfirmColor => crosshairHitConfirmColor;
         public Color CrosshairWeakPointHitConfirmColor => crosshairWeakPointHitConfirmColor;
-        public Color CrosshairCriticalHitConfirmColor => crosshairCriticalHitConfirmColor;
         public Color CrosshairKillHitConfirmColor => crosshairKillHitConfirmColor;
         public float CrosshairHitPulseScale => crosshairHitPulseScale;
-        public float CrosshairCriticalHitPulseScale => crosshairCriticalHitPulseScale;
+        public float CrosshairWeakPointHitPulseScale => crosshairWeakPointHitPulseScale;
         public float CrosshairKillHitPulseScale => crosshairKillHitPulseScale;
 
         #endregion
@@ -682,10 +680,9 @@ namespace Game.Gameplay.Weapon
                 crosshairFallbackPointColor = Color.blue;
                 crosshairHitConfirmColor = Color.yellow;
                 crosshairWeakPointHitConfirmColor = new Color(1f, 0.55f, 0.1f, 1f);
-                crosshairCriticalHitConfirmColor = new Color(1f, 0.8f, 0.2f, 1f);
                 crosshairKillHitConfirmColor = new Color(1f, 0.25f, 0.25f, 1f);
                 crosshairHitPulseScale = 1.15f;
-                crosshairCriticalHitPulseScale = 1.22f;
+                crosshairWeakPointHitPulseScale = 1.22f;
                 crosshairKillHitPulseScale = 1.3f;
                 return;
             }
@@ -700,10 +697,9 @@ namespace Game.Gameplay.Weapon
             crosshairFallbackPointColor = crosshairConfig.FallbackPointColor;
             crosshairHitConfirmColor = crosshairConfig.HitConfirmColor;
             crosshairWeakPointHitConfirmColor = crosshairConfig.WeakPointHitConfirmColor;
-            crosshairCriticalHitConfirmColor = crosshairConfig.CriticalHitConfirmColor;
             crosshairKillHitConfirmColor = crosshairConfig.KillHitConfirmColor;
             crosshairHitPulseScale = Mathf.Max(1f, crosshairConfig.HitPulseScale);
-            crosshairCriticalHitPulseScale = Mathf.Max(1f, crosshairConfig.CriticalHitPulseScale);
+            crosshairWeakPointHitPulseScale = Mathf.Max(1f, crosshairConfig.WeakPointHitPulseScale);
             crosshairKillHitPulseScale = Mathf.Max(1f, crosshairConfig.KillHitPulseScale);
         }
 
@@ -742,10 +738,9 @@ namespace Game.Gameplay.Weapon
             crosshairFallbackPointColor = Color.blue;
             crosshairHitConfirmColor = Color.yellow;
             crosshairWeakPointHitConfirmColor = new Color(1f, 0.55f, 0.1f, 1f);
-            crosshairCriticalHitConfirmColor = new Color(1f, 0.8f, 0.2f, 1f);
             crosshairKillHitConfirmColor = new Color(1f, 0.25f, 0.25f, 1f);
             crosshairHitPulseScale = 1.15f;
-            crosshairCriticalHitPulseScale = 1.22f;
+            crosshairWeakPointHitPulseScale = 1.22f;
             crosshairKillHitPulseScale = 1.3f;
 
             // 重置散布与后坐力。

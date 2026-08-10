@@ -1,5 +1,5 @@
-using Game.Foundation.Events;
 using Game.Definition.Combat;
+using Game.Foundation.Events;
 using Game.Gameplay.Character;
 using Game.Gameplay.Combat.Events;
 using Game.Gameplay.Enemy;
@@ -8,79 +8,51 @@ using UnityEngine;
 namespace Game.Gameplay.Combat
 {
     /// <summary>
-    /// Combat 域唯一伤害裁决点。
-    ///
-    /// 职责：
-    /// 1. 统一处理部位倍率、暴击、防御、抗性与承伤乘区
-    /// 2. 把最终结果提交给 HealthComponent
-    /// 3. 在事实写回成功后，通过 GameEventBus 发布结果事件
-    ///
-    /// 伤害公式：
-    /// FinalDamage = BaseDamage × HitPartMultiplier × CritMultiplier × DefenseMultiplier × ResistanceMultiplier × DamageTakenMultiplier
-    ///
-    /// 约束：
-    /// 1. 运行时只读 HealthComponent 和 ActorStatBase，不在热路径回查配置表
-    /// 2. 只裁决并提交，不缓存运行时状态
-    ///
-    /// 扩展预留：
-    /// 元素处理（Step 5）和韧性/受击处理（Step 6）当前未实现，
-    /// 后续接入时在 ResolveAndApply 中对应位置插入调用即可。
+    /// 伤害域唯一裁决点，按确定性公式计算伤害并把结果提交给目标生命组件。
     /// </summary>
     public static class DamageResolver
     {
         /// <summary>
-        /// 执行完整伤害裁决并提交到生命事实组件。
+        /// 执行完整伤害裁决；目标拒绝伤害时返回 <see cref="DamageResult.None"/>。
         /// </summary>
-        public static CombatDamageResult ResolveAndApply(in CombatDamageRequestContext _request)
+        /// <param name="_request">已经完成来源、目标和命中事实解析的请求。</param>
+        /// <returns>已提交的伤害结果；目标不可受伤时返回空结果。</returns>
+        public static DamageResult ResolveAndApply(in DamageRequest _request)
         {
-            HealthComponent healthComponent = _request.HitContext.HealthComponent;
+            HealthComponent healthComponent = _request.Target;
             if (healthComponent == null || healthComponent.CanReceiveDamage == false)
             {
-                return CombatDamageResult.None;
+                return DamageResult.None;
             }
 
             ActorStatBase targetStat = healthComponent.OwnerStat;
-
-            // --- Step 2: 命中部位倍率 ---
             float hitPartMultiplier = ResolveHitPartMultiplier(_request, healthComponent);
-
-            // --- Step 3: 攻击侧修正（暴击） ---
-            float criticalMultiplier = ResolveCriticalMultiplier(
-                _request.CritChance, _request.CritDamageMultiplier, out bool isCritical);
-
-            // --- Step 4: 防守侧修正 ---
             float defenseMultiplier = ResolveDefenseMultiplier(targetStat);
-            float resistanceMultiplier = ResolveResistanceMultiplier(_request.DamageKind, targetStat);
+            float elementResistanceMultiplier = ResolveElementResistanceMultiplier(_request.Element, targetStat);
+            float deliveryResistanceMultiplier = ResolveDeliveryResistanceMultiplier(_request.Delivery, targetStat);
             float damageTakenMultiplier = ResolveDamageTakenMultiplier(targetStat);
 
-            // --- Step 5: 元素处理（预留，当前版本跳过） ---
-            // TODO: 接入 ElementReactionService 后在此处插入反应判定与附着写入
-
-            // --- Step 6: 韧性/受击处理（预留，当前版本跳过） ---
-            // TODO: 接入 PoiseComponent 后在此处插入削韧与受击等级结算
-
-            // --- 收敛所有乘区，计算最终伤害 ---
+            // 元素轴当前只参与抗性，不在本阶段执行附着或反应。
             float finalDamage = Mathf.Max(
                 0f,
                 _request.BaseDamage
                 * hitPartMultiplier
-                * criticalMultiplier
                 * defenseMultiplier
-                * resistanceMultiplier
+                * elementResistanceMultiplier
+                * deliveryResistanceMultiplier
                 * damageTakenMultiplier);
 
-            // --- Step 7: 提交到生命事实组件 ---
-            CombatDamageResult result = healthComponent.ApplyResolvedDamage(
-                _request.Attacker,
-                _request.DamageKind,
-                _request.HitContext.HitPartType,
+            DamageResult result = healthComponent.ApplyResolvedDamage(
+                _request.Instigator,
+                _request.SourceObject,
+                _request.Element,
+                _request.Delivery,
+                _request.HitPartType,
                 finalDamage,
-                isCritical,
-                _request.HitContext.HitPoint,
-                _request.HitContext.HitNormal,
+                _request.HitPoint,
+                _request.HitNormal,
                 _request.RequestTime);
 
-            // 只有事实写回成功后，才对外发布结果事件。
             if (result.IsApplied)
             {
                 PublishDamageEvents(result);
@@ -89,61 +61,40 @@ namespace Game.Gameplay.Combat
             return result;
         }
 
-        #region Hit Part
-
         /// <summary>
-        /// 根据命中部位类型解析伤害倍率。
+        /// 解析确定性的命中部位倍率。弱点同时应用来源侧和敌人受击侧倍率。
         /// </summary>
-        private static float ResolveHitPartMultiplier(in CombatDamageRequestContext _request, HealthComponent _healthComponent)
+        private static float ResolveHitPartMultiplier(in DamageRequest _request, HealthComponent _healthComponent)
         {
-            return _request.HitContext.HitPartType switch
+            return _request.HitPartType switch
             {
-                CombatHitPartType.Head => Mathf.Max(1f, _request.HeadShotDamageMultiplier),
-                CombatHitPartType.WeakPoint => ResolveWeakPointMultiplier(_request.WeakPointDamageMultiplier, _healthComponent),
+                HitPartType.Head => Mathf.Max(1f, _request.HeadShotDamageMultiplier),
+                HitPartType.WeakPoint => ResolveWeakPointMultiplier(
+                    _request.WeakPointDamageMultiplier,
+                    _healthComponent),
                 _ => 1f,
             };
         }
 
         /// <summary>
-        /// 弱点伤害倍率 = 武器弱点倍率 × 敌人弱点受击倍率。
+        /// 弱点倍率由攻击来源倍率与敌人弱点承伤倍率相乘；非敌人目标只使用来源倍率。
         /// </summary>
-        private static float ResolveWeakPointMultiplier(float _requestWeakPointMultiplier, HealthComponent _healthComponent)
+        private static float ResolveWeakPointMultiplier(
+            float _requestWeakPointMultiplier,
+            HealthComponent _healthComponent)
         {
             if (_healthComponent.OwnerStat is EnemyStat enemyStat)
             {
-                return Mathf.Max(1f, _requestWeakPointMultiplier * enemyStat.WeakPointDamageMultiplier);
+                return Mathf.Max(
+                    1f,
+                    _requestWeakPointMultiplier * enemyStat.WeakPointDamageMultiplier);
             }
 
             return Mathf.Max(1f, _requestWeakPointMultiplier);
         }
 
-        #endregion
-
-        #region Critical
-
         /// <summary>
-        /// 暴击判定。当前请求范围内随机一次，后续链路直接消费裁决结果。
-        /// </summary>
-        private static float ResolveCriticalMultiplier(float _critChance, float _critDamageMultiplier, out bool _isCritical)
-        {
-            _isCritical = false;
-
-            if (_critChance <= 0f)
-            {
-                return 1f;
-            }
-
-            _isCritical = Random.value * 100f <= _critChance;
-            return _isCritical ? Mathf.Max(1f, _critDamageMultiplier) : 1f;
-        }
-
-        #endregion
-
-        #region Defense & Resistance
-
-        /// <summary>
-        /// 防御减伤，使用递减公式：100 / (100 + defense)。
-        /// defense = 0 时不减伤，defense = 100 时减 50%。
+        /// 防御使用递减公式 100 / (100 + defense)。
         /// </summary>
         private static float ResolveDefenseMultiplier(ActorStatBase _targetStat)
         {
@@ -157,48 +108,67 @@ namespace Game.Gameplay.Combat
         }
 
         /// <summary>
-        /// 元素/物理抗性减伤。
-        ///
-        /// 抗性值域约定（与 ResistanceSetConfig 一致）：
-        ///   [-1, 1] 范围，其中 0 = 无抗性，0.5 = 减伤 50%，1.0 = 完全免疫，-0.5 = 增伤 50%。
-        /// 最终乘区 = Clamp(1 - resistance, 0, 2)，即最多免疫（×0）或最多受 200% 伤害（×2）。
+        /// 根据元素轴选择抗性；<see cref="ElementType.None"/> 使用物理抗性。
+        /// 抗性最终钳制为 0 至 2 倍伤害。
         /// </summary>
-        private static float ResolveResistanceMultiplier(CombatDamageKind _damageKind, ActorStatBase _targetStat)
+        private static float ResolveElementResistanceMultiplier(
+            ElementType _element,
+            ActorStatBase _targetStat)
         {
             if (_targetStat == null)
             {
                 return 1f;
             }
 
-            float resistance = _damageKind switch
+            float resistance = _element switch
             {
-                CombatDamageKind.Fire => _targetStat.FireResistance,
-                CombatDamageKind.Electric => _targetStat.ElectricResistance,
-                CombatDamageKind.Ice => _targetStat.IceResistance,
-                CombatDamageKind.Explosion => _targetStat.ExplosionResistance,
+                ElementType.Fire => _targetStat.FireResistance,
+                ElementType.Water => _targetStat.WaterResistance,
+                ElementType.Electric => _targetStat.ElectricResistance,
+                ElementType.Ice => _targetStat.IceResistance,
                 _ => _targetStat.PhysicalResistance,
             };
 
-            // 安全 Clamp：即使运行时被 Buff 改到超出配置范围，也不会产生负伤害或无限伤害。
-            return Mathf.Clamp(1f - resistance, 0f, 2f);
+            return ResolveResistanceMultiplier(resistance);
         }
 
         /// <summary>
-        /// 全局承伤倍率。由目标自身 Stat 提供，Buff 可以修改。
+        /// 爆炸形态在元素抗性之外独立应用爆炸抗性；直接伤害不追加修正。
+        /// </summary>
+        private static float ResolveDeliveryResistanceMultiplier(
+            DamageDeliveryType _delivery,
+            ActorStatBase _targetStat)
+        {
+            if (_targetStat == null || _delivery != DamageDeliveryType.Explosion)
+            {
+                return 1f;
+            }
+
+            return ResolveResistanceMultiplier(_targetStat.ExplosionResistance);
+        }
+
+        /// <summary>
+        /// 把 [-1, 1] 抗性转换为 [2, 0] 的伤害倍率，并防御运行时越界值。
+        /// </summary>
+        private static float ResolveResistanceMultiplier(float _resistance)
+        {
+            return Mathf.Clamp(1f - _resistance, 0f, 2f);
+        }
+
+        /// <summary>
+        /// 读取目标当前承伤乘区；没有 Stat 时不修正。
         /// </summary>
         private static float ResolveDamageTakenMultiplier(ActorStatBase _targetStat)
         {
-            return _targetStat != null ? Mathf.Max(0f, _targetStat.DamageTakenMultiplier) : 1f;
+            return _targetStat != null
+                ? Mathf.Max(0f, _targetStat.DamageTakenMultiplier)
+                : 1f;
         }
 
-        #endregion
-
-        #region Event Publishing
-
         /// <summary>
-        /// 在伤害事实提交成功后，按"命中 → 伤害 → 生命变化 → 击杀"顺序发布结果事件。
+        /// 在生命事实提交后按命中、伤害、生命变化、生命耗尽的顺序同步发布事件。
         /// </summary>
-        private static void PublishDamageEvents(in CombatDamageResult _result)
+        private static void PublishDamageEvents(in DamageResult _result)
         {
             GameEventBus eventBus = GameEventBus.Instance;
             if (eventBus == null)
@@ -209,19 +179,26 @@ namespace Game.Gameplay.Combat
             GameObject target = _result.Target != null ? _result.Target.gameObject : null;
 
             eventBus.Publish(new HitConfirmedEvent(
-                _result.Attacker, target, _result.HitPartType, _result.HitPoint, _result.HitNormal));
+                _result.Instigator,
+                _result.SourceObject,
+                target,
+                _result.HitPartType,
+                _result.HitPoint,
+                _result.HitNormal));
 
             eventBus.Publish(new DamageAppliedEvent(_result));
-
             eventBus.Publish(new HealthChangedEvent(
-                _result.Target, _result.RemainingHealth, _result.Target.MaxHealth));
+                _result.Target,
+                _result.RemainingHealth,
+                _result.Target.MaxHealth));
 
-            if (_result.WasKilled)
+            if (_result.DidDepleteHealth)
             {
-                eventBus.Publish(new EntityDiedEvent(_result.Attacker, _result.Target));
+                eventBus.Publish(new HealthDepletedEvent(
+                    _result.Instigator,
+                    _result.SourceObject,
+                    _result.Target));
             }
         }
-
-        #endregion
     }
 }

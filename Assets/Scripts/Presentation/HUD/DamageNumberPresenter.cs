@@ -17,11 +17,9 @@ namespace Game.Presentation.HUD
         [SerializeField] private TMP_Text debugDamageText;
         [SerializeField] private Color normalDamageColor = Color.white;
         [SerializeField] private Color weakPointDamageColor = new(1f, 0.55f, 0.1f, 1f);
-        [SerializeField] private Color criticalDamageColor = Color.yellow;
         [SerializeField] private Color killDamageColor = Color.red;
         [SerializeField] private float displayDuration = 0.5f;
         [SerializeField] private string weakPointPrefix = "WEAK ";
-        [SerializeField] private string criticalPrefix = "CRIT ";
         [SerializeField] private string killSuffix = " KILL";
 
         private float hideTime;
@@ -66,45 +64,35 @@ namespace Game.Presentation.HUD
                 return;
             }
 
-            CombatDamageResult damageResult = _eventArgs.DamageResult;
+            DamageResult damageResult = _eventArgs.DamageResult;
             string text = $"{damageResult.FinalDamage:0}";
 
-            // 弱点命中先标记文本前缀，再由暴击或击杀继续叠加更高层级反馈。
-            if (damageResult.HitPartType == CombatHitPartType.WeakPoint)
+            // 弱点命中使用独立前缀；生命耗尽在结果阶段追加最终反馈。
+            if (damageResult.HitPartType == HitPartType.WeakPoint)
             {
                 text = weakPointPrefix + text;
             }
 
-            if (damageResult.IsCritical)
-            {
-                text = criticalPrefix + text;
-            }
-
-            if (damageResult.WasKilled)
+            if (damageResult.DidDepleteHealth)
             {
                 text += killSuffix;
             }
 
-            // 伤害文本只消费最终裁决结果，不在 HUD 层自行推导暴击或击杀。
+            // 伤害文本只消费最终裁决结果，不在 HUD 层自行推导生命事实。
             debugDamageText.text = text;
             debugDamageText.color = ResolveColor(damageResult);
             hideTime = Time.unscaledTime + displayDuration;
             ApplyVisible(true);
         }
 
-        private Color ResolveColor(CombatDamageResult _damageResult)
+        private Color ResolveColor(DamageResult _damageResult)
         {
-            if (_damageResult.WasKilled)
+            if (_damageResult.DidDepleteHealth)
             {
                 return killDamageColor;
             }
 
-            if (_damageResult.IsCritical)
-            {
-                return criticalDamageColor;
-            }
-
-            if (_damageResult.HitPartType == CombatHitPartType.WeakPoint)
+            if (_damageResult.HitPartType == HitPartType.WeakPoint)
             {
                 return weakPointDamageColor;
             }

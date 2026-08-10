@@ -133,20 +133,27 @@ namespace Game.Gameplay.Weapon
                 return;
             }
 
-            CombatDamageRequestContext damageRequestContext = new(
-                gameObject,
-                CombatDamageKind.Physical,
+            GameObject instigator = characterStat != null
+                ? characterStat.gameObject
+                : transform.root.gameObject;
+
+            DamageRequest damageRequest = new(
+                instigator,
+                weaponRuntime,
+                hitContext.HealthComponent,
+                ElementType.None,
+                DamageDeliveryType.Direct,
                 weaponRuntime.Damage,
-                characterStat.CritChance,
-                characterStat.CritDamageMultiplier,
+                hitContext.HitPartType,
                 weaponRuntime.HeadShotDamageMultiplier,
                 weaponRuntime.WeakPointDamageMultiplier,
                 shotRay.origin,
                 shotRay.direction,
-                hitContext,
+                hitContext.HitPoint,
+                hitContext.HitNormal,
                 _currentTime);
 
-            DamageResolver.ResolveAndApply(damageRequestContext);
+            DamageResolver.ResolveAndApply(damageRequest);
         }
 
         private void PublishWeaponFiredEvent(

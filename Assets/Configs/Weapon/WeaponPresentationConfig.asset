@@ -29,7 +29,6 @@ MonoBehaviour:
   worldHitAudio: {fileID: 0}
   actorHitAudio: {fileID: 0}
   weakPointHitAudio: {fileID: 0}
-  criticalHitAudio: {fileID: 0}
   killHitAudio: {fileID: 0}
   reloadAudio: {fileID: 0}
   equipAudio: {fileID: 0}

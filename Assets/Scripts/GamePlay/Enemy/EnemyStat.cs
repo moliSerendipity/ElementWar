@@ -170,6 +170,7 @@ namespace Game.Gameplay.Enemy
                 1f,
                 enemyResistanceSetConfig.PhysicalResistance,
                 enemyResistanceSetConfig.FireResistance,
+                enemyResistanceSetConfig.WaterResistance,
                 enemyResistanceSetConfig.ElectricResistance,
                 enemyResistanceSetConfig.IceResistance,
                 enemyResistanceSetConfig.ExplosionResistance);

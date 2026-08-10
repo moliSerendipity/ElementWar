@@ -56,7 +56,6 @@ namespace Game.Presentation.VFX
         private AudioEventConfig worldHitAudio;
         private AudioEventConfig actorHitAudio;
         private AudioEventConfig weakPointHitAudio;
-        private AudioEventConfig criticalHitAudio;
         private AudioEventConfig killHitAudio;
 
         private bool isSubscribed;
@@ -181,7 +180,6 @@ namespace Game.Presentation.VFX
             worldHitAudio = weaponPresentationConfig.WorldHitAudio;
             actorHitAudio = weaponPresentationConfig.ActorHitAudio;
             weakPointHitAudio = weaponPresentationConfig.WeakPointHitAudio;
-            criticalHitAudio = weaponPresentationConfig.CriticalHitAudio;
             killHitAudio = weaponPresentationConfig.KillHitAudio;
 
             ApplyFireAudioConfig(weaponPresentationConfig.FireAudio);
@@ -291,7 +289,7 @@ namespace Game.Presentation.VFX
         /// </summary>
         private void OnHitConfirmed(HitConfirmedEvent eventData)
         {
-            if (eventData.Attacker != gameObject || string.IsNullOrWhiteSpace(actorImpactPoolKey))
+            if (eventData.SourceObject != weaponRuntime || string.IsNullOrWhiteSpace(actorImpactPoolKey))
             {
                 return;
             }
@@ -300,7 +298,7 @@ namespace Game.Presentation.VFX
             Quaternion impactRotation = Quaternion.LookRotation(eventData.HitNormal, Vector3.up);
             SpawnTemporaryVisual(actorImpactPoolKey, eventData.HitPoint, impactRotation, actorImpactLifeTime);
 
-            if (eventData.HitPartType == CombatHitPartType.WeakPoint)
+            if (eventData.HitPartType == HitPartType.WeakPoint)
             {
                 // 弱点命中优先播放弱点音效，没有配置时再退回普通目标命中音效。
                 PlayConfiguredAudio(hitAudioSource, weakPointHitAudio ?? actorHitAudio);
@@ -316,24 +314,19 @@ namespace Game.Presentation.VFX
         /// </summary>
         private void OnDamageApplied(DamageAppliedEvent eventData)
         {
-            CombatDamageResult damageResult = eventData.DamageResult;
-            if (damageResult.Attacker != gameObject)
+            DamageResult damageResult = eventData.DamageResult;
+            if (damageResult.SourceObject != weaponRuntime)
             {
                 return;
             }
 
-            if (damageResult.WasKilled)
+            if (damageResult.DidDepleteHealth)
             {
                 // 击杀反馈优先级最高，命中音频在这里提升一层。
                 PlayConfiguredAudio(hitAudioSource, killHitAudio);
                 return;
             }
 
-            if (damageResult.IsCritical)
-            {
-                // 暴击成立后，再叠一层更高优先级的命中音效。
-                PlayConfiguredAudio(hitAudioSource, criticalHitAudio);
-            }
         }
 
         #endregion

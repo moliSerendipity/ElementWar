@@ -37,10 +37,6 @@ namespace Game.Gameplay.Character
         [SerializeField] private float gravity = -25f;
         [SerializeField] private float maxFallSpeed = -30f;
 
-        [Header("Crit")]
-        [SerializeField] private float critChance = 5f;
-        [SerializeField] private float critDamageMultiplier = 1.5f;
-
         private CharacterDefinitionConfig characterDefinitionConfig;
         private CharacterBaseStatConfig characterBaseStatConfig;
         private CharacterMovementConfig characterMovementConfig;
@@ -59,9 +55,6 @@ namespace Game.Gameplay.Character
         public float JumpHeight => jumpHeight;
         public float Gravity => gravity;
         public float MaxFallSpeed => maxFallSpeed;
-        public float CritChance => critChance;
-        public float CritDamageMultiplier => critDamageMultiplier;
-
         public bool TryInitialize(ConfigService _configService)
         {
             ResetRuntimeState();
@@ -131,6 +124,7 @@ namespace Game.Gameplay.Character
                 characterBaseStatConfig.HealingTakenMultiplier,
                 characterResistanceSetConfig != null ? characterResistanceSetConfig.PhysicalResistance : 0f,
                 characterResistanceSetConfig != null ? characterResistanceSetConfig.FireResistance : 0f,
+                characterResistanceSetConfig != null ? characterResistanceSetConfig.WaterResistance : 0f,
                 characterResistanceSetConfig != null ? characterResistanceSetConfig.ElectricResistance : 0f,
                 characterResistanceSetConfig != null ? characterResistanceSetConfig.IceResistance : 0f,
                 characterResistanceSetConfig != null ? characterResistanceSetConfig.ExplosionResistance : 0f);
@@ -146,8 +140,6 @@ namespace Game.Gameplay.Character
             jumpHeight = Mathf.Max(0.01f, characterJumpConfig.JumpHeight);
             gravity = Mathf.Min(-0.01f, characterJumpConfig.Gravity);
             maxFallSpeed = Mathf.Min(-0.01f, characterJumpConfig.MaxFallSpeed);
-            critChance = characterBaseStatConfig.CritChance;
-            critDamageMultiplier = Mathf.Max(1f, characterBaseStatConfig.CritDamageMultiplier);
             return true;
         }
 
@@ -170,8 +162,6 @@ namespace Game.Gameplay.Character
             jumpHeight = 0f;
             gravity = -25f;
             maxFallSpeed = -30f;
-            critChance = 5f;
-            critDamageMultiplier = 1.5f;
             ResetCombatStatRuntime();
         }
 
@@ -186,7 +176,5 @@ namespace Game.Gameplay.Character
         public void SetJumpHeight(float _value) => jumpHeight = Mathf.Max(0.01f, _value);
         public void SetGravity(float _value) => gravity = Mathf.Min(-0.01f, _value);
         public void SetMaxFallSpeed(float _value) => maxFallSpeed = Mathf.Min(-0.01f, _value);
-        public void SetCritChance(float _value) => critChance = _value;
-        public void SetCritDamageMultiplier(float _value) => critDamageMultiplier = Mathf.Max(1f, _value);
     }
 }

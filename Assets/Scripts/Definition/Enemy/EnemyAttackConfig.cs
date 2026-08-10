@@ -54,8 +54,11 @@ namespace Game.Definition.Enemy
                  "轻击 = 1.0，重击 = 1.8，跳砸 = 2.5 等。")]
         [SerializeField, Min(0.1f)] private float damageMultiplier = 1f;
 
-        [Tooltip("伤害类型。")]
-        [SerializeField] private CombatDamageKind damageKind = CombatDamageKind.Physical;
+        [Tooltip("伤害元素。None 表示不携带元素并使用物理抗性。")]
+        [SerializeField] private ElementType element = ElementType.None;
+
+        [Tooltip("伤害传递形态。爆炸形态会在元素抗性之外应用爆炸抗性。")]
+        [SerializeField] private DamageDeliveryType delivery = DamageDeliveryType.Direct;
 
         [Tooltip("是否命中范围内所有有效目标（AOE）。\nfalse = 只命中最近的一个。")]
         [SerializeField] private bool isAreaOfEffect;
@@ -127,7 +130,8 @@ namespace Game.Definition.Enemy
         #region Properties — Damage
 
         public float DamageMultiplier => damageMultiplier;
-        public CombatDamageKind DamageKind => damageKind;
+        public ElementType Element => element;
+        public DamageDeliveryType Delivery => delivery;
         public bool IsAreaOfEffect => isAreaOfEffect;
 
         #endregion

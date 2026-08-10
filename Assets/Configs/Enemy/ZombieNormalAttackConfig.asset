@@ -21,7 +21,8 @@ MonoBehaviour:
   animationTriggerName: NormalAttackTrigger
   damageNormalizedTime: 0.49
   damageMultiplier: 1
-  damageKind: 0
+  element: 0
+  delivery: 0
   isAreaOfEffect: 0
   shapeType: 0
   offsetDistance: 1.2

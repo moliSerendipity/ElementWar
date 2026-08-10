@@ -19,8 +19,6 @@ MonoBehaviour:
   maxHealth: 100
   attackPower: 10
   defense: 0
-  critChance: 5
-  critDamageMultiplier: 1.5
   maxShield: 0
   toughness: 100
   damageTakenMultiplier: 1

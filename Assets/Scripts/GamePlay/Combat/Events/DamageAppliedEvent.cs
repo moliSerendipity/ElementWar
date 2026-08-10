@@ -6,11 +6,11 @@ namespace Game.Gameplay.Combat.Events
     /// </summary>
     public readonly struct DamageAppliedEvent
     {
-        public DamageAppliedEvent(in CombatDamageResult _damageResult)
+        public DamageAppliedEvent(in DamageResult _damageResult)
         {
             DamageResult = _damageResult;
         }
 
-        public CombatDamageResult DamageResult { get; }
+        public DamageResult DamageResult { get; }
     }
 }

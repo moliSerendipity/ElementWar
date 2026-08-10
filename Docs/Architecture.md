@@ -1,8 +1,8 @@
 # ElementWar 架构与边界
 
-状态：当前新 C# 架构基线  
-核对日期：2026-08-05  
-Unity：`2022.3.62f2c1`
+- 状态：当前新 C# 架构基线
+- 核对日期：2026-08-08
+- Unity：`2022.3.62f2c1`
 
 本文件是采用后的架构、主线和旧代码边界唯一维护来源。每次高影响任务仍需根据实时仓库复核是否发生漂移。
 
@@ -39,10 +39,18 @@ Input → Decision → Execution → Fact writeback → Event → Presentation
 当前伤害主链可概括为：
 
 ```text
-WeaponFireExecutor → HitScanService → DamageResolver
-                   → HealthComponent → DamageAppliedEvent
-                   → Presentation / 其他消费者
+WeaponFireExecutor → HitScanService ─┐
+EnemyAttack ─────────────────────────┴→ DamageRequest → DamageResolver
+                                                      → HealthComponent
+                                                      → DamageResult / Combat Events
+                                                      → Presentation / 其他消费者
 ```
+
+- `DamageRequest` / `DamageResult` 以 `Instigator` 保存责任角色，以 `SourceObject` 保存武器运行时、攻击配置等具体来源。
+- `ElementType`、`DamageDeliveryType` 和 `HitPartType` 分别表达元素、传递形态和命中部位；元素轴当前只参与抗性，不执行附着或反应。
+- 解析公式是确定性的，不包含随机暴击；头部与弱点只应用明确倍率。
+- `HealthComponent.CurrentHealth` 是生命数值的唯一存储事实，`IsHealthDepleted` 由初始化状态和当前生命值派生；角色事实、敌人状态机和表现快照只读取或映射该事实。
+- 公共契约、迁移约束和取舍见 [`ADR-Combat-Domain-Contract-v1.md`](Decisions/ADR-Combat-Domain-Contract-v1.md)。
 
 ## 当前主线
 
@@ -86,7 +94,8 @@ WeaponFireExecutor → HitScanService → DamageResolver
 |---|---|
 | 编辑期默认值 | Definition 配置 |
 | 可变运行时数值 | Gameplay Stat/Runtime 组件 |
-| 生命和伤害事实 | Combat 运行时组件 |
+| 生命数值与生命耗尽事实 | `HealthComponent` |
+| 伤害裁决与已提交结果 | `DamageResolver` / `DamageResult` |
 | AI 决策 | Enemy Runtime/Brain |
 | 移动执行与修饰 | Enemy Locomotion |
 | 已发生事实通知 | Foundation Event Bus |

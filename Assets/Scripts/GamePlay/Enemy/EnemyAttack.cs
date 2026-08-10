@@ -430,7 +430,7 @@ namespace Game.Gameplay.Enemy
                     continue;
                 }
 
-                SubmitDamage(hitCollider, targetHealth, damage, activeConfig.DamageKind);
+                SubmitDamage(hitCollider, targetHealth, damage, activeConfig);
 
                 // 非 AOE 攻击只命中第一个有效目标。
                 if (aoe == false)
@@ -447,27 +447,25 @@ namespace Game.Gameplay.Enemy
             Collider _hitCollider,
             HealthComponent _targetHealth,
             float _damage,
-            CombatDamageKind _damageKind)
+            EnemyAttackConfig _sourceConfig)
         {
             Vector3 hitPoint = _hitCollider.ClosestPoint(transform.position);
             Vector3 hitNormal = (transform.position - hitPoint).normalized;
-            float hitDistance = Vector3.Distance(transform.position, hitPoint);
 
-            HitScanHitContext hitContext = new(
-                true, _hitCollider, _targetHealth,
-                hitPoint, hitNormal, hitDistance, CombatHitPartType.Default);
-
-            CombatDamageRequestContext request = new(
-                gameObject,
-                _damageKind,
+            DamageRequest request = new(
+                enemyStat.gameObject,
+                _sourceConfig,
+                _targetHealth,
+                _sourceConfig.Element,
+                _sourceConfig.Delivery,
                 _damage,
-                _critChance: 0f,
-                _critDamageMultiplier: 1f,
-                _headShotDamageMultiplier: 1f,
-                _weakPointDamageMultiplier: 1f,
+                HitPartType.Default,
+                1f,
+                1f,
                 transform.position,
                 lockedStrikeDirection,
-                hitContext,
+                hitPoint,
+                hitNormal,
                 Time.time);
 
             DamageResolver.ResolveAndApply(request);

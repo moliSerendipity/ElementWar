@@ -1,9 +1,15 @@
 # 元素与反应设计
 
 - 状态：首版规则与初始调试值已确认
-- 维护日期：2026-08-07
+- 维护日期：2026-08-08
 
 本文是元素附着、反应结果、控制处理和未来扩展边界的设计事实源。武器弹药与技能来源见 [`Combat.md`](Combat.md)，反应在波次和 Boss 中的使用见 [`Run.md`](Run.md)。本文描述目标行为，不代表旧 Lua 或新 C# 主线已经完成收敛。
+
+## 当前实现边界
+
+- 新 C# 伤害主线已经用 `ElementType.None/Fire/Water/Electric/Ice` 建立正式元素语义，并与 `DamageDeliveryType.Direct/Explosion` 分离；当前只用于选择伤害抗性。
+- `ElementType` 出现在一次伤害中不代表已经产生元素附着。附着状态、应用间隔、六种反应及反应递归约束仍未实现。
+- 伤害请求同时保留责任角色 `Instigator` 与具体来源 `SourceObject`，为后续附着和反应归属提供输入，但当前不据此创建第二套元素状态。契约见 [`ADR-Combat-Domain-Contract-v1.md`](../Decisions/ADR-Combat-Domain-Contract-v1.md)。
 
 ## 首版元素集合
 

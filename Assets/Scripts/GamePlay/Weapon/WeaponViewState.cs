@@ -55,10 +55,9 @@ namespace Game.Gameplay.Weapon
         [SerializeField] private Color crosshairFallbackPointColor = Color.blue;
         [SerializeField] private Color crosshairHitConfirmColor = Color.yellow;
         [SerializeField] private Color crosshairWeakPointHitConfirmColor = new(1f, 0.55f, 0.1f, 1f);
-        [SerializeField] private Color crosshairCriticalHitConfirmColor = new(1f, 0.8f, 0.2f, 1f);
         [SerializeField] private Color crosshairKillHitConfirmColor = new(1f, 0.25f, 0.25f, 1f);
         [SerializeField] private float crosshairHitPulseScale = 1.15f;
-        [SerializeField] private float crosshairCriticalHitPulseScale = 1.22f;
+        [SerializeField] private float crosshairWeakPointHitPulseScale = 1.22f;
         [SerializeField] private float crosshairKillHitPulseScale = 1.3f;
 
         #endregion
@@ -101,10 +100,9 @@ namespace Game.Gameplay.Weapon
         public Color CrosshairFallbackPointColor => crosshairFallbackPointColor;
         public Color CrosshairHitConfirmColor => crosshairHitConfirmColor;
         public Color CrosshairWeakPointHitConfirmColor => crosshairWeakPointHitConfirmColor;
-        public Color CrosshairCriticalHitConfirmColor => crosshairCriticalHitConfirmColor;
         public Color CrosshairKillHitConfirmColor => crosshairKillHitConfirmColor;
         public float CrosshairHitPulseScale => crosshairHitPulseScale;
-        public float CrosshairCriticalHitPulseScale => crosshairCriticalHitPulseScale;
+        public float CrosshairWeakPointHitPulseScale => crosshairWeakPointHitPulseScale;
         public float CrosshairKillHitPulseScale => crosshairKillHitPulseScale;
 
         #endregion
@@ -160,10 +158,9 @@ namespace Game.Gameplay.Weapon
             crosshairFallbackPointColor = _weaponRuntime.CrosshairFallbackPointColor;
             crosshairHitConfirmColor = _weaponRuntime.CrosshairHitConfirmColor;
             crosshairWeakPointHitConfirmColor = _weaponRuntime.CrosshairWeakPointHitConfirmColor;
-            crosshairCriticalHitConfirmColor = _weaponRuntime.CrosshairCriticalHitConfirmColor;
             crosshairKillHitConfirmColor = _weaponRuntime.CrosshairKillHitConfirmColor;
             crosshairHitPulseScale = _weaponRuntime.CrosshairHitPulseScale;
-            crosshairCriticalHitPulseScale = _weaponRuntime.CrosshairCriticalHitPulseScale;
+            crosshairWeakPointHitPulseScale = _weaponRuntime.CrosshairWeakPointHitPulseScale;
             crosshairKillHitPulseScale = _weaponRuntime.CrosshairKillHitPulseScale;
 
             if (fireTriggeredThisFrame)
