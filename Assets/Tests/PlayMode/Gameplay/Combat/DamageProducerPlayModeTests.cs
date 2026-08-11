@@ -11,6 +11,7 @@ using Game.Gameplay.Combat;
 using Game.Gameplay.Combat.Events;
 using Game.Gameplay.Enemy;
 using Game.Gameplay.Weapon;
+using Game.Gameplay.Weapon.Events;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -111,7 +112,11 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             GameObject targetGameObject = CreateGameObject("RifleTarget");
             targetGameObject.transform.position = new Vector3(0f, 0f, 5f);
             targetGameObject.AddComponent<BoxCollider>();
-            HealthComponent targetHealth = AddInitializedHealth(targetGameObject, 100f);
+            Combatant targetCombatant = AddInitializedCombatant(
+                targetGameObject,
+                100f,
+                CombatFaction.Enemy);
+            HealthComponent targetHealth = targetCombatant.Health;
 
             GameObject providerGameObject = CreateGameObject("AimPointProvider");
             DamageProducerTestAimPointProvider provider =
@@ -125,6 +130,8 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
 
             GameObject characterGameObject = CreateGameObject("CharacterInstigator");
             characterGameObject.AddComponent<CharacterStat>();
+            Combatant characterCombatant = characterGameObject.AddComponent<Combatant>();
+            SetPrivateField(characterCombatant, "faction", CombatFaction.PlayerParty);
 
             GameObject weaponGameObject = CreateGameObject("RifleSource");
             weaponGameObject.transform.SetParent(characterGameObject.transform, false);
@@ -144,11 +151,13 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
 
             int damageEventCount = 0;
             DamageResult receivedResult = default;
+            WeaponFiredEvent receivedWeaponFiredEvent = default;
             eventBus.Subscribe<DamageAppliedEvent>(_eventData =>
             {
                 damageEventCount++;
                 receivedResult = _eventData.DamageResult;
             });
+            eventBus.Subscribe<WeaponFiredEvent>(_eventData => receivedWeaponFiredEvent = _eventData);
 
             Physics.SyncTransforms();
             yield return null;
@@ -171,6 +180,10 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
 
             Assert.That(didFire, Is.True);
             Assert.That(damageEventCount, Is.EqualTo(1));
+            Assert.That(receivedResult.ExecutionId.IsValid, Is.True);
+            Assert.That(receivedResult.ExecutionId, Is.EqualTo(receivedWeaponFiredEvent.ExecutionId));
+            Assert.That(receivedResult.InstigatorId, Is.EqualTo(characterCombatant.Id));
+            Assert.That(receivedResult.TargetId, Is.EqualTo(targetCombatant.Id));
             Assert.That(receivedResult.Instigator, Is.SameAs(characterGameObject));
             Assert.That(receivedResult.SourceObject, Is.SameAs(weaponRuntime));
             Assert.That(receivedResult.Target, Is.SameAs(targetHealth));
@@ -189,12 +202,18 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             GameObject targetGameObject = CreateGameObject("EnemyAttackTarget");
             targetGameObject.transform.position = new Vector3(0f, 0f, 1.2f);
             targetGameObject.AddComponent<BoxCollider>();
-            HealthComponent targetHealth = AddInitializedHealth(targetGameObject, 100f);
+            Combatant targetCombatant = AddInitializedCombatant(
+                targetGameObject,
+                100f,
+                CombatFaction.PlayerParty);
+            HealthComponent targetHealth = targetCombatant.Health;
 
             GameObject enemyGameObject = CreateGameObject("EnemyInstigator");
             EnemyStat enemyStat = enemyGameObject.AddComponent<EnemyStat>();
             SetPrivateField(enemyStat, "attackPower", 20f);
             SetPrivateField(enemyStat, "isInitialized", true);
+            Combatant enemyCombatant = enemyGameObject.AddComponent<Combatant>();
+            SetPrivateField(enemyCombatant, "faction", CombatFaction.Enemy);
 
             EnemyAttackConfig attackConfig = ScriptableObject.CreateInstance<EnemyAttackConfig>();
             ownedObjects.Add(attackConfig);
@@ -230,6 +249,10 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             enemyAttack.Tick(0.01f);
 
             Assert.That(damageEventCount, Is.EqualTo(1));
+            Assert.That(receivedResult.ExecutionId.IsValid, Is.True);
+            Assert.That(receivedResult.ExecutionId, Is.EqualTo(enemyAttack.ActiveExecutionId));
+            Assert.That(receivedResult.InstigatorId, Is.EqualTo(enemyCombatant.Id));
+            Assert.That(receivedResult.TargetId, Is.EqualTo(targetCombatant.Id));
             Assert.That(receivedResult.Instigator, Is.SameAs(enemyGameObject));
             Assert.That(receivedResult.SourceObject, Is.SameAs(attackConfig));
             Assert.That(receivedResult.Target, Is.SameAs(targetHealth));
@@ -239,13 +262,160 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             Assert.That(targetHealth.CurrentHealth, Is.EqualTo(80f).Within(0.0001f));
         }
 
-        private HealthComponent AddInitializedHealth(GameObject _gameObject, float _maxHealth)
+        /// <summary>
+        /// AOE 扫到同一角色多个 Collider 时只提交一次，并拒绝同阵营敌人目标。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator EnemyAreaAttackDeduplicatesMultiColliderTargetAndRejectsFriendlyTarget()
+        {
+            GameObject playerTargetGameObject = CreateGameObject("MultiColliderPlayerTarget");
+            playerTargetGameObject.transform.position = new Vector3(0f, 0f, 1.2f);
+            Combatant playerTarget = AddInitializedCombatant(
+                playerTargetGameObject,
+                100f,
+                CombatFaction.PlayerParty);
+
+            GameObject firstColliderGameObject = CreateGameObject("PlayerColliderA");
+            firstColliderGameObject.transform.SetParent(playerTargetGameObject.transform, false);
+            firstColliderGameObject.transform.localPosition = new Vector3(-0.1f, 0f, 0f);
+            firstColliderGameObject.AddComponent<BoxCollider>();
+
+            GameObject secondColliderGameObject = CreateGameObject("PlayerColliderB");
+            secondColliderGameObject.transform.SetParent(playerTargetGameObject.transform, false);
+            secondColliderGameObject.transform.localPosition = new Vector3(0.1f, 0f, 0f);
+            secondColliderGameObject.AddComponent<SphereCollider>();
+
+            GameObject friendlyTargetGameObject = CreateGameObject("FriendlyEnemyTarget");
+            friendlyTargetGameObject.transform.position = new Vector3(0.35f, 0f, 1.2f);
+            friendlyTargetGameObject.AddComponent<BoxCollider>();
+            Combatant friendlyTarget = AddInitializedCombatant(
+                friendlyTargetGameObject,
+                100f,
+                CombatFaction.Enemy);
+
+            GameObject enemyGameObject = CreateGameObject("AreaAttackEnemy");
+            EnemyStat enemyStat = enemyGameObject.AddComponent<EnemyStat>();
+            SetPrivateField(enemyStat, "attackPower", 20f);
+            SetPrivateField(enemyStat, "isInitialized", true);
+            Combatant enemyCombatant = enemyGameObject.AddComponent<Combatant>();
+            SetPrivateField(enemyCombatant, "faction", CombatFaction.Enemy);
+
+            EnemyAttackConfig attackConfig = ScriptableObject.CreateInstance<EnemyAttackConfig>();
+            ownedObjects.Add(attackConfig);
+            SetPrivateField(attackConfig, "damageMultiplier", 1f);
+            SetPrivateField(attackConfig, "element", ElementType.None);
+            SetPrivateField(attackConfig, "delivery", DamageDeliveryType.Direct);
+            SetPrivateField(attackConfig, "isAreaOfEffect", true);
+            SetPrivateField(attackConfig, "damageNormalizedTime", 0.05f);
+            SetPrivateField(attackConfig, "shapeType", AttackShapeType.Sphere);
+            SetPrivateField(attackConfig, "offsetDistance", 1.2f);
+            SetPrivateField(attackConfig, "radius", 0.8f);
+            SetPrivateField(attackConfig, "minUseRange", 0f);
+            SetPrivateField(attackConfig, "maxUseRange", 2f);
+            SetPrivateField(attackConfig, "selectionWeight", 1);
+
+            EnemyAttack enemyAttack = enemyGameObject.AddComponent<EnemyAttack>();
+            SetPrivateField(enemyAttack, "attackConfigs", new[] { attackConfig });
+            SetPrivateField(enemyAttack, "attackTargetMask", (LayerMask)(~0));
+            enemyAttack.Initialize(enemyStat);
+
+            int damageEventCount = 0;
+            DamageResult receivedResult = default;
+            eventBus.Subscribe<DamageAppliedEvent>(_eventData =>
+            {
+                damageEventCount++;
+                receivedResult = _eventData.DamageResult;
+            });
+
+            Physics.SyncTransforms();
+            yield return null;
+
+            Assert.That(enemyAttack.TryBeginAttack(1.2f), Is.True);
+            enemyAttack.Tick(1f);
+            enemyAttack.Tick(0.01f);
+
+            Assert.That(damageEventCount, Is.EqualTo(1));
+            Assert.That(receivedResult.ExecutionId.IsValid, Is.True);
+            Assert.That(receivedResult.TargetId, Is.EqualTo(playerTarget.Id));
+            Assert.That(playerTarget.Health.CurrentHealth, Is.EqualTo(80f).Within(0.0001f));
+            Assert.That(friendlyTarget.Health.CurrentHealth, Is.EqualTo(100f).Within(0.0001f));
+        }
+
+        /// <summary>
+        /// 实际禁用/重新启用会更新目标身份、拒绝旧请求并清除上一生命周期去重记录。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator CombatantReuseRejectsStaleRequestAndAcceptsCurrentIdentity()
+        {
+            GameObject instigatorGameObject = CreateGameObject("LifecycleInstigator");
+            Combatant instigator = instigatorGameObject.AddComponent<Combatant>();
+            SetPrivateField(instigator, "faction", CombatFaction.PlayerParty);
+
+            GameObject targetGameObject = CreateGameObject("LifecycleTarget");
+            Combatant target = AddInitializedCombatant(targetGameObject, 100f, CombatFaction.Enemy);
+            AttackExecutionId executionId = AttackExecutionId.Create();
+            DamageRequest staleRequest = CreateRequest(executionId, instigator, target, 20f);
+
+            DamageResult firstResult = DamageResolver.ResolveAndApply(staleRequest);
+            CombatantId previousTargetId = target.Id;
+
+            targetGameObject.SetActive(false);
+            yield return null;
+            Assert.That(target.Id.IsValid, Is.False);
+
+            targetGameObject.SetActive(true);
+            yield return null;
+
+            DamageResult staleResult = DamageResolver.ResolveAndApply(staleRequest);
+            DamageResult currentResult = DamageResolver.ResolveAndApply(
+                CreateRequest(executionId, instigator, target, 20f));
+
+            Assert.That(firstResult.IsApplied, Is.True);
+            Assert.That(target.Id.IsValid, Is.True);
+            Assert.That(target.Id, Is.Not.EqualTo(previousTargetId));
+            Assert.That(staleResult.IsApplied, Is.False);
+            Assert.That(staleResult.RejectionReason, Is.EqualTo(DamageRejectionReason.InvalidTarget));
+            Assert.That(currentResult.IsApplied, Is.True);
+            Assert.That(target.Health.CurrentHealth, Is.EqualTo(60f).Within(0.0001f));
+        }
+
+        private Combatant AddInitializedCombatant(
+            GameObject _gameObject,
+            float _maxHealth,
+            CombatFaction _faction)
         {
             DamageProducerTestActorStat stat = _gameObject.AddComponent<DamageProducerTestActorStat>();
             stat.InitializeForTest(_maxHealth);
             HealthComponent health = _gameObject.AddComponent<HealthComponent>();
             Assert.That(health.TryInitialize(), Is.True);
-            return health;
+            Combatant combatant = _gameObject.AddComponent<Combatant>();
+            SetPrivateField(combatant, "faction", _faction);
+            Assert.That(combatant.Id.IsValid, Is.True);
+            return combatant;
+        }
+
+        private static DamageRequest CreateRequest(
+            AttackExecutionId _executionId,
+            Combatant _instigator,
+            Combatant _target,
+            float _baseDamage)
+        {
+            return new DamageRequest(
+                _executionId,
+                _instigator,
+                _instigator,
+                _target,
+                ElementType.None,
+                DamageDeliveryType.Direct,
+                _baseDamage,
+                HitPartType.Default,
+                1f,
+                1f,
+                Vector3.zero,
+                Vector3.forward,
+                Vector3.forward,
+                Vector3.back,
+                Time.time);
         }
 
         private GameObject CreateGameObject(string _name)

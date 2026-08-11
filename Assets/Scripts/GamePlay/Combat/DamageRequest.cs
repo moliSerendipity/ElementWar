@@ -11,10 +11,26 @@ namespace Game.Gameplay.Combat
         /// <summary>
         /// 创建一次已经完成目标与命中部位解析的伤害请求。
         /// </summary>
+        /// <param name="_executionId">已成立攻击的运行时执行身份。</param>
+        /// <param name="_instigatorCombatant">承担归属的活动战斗实体。</param>
+        /// <param name="_sourceObject">产生伤害的武器运行时、配置或其他具体来源。</param>
+        /// <param name="_targetCombatant">接收请求的活动权威目标。</param>
+        /// <param name="_element">伤害携带的元素语义。</param>
+        /// <param name="_delivery">伤害的传递形态。</param>
+        /// <param name="_baseDamage">进入防守侧公式前的基础伤害。</param>
+        /// <param name="_hitPartType">命中查询已解析的部位类型。</param>
+        /// <param name="_headShotDamageMultiplier">头部命中的来源侧倍率。</param>
+        /// <param name="_weakPointDamageMultiplier">弱点命中的来源侧倍率。</param>
+        /// <param name="_attackOrigin">攻击起点的世界坐标。</param>
+        /// <param name="_attackDirection">攻击的世界空间方向。</param>
+        /// <param name="_hitPoint">命中点的世界坐标。</param>
+        /// <param name="_hitNormal">命中表面的世界空间法线。</param>
+        /// <param name="_requestTime">请求产生时的运行时时间戳。</param>
         public DamageRequest(
-            GameObject _instigator,
+            AttackExecutionId _executionId,
+            Combatant _instigatorCombatant,
             Object _sourceObject,
-            HealthComponent _target,
+            Combatant _targetCombatant,
             ElementType _element,
             DamageDeliveryType _delivery,
             float _baseDamage,
@@ -27,9 +43,12 @@ namespace Game.Gameplay.Combat
             Vector3 _hitNormal,
             float _requestTime)
         {
-            Instigator = _instigator;
+            ExecutionId = _executionId;
+            InstigatorCombatant = _instigatorCombatant;
+            InstigatorId = _instigatorCombatant != null ? _instigatorCombatant.Id : default;
             SourceObject = _sourceObject;
-            Target = _target;
+            TargetCombatant = _targetCombatant;
+            TargetId = _targetCombatant != null ? _targetCombatant.Id : default;
             Element = _element;
             Delivery = _delivery;
             BaseDamage = _baseDamage;
@@ -43,14 +62,29 @@ namespace Game.Gameplay.Combat
             RequestTime = _requestTime;
         }
 
+        /// <summary>本次攻击执行的运行时身份。</summary>
+        public AttackExecutionId ExecutionId { get; }
+
+        /// <summary>承担归属的权威战斗实体。</summary>
+        public Combatant InstigatorCombatant { get; }
+
+        /// <summary>请求创建时冻结的责任实体身份。</summary>
+        public CombatantId InstigatorId { get; }
+
         /// <summary>承担伤害与后续击杀归属的责任实体。</summary>
-        public GameObject Instigator { get; }
+        public GameObject Instigator => InstigatorCombatant != null ? InstigatorCombatant.gameObject : null;
 
         /// <summary>产生本次伤害的具体武器运行时、攻击配置或其他 Unity 对象。</summary>
         public Object SourceObject { get; }
 
-        /// <summary>接收已裁决伤害的权威生命组件。</summary>
-        public HealthComponent Target { get; }
+        /// <summary>接收请求的权威战斗目标。</summary>
+        public Combatant TargetCombatant { get; }
+
+        /// <summary>请求创建时冻结的目标身份。</summary>
+        public CombatantId TargetId { get; }
+
+        /// <summary>接收已裁决伤害的唯一生命组件。</summary>
+        public HealthComponent Target => TargetCombatant != null ? TargetCombatant.Health : null;
 
         /// <summary>本次伤害携带的元素；不负责元素附着或反应。</summary>
         public ElementType Element { get; }

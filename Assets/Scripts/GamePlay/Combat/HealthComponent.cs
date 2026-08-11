@@ -1,4 +1,3 @@
-using Game.Definition.Combat;
 using Game.Gameplay.Character;
 using UnityEngine;
 
@@ -68,19 +67,13 @@ namespace Game.Gameplay.Combat
         /// 写入已裁决的最终伤害。该入口只供伤害域使用，不重新计算任何乘区。
         /// </summary>
         internal DamageResult ApplyResolvedDamage(
-            GameObject _instigator,
-            Object _sourceObject,
-            ElementType _element,
-            DamageDeliveryType _delivery,
-            HitPartType _hitPartType,
+            in DamageRequest _request,
             float _finalDamage,
-            Vector3 _hitPoint,
-            Vector3 _hitNormal,
             float _appliedTime)
         {
             if (CanReceiveDamage == false)
             {
-                return DamageResult.None;
+                return DamageResult.Rejected(_request, DamageRejectionReason.TargetCannotReceiveDamage);
             }
 
             float previousHealth = currentHealth;
@@ -90,17 +83,21 @@ namespace Game.Gameplay.Combat
 
             return new DamageResult(
                 true,
-                _instigator,
-                _sourceObject,
-                this,
-                _element,
-                _delivery,
-                _hitPartType,
+                DamageRejectionReason.None,
+                _request.ExecutionId,
+                _request.InstigatorCombatant,
+                _request.InstigatorId,
+                _request.SourceObject,
+                _request.TargetCombatant,
+                _request.TargetId,
+                _request.Element,
+                _request.Delivery,
+                _request.HitPartType,
                 appliedDamage,
                 currentHealth,
                 didDepleteHealth,
-                _hitPoint,
-                _hitNormal,
+                _request.HitPoint,
+                _request.HitNormal,
                 _appliedTime);
         }
 

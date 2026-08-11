@@ -1545,6 +1545,7 @@ GameObject:
   - component: {fileID: 925289278}
   - component: {fileID: 925289280}
   - component: {fileID: 925289279}
+  - component: {fileID: 8800000000000000101}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -1603,6 +1604,20 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   isInitialized: 0
+--- !u!114 &8800000000000000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925289272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ac9b9280038824cbebbb01bf1fc8b3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  faction: 2
+  healthComponent: {fileID: 925289279}
 --- !u!114 &925289280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2453,6 +2468,7 @@ GameObject:
   - component: {fileID: 1297331262}
   - component: {fileID: 1297331261}
   - component: {fileID: 1297331260}
+  - component: {fileID: 8800000000000000102}
   - component: {fileID: 1297331259}
   - component: {fileID: 1297331270}
   - component: {fileID: 1297331269}
@@ -2501,6 +2517,20 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   isInitialized: 0
+--- !u!114 &8800000000000000102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297331258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ac9b9280038824cbebbb01bf1fc8b3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  faction: 2
+  healthComponent: {fileID: 1297331260}
 --- !u!114 &1297331261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9173,6 +9203,7 @@ GameObject:
   - component: {fileID: 8208061526436469993}
   - component: {fileID: 2216937102603340801}
   - component: {fileID: 8823707006449125371}
+  - component: {fileID: 8800000000000000103}
   - component: {fileID: 8823707006449125372}
   m_Layer: 6
   m_Name: Player
@@ -24590,6 +24621,20 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   isInitialized: 0
+--- !u!114 &8800000000000000103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034066375161366470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ac9b9280038824cbebbb01bf1fc8b3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  faction: 1
+  healthComponent: {fileID: 8823707006449125371}
 --- !u!114 &8823707006449125372
 MonoBehaviour:
   m_ObjectHideFlags: 0

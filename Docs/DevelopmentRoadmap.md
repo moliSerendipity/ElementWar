@@ -1,7 +1,7 @@
 # ElementWar 开发路线
 
 - 状态：Active
-- 维护日期：2026-08-10
+- 维护日期：2026-08-11
 - 路线维护任务：`DOC-001`
 
 本文是开发顺序、任务状态、直接依赖、当前唯一下一项和版本裁剪边界的唯一维护来源。设计目标以 [`GameDesign.md`](GameDesign.md) 及其细则为准，当前代码边界以 [`Architecture.md`](Architecture.md) 为准，单次获批范围与证据以对应 Feature Spec 为准。
@@ -26,14 +26,15 @@
 
 ## 当前唯一下一项
 
-**CMB-010 — 战斗目标、阵营与攻击执行身份。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#cmb-010-战斗目标阵营与攻击执行身份)。
+**ELM-010 — 元素施加配置与快照契约。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#elm-010-元素施加配置与快照契约)。
 
-选择它是因为超载范围伤害、友伤策略、AI 选敌、双角色队伍、爆炸和一次攻击多碰撞体去重都依赖同一目标/阵营/执行身份。直接实现 Party 或超载会在这些系统中各自制造一套临时判断。
+选择它是因为 `CMB-010` 已提供目标、阵营与执行身份，而附着运行时和首个反应还需要先固定“元素由谁、以什么配置、针对哪个执行与目标施加”的最小快照契约。先完成该输入边界，可以避免附着与武器来源各自保存临时字段。
 
 当前已完成基线：
 
 - `DOC-001`：短指令、自适应工作流与详细路线文档（本次文档切片；以本文件收口记录为准）。
 - `CMB-001`：Combat Domain Contract v1，Fast Verified 且额外完成 PlayMode；Windows64 与主线人工验收未运行。证据见 [`CombatDomainContractV1.md`](Features/CombatDomainContractV1.md)。
+- `CMB-010`：战斗目标、阵营与攻击执行身份 v1，Fast Verified 且额外完成 PlayMode 与 Bootstrap 序列化扫描；Windows64 与主线人工验收未运行。证据见 [`CombatantFactionExecutionIdentityV1.md`](Features/CombatantFactionExecutionIdentityV1.md)。
 - `VER-001` / `VER-002` / `VER-003`：EditMode、PlayMode、Bootstrap-only Windows64 自动化基线已分别关闭；它们不是完整项目验收。详见 [`Roadmap/04-IntegrationRelease.md`](Roadmap/04-IntegrationRelease.md)。
 
 ## 主依赖图
@@ -71,7 +72,7 @@ flowchart LR
 
 | 已知问题 | 处理任务 | 进入时机与边界 |
 |---|---|---|
-| 伤害目标没有稳定身份、阵营和一次攻击去重 | `CMB-010` | 在任何范围反应、双角色或新攻击类型前完成公共契约迁移 |
+| 范围效果仍缺统一目标集合、稳定排序、遮挡与数量策略 | `CMB-020` | `CMB-010` 已提供 Combatant、阵营和单目标去重；在首个范围反应或投射物爆炸前完成通用查询 |
 | `WeaponRuntime` 职责过多，动画事件与运行时结算边界不稳 | `WPN-020` | 首个超载闭环先证明需求，再于多武器/多弹药前用特征测试保护重构 |
 | 旧 Input Action 与新主线意图混杂 | `INP-010` | 在闪避、换枪、换元素、切人、投掷和复活输入扩展前增量迁移 |
 | 相机、HUD、输入和角色状态按单角色绑定 | `ARC-010`、`PTY-010`、`PTY-020` | 在第二角色切换前建立组合根和 Party 唯一所有权，不事后同步多个 ActiveCharacter |

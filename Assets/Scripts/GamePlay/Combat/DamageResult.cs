@@ -11,11 +11,15 @@ namespace Game.Gameplay.Combat
         /// <summary>
         /// 创建一次已提交或被拒绝的伤害结果。
         /// </summary>
-        public DamageResult(
+        internal DamageResult(
             bool _isApplied,
-            GameObject _instigator,
+            DamageRejectionReason _rejectionReason,
+            AttackExecutionId _executionId,
+            Combatant _instigatorCombatant,
+            CombatantId _instigatorId,
             Object _sourceObject,
-            HealthComponent _target,
+            Combatant _targetCombatant,
+            CombatantId _targetId,
             ElementType _element,
             DamageDeliveryType _delivery,
             HitPartType _hitPartType,
@@ -27,9 +31,13 @@ namespace Game.Gameplay.Combat
             float _appliedTime)
         {
             IsApplied = _isApplied;
-            Instigator = _instigator;
+            RejectionReason = _rejectionReason;
+            ExecutionId = _executionId;
+            InstigatorCombatant = _instigatorCombatant;
+            InstigatorId = _instigatorId;
             SourceObject = _sourceObject;
-            Target = _target;
+            TargetCombatant = _targetCombatant;
+            TargetId = _targetId;
             Element = _element;
             Delivery = _delivery;
             HitPartType = _hitPartType;
@@ -44,14 +52,32 @@ namespace Game.Gameplay.Combat
         /// <summary>伤害是否已经写回目标生命事实。</summary>
         public bool IsApplied { get; }
 
+        /// <summary>未提交时的确定原因；成功提交时为 None。</summary>
+        public DamageRejectionReason RejectionReason { get; }
+
+        /// <summary>本次攻击执行的运行时身份。</summary>
+        public AttackExecutionId ExecutionId { get; }
+
+        /// <summary>承担归属的权威战斗实体引用。</summary>
+        public Combatant InstigatorCombatant { get; }
+
+        /// <summary>请求创建时冻结的责任实体身份。</summary>
+        public CombatantId InstigatorId { get; }
+
         /// <summary>承担本次伤害归属的责任实体。</summary>
-        public GameObject Instigator { get; }
+        public GameObject Instigator => InstigatorCombatant != null ? InstigatorCombatant.gameObject : null;
 
         /// <summary>产生本次伤害的具体来源对象。</summary>
         public Object SourceObject { get; }
 
-        /// <summary>已被写入生命事实的目标。</summary>
-        public HealthComponent Target { get; }
+        /// <summary>请求创建时的权威目标引用。</summary>
+        public Combatant TargetCombatant { get; }
+
+        /// <summary>请求创建时冻结的目标身份。</summary>
+        public CombatantId TargetId { get; }
+
+        /// <summary>已被写入或尝试写入生命事实的目标。</summary>
+        public HealthComponent Target => TargetCombatant != null ? TargetCombatant.Health : null;
 
         /// <summary>本次伤害的元素语义。</summary>
         public ElementType Element { get; }
@@ -80,20 +106,30 @@ namespace Game.Gameplay.Combat
         /// <summary>生命事实写回的时间戳。</summary>
         public float AppliedTime { get; }
 
-        /// <summary>表示请求未被目标接受的空结果。</summary>
-        public static DamageResult None => new(
-            false,
-            null,
-            null,
-            null,
-            ElementType.None,
-            DamageDeliveryType.Direct,
-            HitPartType.Default,
-            0f,
-            0f,
-            false,
-            Vector3.zero,
-            Vector3.up,
-            0f);
+        /// <summary>表示尚未经过伤害裁决的默认空结果。</summary>
+        public static DamageResult None => default;
+
+        internal static DamageResult Rejected(in DamageRequest _request, DamageRejectionReason _reason)
+        {
+            HealthComponent targetHealth = _request.Target;
+            return new DamageResult(
+                false,
+                _reason,
+                _request.ExecutionId,
+                _request.InstigatorCombatant,
+                _request.InstigatorId,
+                _request.SourceObject,
+                _request.TargetCombatant,
+                _request.TargetId,
+                _request.Element,
+                _request.Delivery,
+                _request.HitPartType,
+                0f,
+                targetHealth != null ? targetHealth.CurrentHealth : 0f,
+                false,
+                _request.HitPoint,
+                _request.HitNormal,
+                0f);
+        }
     }
 }

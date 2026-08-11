@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-10
+- 维护日期：2026-08-11
 
 本路线先建立可复用战斗身份，再完成一个“开火 → 附着 → 超载 → 范围伤害/控制 → 反馈”的真实闭环，随后才扩展武器实例、弹药、投射物和其余反应。每项启动时用 [`TEMPLATE.md`](../Features/TEMPLATE.md) 建立具体 Feature Spec。
 
@@ -22,18 +22,17 @@
 
 ### CMB-010 战斗目标、阵营与攻击执行身份
 
-- 状态：Next
+- 状态：Done（Fast Verified，并额外通过 PlayMode 与 Bootstrap 序列化扫描；未做 Windows64 与主线人工验收）
 - 依赖：`CMB-001`。
-- 当前缺口：伤害请求能说明责任者和来源对象，但没有一次攻击执行身份、稳定战斗目标身份或统一阵营；多 Collider、范围攻击、友伤和 AI 选敌会各自去重或判断。
-- 实施要点：① 用特征测试固定当前步枪与敌人攻击；② 设计 `Combatant`/团队事实、目标根解析和一次攻击执行 ID；③ 让 Hitscan、EnemyAttack 和伤害主链携带同一上下文；④ 在权威目标层保证同一执行对同一目标至多提交一次；⑤ 明确首版玩家/AI/敌人的友伤矩阵与禁用、死亡、复用清理。
-- 可观察完成：多碰撞体目标只受一次伤害；敌人不会伤害同阵营；日志/事件可把结果关联到一次攻击执行和一个权威目标。
-- 范围：公共战斗/事件契约与 Gameplay 运行时；需要 ADR。非目标是元素反应、Party 切换、网络实体 ID 和完整威胁系统。
-- 验证：EditMode 覆盖身份、阵营矩阵与重复请求；PlayMode 覆盖步枪/敌人生产链、多 Collider 和禁用重用；序列化引用扫描。
+- 已完成：新增权威 `Combatant` 根、运行时 `CombatantId` / `AttackExecutionId`、首版阵营矩阵、Collider 根解析和目标侧精确去重；步枪、`EnemyAttack`、伤害结果及事件共享身份上下文；Bootstrap 三个生命根已显式装配阵营。
+- 可观察结果：同一敌人攻击扫到目标多个 Collider 只扣血一次；同阵营敌人不扣血；步枪与敌人攻击结果可关联同一次执行和权威目标；禁用复用后旧请求被拒绝。
+- 证据：[`CombatantFactionExecutionIdentityV1.md`](../Features/CombatantFactionExecutionIdentityV1.md)；决策见 [`ADR-Combatant-Faction-Execution-Identity-v1.md`](../Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md)。
+- 剩余边界：元素附着/反应、通用范围目标集合与稳定排序、Party/威胁、网络身份、完整敌人攻击时序和玩家爆炸自伤例外仍由后续任务负责。
 - 解锁：`ELM-010`、`CMB-020`、`CMB-030`、`INP-010`、`ENM-010`。
 
 ### ELM-010 元素施加配置与快照契约
 
-- 状态：Planned
+- 状态：Next
 - 依赖：`CMB-010`。
 - 当前缺口：`ElementType` 只参与抗性；现有反应配置没有元素对或反应类型，活动 Registry 没有可消费的反应表。
 - 实施要点：① 审计并决定迁移或替换现有定义壳；② 用 Application Profile 定义元素、来源+目标应用间隔、持续时间、来源快照、攻击执行 ID 和目标 ID；③ 配置校验拒绝空 ID、重复键和无消费者字段；④ 保持元素来源与伤害传递形态正交，不提前加入强弱元素或复杂 ICD。
@@ -66,7 +65,7 @@
 
 ### CMB-020 范围目标查询与友伤过滤
 
-- 状态：Planned
+- 状态：Ready
 - 依赖：`CMB-010`。
 - 当前缺口：范围效果没有复用的目标根解析、阵营过滤、稳定排序、遮挡策略或多 Collider 去重入口。
 - 实施要点：① 建立只返回权威战斗目标的查询；② 统一半径、层级、触发器、死亡/禁用和友伤过滤；③ 按稳定 ID 或距离建立确定顺序；④ 把 LOS/上限作为显式策略；⑤ 禁止表现层重新裁决命中。
@@ -77,7 +76,7 @@
 
 ### CMB-030 韧性、失衡与受控状态事实
 
-- 状态：Planned
+- 状态：Ready
 - 依赖：`CMB-010`。
 - 当前缺口：配置有静态 Toughness，但没有当前韧性、削减、恢复、失衡/硬直生命周期和控制免疫的权威状态。
 - 实施要点：① 定义当前韧性与恢复所有者；② 区分伤害、韧性伤害和控制请求；③ 明确普通敌人、精英、Boss 的抵抗/转换策略；④ 统一打断、到期、死亡、禁用和复用清理；⑤ 事件只报告已提交的状态变化。

@@ -91,7 +91,6 @@ namespace Game.Presentation.HUD
             }
 
             GameEventBus.Instance.Subscribe<WeaponFiredEvent>(OnWeaponFired);
-            GameEventBus.Instance.Subscribe<HitConfirmedEvent>(OnHitConfirmed);
             GameEventBus.Instance.Subscribe<DamageAppliedEvent>(OnDamageApplied);
         }
 
@@ -100,7 +99,6 @@ namespace Game.Presentation.HUD
             if (GameEventBus.Instance != null)
             {
                 GameEventBus.Instance.Unsubscribe<WeaponFiredEvent>(OnWeaponFired);
-                GameEventBus.Instance.Unsubscribe<HitConfirmedEvent>(OnHitConfirmed);
                 GameEventBus.Instance.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
             }
         }
@@ -200,22 +198,6 @@ namespace Game.Presentation.HUD
             fireKickEndTime = Time.unscaledTime + fireKickDuration;
         }
 
-        private void OnHitConfirmed(HitConfirmedEvent _eventArgs)
-        {
-            if (weaponViewState == null)
-            {
-                return;
-            }
-
-            activeHitFeedbackColor = _eventArgs.HitPartType == HitPartType.WeakPoint
-                ? weaponViewState.CrosshairWeakPointHitConfirmColor
-                : weaponViewState.CrosshairHitConfirmColor;
-            activeHitPulseScale = _eventArgs.HitPartType == HitPartType.WeakPoint
-                ? weaponViewState.CrosshairWeakPointHitPulseScale
-                : weaponViewState.CrosshairHitPulseScale;
-            hitConfirmEndTime = Time.unscaledTime + hitConfirmDuration;
-        }
-
         private void OnDamageApplied(DamageAppliedEvent _eventArgs)
         {
             if (weaponViewState == null)
@@ -229,6 +211,16 @@ namespace Game.Presentation.HUD
             {
                 activeHitFeedbackColor = weaponViewState.CrosshairKillHitConfirmColor;
                 activeHitPulseScale = weaponViewState.CrosshairKillHitPulseScale;
+            }
+            else if (damageResult.HitPartType == HitPartType.WeakPoint)
+            {
+                activeHitFeedbackColor = weaponViewState.CrosshairWeakPointHitConfirmColor;
+                activeHitPulseScale = weaponViewState.CrosshairWeakPointHitPulseScale;
+            }
+            else
+            {
+                activeHitFeedbackColor = weaponViewState.CrosshairHitConfirmColor;
+                activeHitPulseScale = weaponViewState.CrosshairHitPulseScale;
             }
 
             hitConfirmEndTime = Time.unscaledTime + hitConfirmDuration;

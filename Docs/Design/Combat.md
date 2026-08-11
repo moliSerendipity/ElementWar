@@ -1,7 +1,7 @@
 # 战斗、角色与武器设计
 
 - 状态：已确认设计检查点
-- 维护日期：2026-08-08
+- 维护日期：2026-08-11
 
 本文是角色控制、AI 队友、武器弹药、技能、伤害、输入和战斗 HUD 的设计事实源。元素反应细节见 [`Elements.md`](Elements.md)，波次、敌人编排和肉鸽强化见 [`Run.md`](Run.md)。本文描述目标行为，不代表现有代码已经完成。
 
@@ -113,9 +113,11 @@
 
 ## 命中、弱点与反馈
 
-- 当前新 C# 主线使用统一 `DamageRequest` / `DamageResult`：`Instigator` 表达责任角色，`SourceObject` 表达具体武器或攻击来源；元素、传递形态和命中部位是相互独立的语义轴。
+- 当前新 C# 主线以 `Combatant` 表达权威战斗目标和阵营，并使用统一 `DamageRequest` / `DamageResult`：`AttackExecutionId` 关联一次成立攻击，责任者与目标使用当前运行时 `CombatantId` 快照，`SourceObject` 表达具体武器或攻击来源；元素、传递形态和命中部位是相互独立的语义轴。
+- 同一攻击执行通过多个 Collider 命中同一目标时只提交一次；同一执行仍可分别命中多个不同目标。禁用或复用目标会使旧身份和迟到请求失效。
+- 首版通用伤害许可只允许 `PlayerParty → Enemy` 与 `Enemy → PlayerParty`；同阵营和未分配阵营默认拒绝。玩家爆炸对来源自身的例外必须由后续爆炸任务建立显式策略，不能放宽全局友伤矩阵。
 - 当前确定性公式为 `基础伤害 × 命中部位 × 防御 × 元素抗性 × 传递形态抗性 × 承伤倍率`；`None` 使用物理抗性，`Explosion` 在元素抗性之外独立应用爆炸抗性。
-- `HealthComponent.CurrentHealth` 是生命数值的唯一存储事实；生命耗尽由当前生命派生，不等同于未来倒地、复活或最终实体生命周期裁决。公共契约见 [`ADR-Combat-Domain-Contract-v1.md`](../Decisions/ADR-Combat-Domain-Contract-v1.md)。
+- `HealthComponent.CurrentHealth` 是生命数值的唯一存储事实；生命耗尽由当前生命派生，不等同于未来倒地、复活或最终实体生命周期裁决。公共契约见 [`ADR-Combat-Domain-Contract-v1.md`](../Decisions/ADR-Combat-Domain-Contract-v1.md) 与 [`ADR-Combatant-Faction-Execution-Identity-v1.md`](../Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md)。
 - 首版不加入随机暴击率和暴击伤害属性。
 - 普通敌人可以配置明确弱点，弱点命中使用确定性倍率；Boss 弱点设计以 [`Run.md`](Run.md) 为准。
 - 首版只有步枪命中和直接命中的非范围技能可以命中 Boss 弱点；榴弹枪、手雷及其他范围伤害不能命中 Boss 弱点。

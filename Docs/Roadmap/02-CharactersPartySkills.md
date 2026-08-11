@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-10
+- 维护日期：2026-08-11
 
 本路线在战斗与武器状态拥有稳定身份后再引入第二角色。Party 是角色、控制权和切换的唯一所有者；相机、HUD、AI 与表现只绑定它发布的事实，不各自保存“当前角色”。
 
@@ -11,7 +11,7 @@
 
 ### INP-010 活动 Input Actions 增量迁移
 
-- 状态：Planned
+- 状态：Ready
 - 依赖：`CMB-010`。
 - 当前缺口：`InputReader` 只覆盖现有移动/瞄准/射击/装填/跳跃/技能/切换子集，Input Action 资产还包含旧 Action Map；后续闪避、双武器、角色切换、交互和投掷不能继续临时读键。
 - 实施要点：① 扫描活动 Action Map、生成 C# 与场景引用；② 建立新主线动作清单和兼容映射；③ 每次只迁移一个消费者并保持旧架构只读；④ Gameplay 接收意图而非直接依赖 Input System；⑤ 输入禁用、UI 焦点和重绑生命周期统一。

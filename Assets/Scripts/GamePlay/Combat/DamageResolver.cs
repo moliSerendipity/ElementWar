@@ -13,18 +13,19 @@ namespace Game.Gameplay.Combat
     public static class DamageResolver
     {
         /// <summary>
-        /// 执行完整伤害裁决；目标拒绝伤害时返回 <see cref="DamageResult.None"/>。
+        /// 执行完整伤害裁决；请求未通过时返回保留身份快照和明确拒绝原因的结果。
         /// </summary>
         /// <param name="_request">已经完成来源、目标和命中事实解析的请求。</param>
-        /// <returns>已提交的伤害结果；目标不可受伤时返回空结果。</returns>
+        /// <returns>已提交结果，或 <see cref="DamageResult.IsApplied"/> 为假的明确拒绝结果。</returns>
         public static DamageResult ResolveAndApply(in DamageRequest _request)
         {
-            HealthComponent healthComponent = _request.Target;
-            if (healthComponent == null || healthComponent.CanReceiveDamage == false)
+            DamageRejectionReason rejectionReason = ValidateRequest(_request);
+            if (rejectionReason != DamageRejectionReason.None)
             {
-                return DamageResult.None;
+                return DamageResult.Rejected(_request, rejectionReason);
             }
 
+            HealthComponent healthComponent = _request.Target;
             ActorStatBase targetStat = healthComponent.OwnerStat;
             float hitPartMultiplier = ResolveHitPartMultiplier(_request, healthComponent);
             float defenseMultiplier = ResolveDefenseMultiplier(targetStat);
@@ -43,14 +44,8 @@ namespace Game.Gameplay.Combat
                 * damageTakenMultiplier);
 
             DamageResult result = healthComponent.ApplyResolvedDamage(
-                _request.Instigator,
-                _request.SourceObject,
-                _request.Element,
-                _request.Delivery,
-                _request.HitPartType,
+                _request,
                 finalDamage,
-                _request.HitPoint,
-                _request.HitNormal,
                 _request.RequestTime);
 
             if (result.IsApplied)
@@ -59,6 +54,47 @@ namespace Game.Gameplay.Combat
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// 在任何伤害公式或事实写回前验证执行、活动身份、阵营、生命状态和目标侧去重。
+        /// </summary>
+        private static DamageRejectionReason ValidateRequest(in DamageRequest _request)
+        {
+            if (_request.ExecutionId.IsValid == false)
+            {
+                return DamageRejectionReason.InvalidExecution;
+            }
+
+            Combatant instigator = _request.InstigatorCombatant;
+            if (instigator == null || instigator.MatchesCurrentIdentity(_request.InstigatorId) == false)
+            {
+                return DamageRejectionReason.InvalidInstigator;
+            }
+
+            Combatant target = _request.TargetCombatant;
+            if (target == null || target.MatchesCurrentIdentity(_request.TargetId) == false)
+            {
+                return DamageRejectionReason.InvalidTarget;
+            }
+
+            if (CombatFactionRules.CanDamage(instigator.Faction, target.Faction) == false)
+            {
+                return DamageRejectionReason.FactionNotAllowed;
+            }
+
+            HealthComponent healthComponent = target.Health;
+            if (healthComponent == null || healthComponent.CanReceiveDamage == false)
+            {
+                return DamageRejectionReason.TargetCannotReceiveDamage;
+            }
+
+            if (target.TryAcceptExecution(_request.ExecutionId, _request.TargetId) == false)
+            {
+                return DamageRejectionReason.DuplicateExecution;
+            }
+
+            return DamageRejectionReason.None;
         }
 
         /// <summary>
@@ -166,7 +202,7 @@ namespace Game.Gameplay.Combat
         }
 
         /// <summary>
-        /// 在生命事实提交后按命中、伤害、生命变化、生命耗尽的顺序同步发布事件。
+        /// 在生命事实提交后按伤害、生命变化、生命耗尽的顺序同步发布事件。
         /// </summary>
         private static void PublishDamageEvents(in DamageResult _result)
         {
@@ -176,28 +212,17 @@ namespace Game.Gameplay.Combat
                 return;
             }
 
-            GameObject target = _result.Target != null ? _result.Target.gameObject : null;
-
-            eventBus.Publish(new HitConfirmedEvent(
-                _result.Instigator,
-                _result.SourceObject,
-                target,
-                _result.HitPartType,
-                _result.HitPoint,
-                _result.HitNormal));
-
             eventBus.Publish(new DamageAppliedEvent(_result));
             eventBus.Publish(new HealthChangedEvent(
+                _result.ExecutionId,
+                _result.TargetId,
                 _result.Target,
                 _result.RemainingHealth,
                 _result.Target.MaxHealth));
 
             if (_result.DidDepleteHealth)
             {
-                eventBus.Publish(new HealthDepletedEvent(
-                    _result.Instigator,
-                    _result.SourceObject,
-                    _result.Target));
+                eventBus.Publish(new HealthDepletedEvent(_result));
             }
         }
     }

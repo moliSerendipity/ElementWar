@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Run.md`](../Design/Run.md)、[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-10
+- 维护日期：2026-08-11
 
 敌人路线先用生产行为特征测试建立安全网，再决定局部加固或边界重构；不会预先承诺整套重写。Run 路线从唯一状态所有者开始，逐步接入波次、恢复、强化、失败与重开，最后用 Boss 和完整一次游玩收口。
 
@@ -11,7 +11,7 @@
 
 ### ENM-010 当前敌人生产行为特征测试与审计门
 
-- 状态：Planned
+- 状态：Ready
 - 依赖：`CMB-010`。
 - 当前缺口：现有 EnemyBrain/StateMachine/Locomotion/Attack 已可运行，但缺少足够生产特征证据；直接重构无法区分历史行为、缺陷和设计变化。
 - 实施要点：① 从 Bootstrap 追踪生成、选目标、追击、攻击、受伤、死亡和禁用链；② 测试状态转换、攻击帧、多 Collider、目标丢失、NavMesh 失败和事件释放；③ 记录与设计不一致项；④ 按“保留/局部修补/边界重构”分类；⑤ 只有测试证明边界妨碍后续任务才批准重写。

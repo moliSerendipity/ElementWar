@@ -18,6 +18,7 @@ namespace Game.Gameplay.Enemy
     /// Brain / Sensor / Locomotion / Attack 都持有 EnemyStat 引用，并在需要时直接读取。
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(Combatant))]
     public sealed class EnemyRoot : MonoBehaviour
     {
         #region Inspector

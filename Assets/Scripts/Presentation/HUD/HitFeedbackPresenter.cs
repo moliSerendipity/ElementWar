@@ -8,7 +8,7 @@ namespace Game.Presentation.HUD
 {
     /// <summary>
     /// 最小命中反馈 Presenter。
-    /// 只消费真实命中与伤害结果事件，并把它们转成短时可见的 HUD 命中标记；
+    /// 只消费已提交伤害结果事件，并把它转成短时可见的 HUD 命中标记；
     /// 不在表现层补做命中判定。
     /// </summary>
     [DisallowMultipleComponent]
@@ -31,7 +31,6 @@ namespace Game.Presentation.HUD
 
         private void OnEnable()
         {
-            GameEventBus.Instance.Subscribe<HitConfirmedEvent>(OnHitConfirmed);
             GameEventBus.Instance.Subscribe<DamageAppliedEvent>(OnDamageApplied);
         }
 
@@ -39,7 +38,6 @@ namespace Game.Presentation.HUD
         {
             if (GameEventBus.Instance != null)
             {
-                GameEventBus.Instance.Unsubscribe<HitConfirmedEvent>(OnHitConfirmed);
                 GameEventBus.Instance.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
             }
         }
@@ -58,43 +56,31 @@ namespace Game.Presentation.HUD
             }
         }
 
-        private void OnHitConfirmed(HitConfirmedEvent _eventArgs)
-        {
-            if (enableDebugLog)
-            {
-                string targetName = _eventArgs.Target != null ? _eventArgs.Target.name : "Unknown";
-                Debug.Log($"[{nameof(HitFeedbackPresenter)}] Hit confirmed. Target={targetName}, Part={_eventArgs.HitPartType}, Point={_eventArgs.HitPoint}", this);
-            }
-
-            if (hitMarkerGraphic == null)
-            {
-                return;
-            }
-
-            // 命中确认先给基础反馈；弱点命中在这一步直接提高颜色层级。
-            hitMarkerGraphic.color = _eventArgs.HitPartType == HitPartType.WeakPoint
-                ? weakPointHitMarkerColor
-                : hitMarkerColor;
-            hideTime = Time.unscaledTime + displayDuration;
-            ApplyVisible(true);
-        }
-
         private void OnDamageApplied(DamageAppliedEvent _eventArgs)
         {
+            DamageResult damageResult = _eventArgs.DamageResult;
+
+            if (enableDebugLog)
+            {
+                string targetName = damageResult.TargetCombatant != null
+                    ? damageResult.TargetCombatant.name
+                    : "Unknown";
+                Debug.Log(
+                    $"[{nameof(HitFeedbackPresenter)}] Damage applied. Target={targetName}, Part={damageResult.HitPartType}, Point={damageResult.HitPoint}",
+                    this);
+            }
+
             if (hitMarkerGraphic == null)
             {
                 return;
             }
 
-            DamageResult damageResult = _eventArgs.DamageResult;
-
-            // 生命耗尽结果会比命中确认更完整，所以在这里覆盖最终反馈层级。
-            if (damageResult.DidDepleteHealth)
-            {
-                hitMarkerGraphic.color = killHitMarkerColor;
-            }
-
-            // 重新推进显示截止时间，保证最终反馈不会被基础命中标记立即盖掉。
+            // 已提交伤害结果一次性决定普通、弱点或击杀反馈层级。
+            hitMarkerGraphic.color = damageResult.DidDepleteHealth
+                ? killHitMarkerColor
+                : damageResult.HitPartType == HitPartType.WeakPoint
+                    ? weakPointHitMarkerColor
+                    : hitMarkerColor;
             hideTime = Time.unscaledTime + displayDuration;
             ApplyVisible(true);
         }

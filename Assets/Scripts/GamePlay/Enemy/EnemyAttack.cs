@@ -59,10 +59,13 @@ namespace Game.Gameplay.Enemy
         #region Runtime
 
         private EnemyStat enemyStat;
-        private HealthComponent ownHealthComponent;
+        private Combatant ownCombatant;
 
         /// <summary>本次攻击选中的配置。攻击结束后清空。</summary>
         private EnemyAttackConfig activeConfig;
+
+        /// <summary>当前攻击从开始到取消或结束共享的执行身份。</summary>
+        private AttackExecutionId activeExecutionId;
 
         /// <summary>本次 Strike 是否已投递伤害。避免多帧重复造伤。</summary>
         private bool hasDamageBeenDelivered;
@@ -95,6 +98,9 @@ namespace Game.Gameplay.Enemy
         /// <summary>当前选中的攻击配置。供 AnimationBridge 读取动画触发名。</summary>
         public EnemyAttackConfig ActiveConfig => activeConfig;
 
+        /// <summary>当前攻击执行身份；没有活动攻击时为无效值。</summary>
+        public AttackExecutionId ActiveExecutionId => activeExecutionId;
+
         /// <summary>是否配置了至少一种攻击行为。</summary>
         public bool HasAttacks => attackConfigs != null && attackConfigs.Length > 0;
 
@@ -104,7 +110,12 @@ namespace Game.Gameplay.Enemy
 
         private void Awake()
         {
-            ownHealthComponent = GetComponentInParent<HealthComponent>();
+            ownCombatant = GetComponentInParent<Combatant>();
+        }
+
+        private void OnDisable()
+        {
+            CancelAttack();
         }
 
         /// <summary>
@@ -208,6 +219,7 @@ namespace Game.Gameplay.Enemy
             }
 
             activeConfig = selectedAttackConfig;
+            activeExecutionId = AttackExecutionId.Create();
             currentAttackName = selectedAttackConfig.AnimationTriggerName;
             hasDamageBeenDelivered = false;
             lockedStrikeDirection = Vector3.zero;
@@ -250,6 +262,7 @@ namespace Game.Gameplay.Enemy
             currentPhase = EnemyAttackPhase.None;
             phaseTimer = 0f;
             activeConfig = null;
+            activeExecutionId = default;
             currentAttackName = string.Empty;
             hasDamageBeenDelivered = false;
             lockedStrikeDirection = Vector3.zero;
@@ -374,6 +387,7 @@ namespace Game.Gameplay.Enemy
                     phaseTimer = 0f;
                     nextAttackAllowedTime = Time.time + enemyStat.AttackCooldown;
                     activeConfig = null;
+                    activeExecutionId = default;
                     currentAttackName = string.Empty;
                     break;
             }
@@ -400,7 +414,7 @@ namespace Game.Gameplay.Enemy
         /// </summary>
         private void DeliverDamage()
         {
-            if (activeConfig == null)
+            if (activeConfig == null || activeExecutionId.IsValid == false)
             {
                 return;
             }
@@ -424,16 +438,16 @@ namespace Game.Gameplay.Enemy
                     continue;
                 }
 
-                HealthComponent targetHealth = hitCollider.GetComponentInParent<HealthComponent>();
-                if (targetHealth == null || targetHealth == ownHealthComponent)
+                if (CombatTargetResolver.TryResolve(hitCollider, out Combatant targetCombatant) == false
+                    || targetCombatant == ownCombatant)
                 {
                     continue;
                 }
 
-                SubmitDamage(hitCollider, targetHealth, damage, activeConfig);
+                DamageResult result = SubmitDamage(hitCollider, targetCombatant, damage, activeConfig);
 
                 // 非 AOE 攻击只命中第一个有效目标。
-                if (aoe == false)
+                if (aoe == false && result.IsApplied)
                 {
                     break;
                 }
@@ -443,9 +457,9 @@ namespace Game.Gameplay.Enemy
         /// <summary>
         /// 构建伤害请求并通过 DamageResolver 统一结算。
         /// </summary>
-        private void SubmitDamage(
+        private DamageResult SubmitDamage(
             Collider _hitCollider,
-            HealthComponent _targetHealth,
+            Combatant _targetCombatant,
             float _damage,
             EnemyAttackConfig _sourceConfig)
         {
@@ -453,9 +467,10 @@ namespace Game.Gameplay.Enemy
             Vector3 hitNormal = (transform.position - hitPoint).normalized;
 
             DamageRequest request = new(
-                enemyStat.gameObject,
+                activeExecutionId,
+                ownCombatant,
                 _sourceConfig,
-                _targetHealth,
+                _targetCombatant,
                 _sourceConfig.Element,
                 _sourceConfig.Delivery,
                 _damage,
@@ -468,7 +483,7 @@ namespace Game.Gameplay.Enemy
                 hitNormal,
                 Time.time);
 
-            DamageResolver.ResolveAndApply(request);
+            return DamageResolver.ResolveAndApply(request);
         }
 
         #endregion

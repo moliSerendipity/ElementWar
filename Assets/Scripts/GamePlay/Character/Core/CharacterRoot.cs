@@ -19,6 +19,7 @@ namespace Game.Gameplay.Character
     /// 7. 同步只读表现态
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(Game.Gameplay.Combat.Combatant))]
     public sealed class CharacterRoot : MonoBehaviour
     {
         #region Inspector References

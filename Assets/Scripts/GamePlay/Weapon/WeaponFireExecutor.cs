@@ -20,6 +20,7 @@ namespace Game.Gameplay.Weapon
 
         [Header("References")]
         [SerializeField] private CharacterStat characterStat;
+        [SerializeField] private Combatant characterCombatant;
         [SerializeField] private WeaponRuntime weaponRuntime;
         [SerializeField] private WeaponAmmoComponent weaponAmmoComponent;
         [SerializeField] private HitScanService hitScanService;
@@ -71,7 +72,8 @@ namespace Game.Gameplay.Weapon
             CommitSingleShotRecoil();
 
             // 扣弹与运行时事实提交完成后，立即进入命中查询与 Combat 主链。
-            ResolveHitAndDamage(_characterFacts, _characterPlan, _currentTime);
+            AttackExecutionId executionId = AttackExecutionId.Create();
+            ResolveHitAndDamage(executionId, _characterFacts, _characterPlan, _currentTime);
             return true;
         }
 
@@ -107,7 +109,11 @@ namespace Game.Gameplay.Weapon
         /// 成功开火后，立即走逻辑射线与 Combat 主链。
         /// 当前阶段不再让 Weapon 域自己直写目标生命，而是统一把请求交给 DamageResolver。
         /// </summary>
-        private void ResolveHitAndDamage(CharacterFacts _characterFacts, in CharacterFramePlan _characterPlan, float _currentTime)
+        private void ResolveHitAndDamage(
+            AttackExecutionId _executionId,
+            CharacterFacts _characterFacts,
+            in CharacterFramePlan _characterPlan,
+            float _currentTime)
         {
             if (hitScanService == null || weaponRuntime == null)
             {
@@ -126,21 +132,24 @@ namespace Game.Gameplay.Weapon
                 : -shotRay.direction;
 
             // 先把“已提交的一枪”广播给表现层，视觉链不参与 Combat 裁决。
-            PublishWeaponFiredEvent(shotRay, hadHit, hitContext, resolvedImpactPoint, resolvedImpactNormal);
+            PublishWeaponFiredEvent(
+                _executionId,
+                shotRay,
+                hadHit,
+                hitContext,
+                resolvedImpactPoint,
+                resolvedImpactNormal);
 
-            if (hadHit == false || hitContext.HealthComponent == null)
+            if (hadHit == false || hitContext.TargetCombatant == null)
             {
                 return;
             }
 
-            GameObject instigator = characterStat != null
-                ? characterStat.gameObject
-                : transform.root.gameObject;
-
             DamageRequest damageRequest = new(
-                instigator,
+                _executionId,
+                characterCombatant,
                 weaponRuntime,
-                hitContext.HealthComponent,
+                hitContext.TargetCombatant,
                 ElementType.None,
                 DamageDeliveryType.Direct,
                 weaponRuntime.Damage,
@@ -157,6 +166,7 @@ namespace Game.Gameplay.Weapon
         }
 
         private void PublishWeaponFiredEvent(
+            AttackExecutionId _executionId,
             in Ray _shotRay,
             bool _hadHit,
             in HitScanHitContext _hitContext,
@@ -169,6 +179,9 @@ namespace Game.Gameplay.Weapon
             }
 
             GameEventBus.Instance.Publish(new WeaponFiredEvent(
+                _executionId,
+                characterCombatant != null ? characterCombatant.Id : default,
+                _hitContext.TargetId,
                 gameObject,
                 weaponRuntime.WeaponDefinitionConfigId,
                 weaponRuntime.CurrentMagazineAmmo,
@@ -200,6 +213,11 @@ namespace Game.Gameplay.Weapon
             if (characterStat == null)
             {
                 characterStat = GetComponentInParent<CharacterStat>();
+            }
+
+            if (characterCombatant == null)
+            {
+                characterCombatant = GetComponentInParent<Combatant>();
             }
 
             if (weaponRuntime == null)

@@ -121,7 +121,6 @@ namespace Game.Presentation.VFX
             // 取消全部事实事件订阅，避免重复装配导致多播。
             GameEventBus.Instance.Unsubscribe<WeaponFiredEvent>(OnWeaponFired);
             GameEventBus.Instance.Unsubscribe<WeaponDryFireEvent>(OnWeaponDryFire);
-            GameEventBus.Instance.Unsubscribe<HitConfirmedEvent>(OnHitConfirmed);
             GameEventBus.Instance.Unsubscribe<DamageAppliedEvent>(OnDamageApplied);
             isSubscribed = false;
         }
@@ -140,10 +139,9 @@ namespace Game.Presentation.VFX
                 return;
             }
 
-            // 开火、空仓、命中确认和伤害结果分别驱动不同表现层，不在桥接层重做裁决。
+            // 开火、空仓和已提交伤害结果分别驱动不同表现层，不在桥接层重做裁决。
             GameEventBus.Instance.Subscribe<WeaponFiredEvent>(OnWeaponFired);
             GameEventBus.Instance.Subscribe<WeaponDryFireEvent>(OnWeaponDryFire);
-            GameEventBus.Instance.Subscribe<HitConfirmedEvent>(OnHitConfirmed);
             GameEventBus.Instance.Subscribe<DamageAppliedEvent>(OnDamageApplied);
             isSubscribed = true;
         }
@@ -285,32 +283,7 @@ namespace Game.Presentation.VFX
         }
 
         /// <summary>
-        /// 处理命中合法受击目标后的受击特效与命中音频。
-        /// </summary>
-        private void OnHitConfirmed(HitConfirmedEvent eventData)
-        {
-            if (eventData.SourceObject != weaponRuntime || string.IsNullOrWhiteSpace(actorImpactPoolKey))
-            {
-                return;
-            }
-
-            // 命中合法受击目标后，只在这里生成目标受击特效，不重复生成世界火花。
-            Quaternion impactRotation = Quaternion.LookRotation(eventData.HitNormal, Vector3.up);
-            SpawnTemporaryVisual(actorImpactPoolKey, eventData.HitPoint, impactRotation, actorImpactLifeTime);
-
-            if (eventData.HitPartType == HitPartType.WeakPoint)
-            {
-                // 弱点命中优先播放弱点音效，没有配置时再退回普通目标命中音效。
-                PlayConfiguredAudio(hitAudioSource, weakPointHitAudio ?? actorHitAudio);
-                return;
-            }
-
-            // 普通部位命中只播放基础目标命中音效。
-            PlayConfiguredAudio(hitAudioSource, actorHitAudio);
-        }
-
-        /// <summary>
-        /// 处理伤害结果成立后的更高层命中音频反馈。
+        /// 处理伤害结果成立后的目标受击特效与命中音频。
         /// </summary>
         private void OnDamageApplied(DamageAppliedEvent eventData)
         {
@@ -320,13 +293,33 @@ namespace Game.Presentation.VFX
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(actorImpactPoolKey) == false)
+            {
+                // 已提交伤害只在这里生成目标受击特效，不重复生成世界火花。
+                Quaternion impactRotation = Quaternion.LookRotation(damageResult.HitNormal, Vector3.up);
+                SpawnTemporaryVisual(
+                    actorImpactPoolKey,
+                    damageResult.HitPoint,
+                    impactRotation,
+                    actorImpactLifeTime);
+
+                if (damageResult.HitPartType == HitPartType.WeakPoint)
+                {
+                    // 弱点命中优先播放弱点音效，没有配置时再退回普通目标命中音效。
+                    PlayConfiguredAudio(hitAudioSource, weakPointHitAudio ?? actorHitAudio);
+                }
+                else
+                {
+                    // 普通部位命中只播放基础目标命中音效。
+                    PlayConfiguredAudio(hitAudioSource, actorHitAudio);
+                }
+            }
+
             if (damageResult.DidDepleteHealth)
             {
                 // 击杀反馈优先级最高，命中音频在这里提升一层。
                 PlayConfiguredAudio(hitAudioSource, killHitAudio);
-                return;
             }
-
         }
 
         #endregion

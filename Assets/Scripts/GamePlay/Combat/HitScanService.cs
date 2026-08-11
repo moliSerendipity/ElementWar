@@ -191,13 +191,13 @@ namespace Game.Gameplay.Combat
 
             #region Step 6: 构建命中上下文
 
-            HealthComponent healthComponent = hitInfo.collider.GetComponentInParent<HealthComponent>();
+            CombatTargetResolver.TryResolve(hitInfo.collider, out Combatant targetCombatant);
             HitPartType hitPartType = ResolveHitPartType(hitInfo.collider);
 
             _hitContext = new HitScanHitContext(
                 true,
                 hitInfo.collider,
-                healthComponent,
+                targetCombatant,
                 hitInfo.point,
                 hitInfo.normal,
                 hitInfo.distance,
