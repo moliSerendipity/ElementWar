@@ -1,7 +1,7 @@
 # 元素与反应设计
 
 - 状态：首版规则与初始调试值已确认
-- 维护日期：2026-08-08
+- 维护日期：2026-08-12
 
 本文是元素附着、反应结果、控制处理和未来扩展边界的设计事实源。武器弹药与技能来源见 [`Combat.md`](Combat.md)，反应在波次和 Boss 中的使用见 [`Run.md`](Run.md)。本文描述目标行为，不代表旧 Lua 或新 C# 主线已经完成收敛。
 
@@ -9,7 +9,9 @@
 
 - 新 C# 伤害主线已经用 `ElementType.None/Fire/Water/Electric/Ice` 建立正式元素语义，并与 `DamageDeliveryType.Direct/Explosion` 分离；当前只用于选择伤害抗性。
 - `ElementType` 出现在一次伤害中不代表已经产生元素附着。附着状态、应用间隔、六种反应及反应递归约束仍未实现。
-- 伤害请求同时保留责任角色 `Instigator` 与具体来源 `SourceObject`，为后续附着和反应归属提供输入，但当前不据此创建第二套元素状态。契约见 [`ADR-Combat-Domain-Contract-v1.md`](../Decisions/ADR-Combat-Domain-Contract-v1.md)。
+- 新 C# 主线已有独立 `ElementApplicationProfileConfig → ElementApplicationSourceSnapshot → ElementApplicationRequest` 输入契约；请求保存运行时来源身份、责任者、具体来源、攻击执行和目标身份，但当前没有消费者，因此不会实际写入附着。
+- 元素请求与伤害请求并列，不读取 `DamageResult` 或 Health；零伤害、伤害免疫或纯施加技能可以独立尝试附着。`ConfigId` 只标识规则，来源—目标应用间隔按 `ElementApplicationSourceId + TargetId` 区分。契约见 [`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)。
+- 默认 Registry 已登记步枪火弹与雷弹 Profile，初值均为 `0` 秒来源—目标间隔和 `6` 秒持续时间；它们尚未接入武器，接入由 `WPN-010` 负责。
 
 ## 首版元素集合
 
@@ -106,7 +108,7 @@
 
 ## 后续扩展边界
 
-- 元素应用使用独立 Application Profile 表达来源、间隔和强度，而不是把规则硬编码到枪械或技能中。
+- 元素应用使用独立 Application Profile 表达元素、来源—目标间隔和持续时间，而不是把规则硬编码到枪械或技能中；首版不在 Profile 中加入强弱元素或复杂 ICD。
 - 运行时附着容器首版只启用一个主要槽位，但接口允许以后扩展为集合。
 - 反应计算通过独立服务处理输入元素、目标状态和输出事实，表现层不裁决反应。
 - 定义数据与运行时状态分离，使新增元素、反应和网络同步不要求替换现有伤害事实源。

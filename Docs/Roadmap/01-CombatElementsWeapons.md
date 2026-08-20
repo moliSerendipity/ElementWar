@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-11
+- 维护日期：2026-08-12
 
 本路线先建立可复用战斗身份，再完成一个“开火 → 附着 → 超载 → 范围伤害/控制 → 反馈”的真实闭环，随后才扩展武器实例、弹药、投射物和其余反应。每项启动时用 [`TEMPLATE.md`](../Features/TEMPLATE.md) 建立具体 Feature Spec。
 
@@ -32,18 +32,18 @@
 
 ### ELM-010 元素施加配置与快照契约
 
-- 状态：Next
+- 状态：Done（Fast Verified，并额外通过 PlayMode 与真实 Profile/Registry 加载；未做 Windows64 与主线人工验收）
 - 依赖：`CMB-010`。
-- 当前缺口：`ElementType` 只参与抗性；现有反应配置没有元素对或反应类型，活动 Registry 没有可消费的反应表。
-- 实施要点：① 审计并决定迁移或替换现有定义壳；② 用 Application Profile 定义元素、来源+目标应用间隔、持续时间、来源快照、攻击执行 ID 和目标 ID；③ 配置校验拒绝空 ID、重复键和无消费者字段；④ 保持元素来源与伤害传递形态正交，不提前加入强弱元素或复杂 ICD。
-- 可观察完成：一次合法命中能产生确定的“尝试施加元素”输入，配置缺失或非法时给出明确失败而非静默默认。
-- 范围：Definition/Gameplay 公共契约与必要配置；序列化结构变化需要迁移计划和 ADR。非目标是实际附着与反应输出。
-- 验证：配置 EditMode、契约透传 PlayMode、真实 ScriptableObject 加载检查。
+- 已完成：用 `ElementApplicationProfileConfig` 定义元素、来源—目标间隔和持续时间；用独立 `ElementApplicationSourceId`、来源快照和请求冻结配置、责任者、具体来源、攻击执行与目标；间隔键固定为 `SourceId + TargetId`。
+- 可观察结果：没有 DamageRequest/Result 且 Health 未初始化时仍能建立合法元素请求；配置、身份、阵营或时间非法时返回明确原因；目标禁用复用后使用新 TargetId 和间隔键。
+- 配置迁移：删除无资产引用的旧 `ElementReactionConfig` 壳；默认 Registry 登记火弹/雷弹两个真实 Profile，均为 0 秒应用间隔与 6 秒持续时间；不把反应定义误迁移为应用定义。
+- 证据：[`ElementApplicationProfileSnapshotV1.md`](../Features/ElementApplicationProfileSnapshotV1.md)；决策见 [`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)。
+- 剩余边界：没有实际附着所有者、间隔计时、到期/刷新/消耗、死亡/禁用清理、武器接入或反应输出。
 - 解锁：`ELM-020`。
 
 ### ELM-020 元素附着运行时与生命周期
 
-- 状态：Planned
+- 状态：Next
 - 依赖：`ELM-010`。
 - 当前缺口：目标没有当前附着、过期、覆盖、消耗或对象池重置的权威运行时事实。
 - 实施要点：① 建立每个敌方战斗目标唯一附着所有者，首版只启用一个主要槽；② 实现默认 6 秒施加、同元素刷新、不同元素交给反应、到期、消耗和查询；③ 保存必要来源快照但不保存第二套生命/伤害事实；④ 处理禁用、死亡和对象池重用；⑤ 只在事实变化后发布事件，并保留未来扩为集合的接口边界。

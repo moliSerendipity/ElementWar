@@ -30,7 +30,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7de0c1d9d39d2e64e85a117cd4cc0e09, type: 2}
   resistanceSets:
   - {fileID: 11400000, guid: dee68760815bed64888521f60f81fef1, type: 2}
-  elementReactions: []
+  elementApplicationProfiles:
+  - {fileID: 11400000, guid: 34c73a0461075d0aad048c76dfe1682b, type: 2}
+  - {fileID: 11400000, guid: 60ee4fb1bf5b083935439bbf300bcd03, type: 2}
   buffDefinitions: []
   areaEffects: []
   weaponDefinitions:

@@ -1,7 +1,7 @@
 # ElementWar 架构与边界
 
 - 状态：当前新 C# 架构基线
-- 核对日期：2026-08-11
+- 核对日期：2026-08-12
 - Unity：`2022.3.62f2c1`
 
 本文件是采用后的架构、主线和旧代码边界唯一维护来源。每次高影响任务仍需根据实时仓库复核是否发生漂移。
@@ -53,10 +53,11 @@ EnemyAttack        → AttackExecutionId → Collider Query ─┴→ CombatTarg
 - `DamageAppliedEvent` 是表现层消费“伤害已提交”事实的唯一伤害事件；步枪对任意物理表面的原始命中仍由 `WeaponFiredEvent.HadHit` 表达，不能把两者混为同一语义。
 - `DamageResolver` 是运行时身份、阵营许可和目标侧重复执行的最终裁决点；首版只允许 `PlayerParty ↔ Enemy`，同阵营与 `Unassigned` 均拒绝。同一执行对同一目标至多提交一次，但可分别命中不同目标。
 - `Combatant` 禁用时使身份失效并清空去重记录，重新启用建立新身份；生命耗尽保留身份，由 `HealthComponent` 拒绝后续伤害。
-- `ElementType`、`DamageDeliveryType` 和 `HitPartType` 分别表达元素、传递形态和命中部位；元素轴当前只参与抗性，不执行附着或反应。
+- `ElementType`、`DamageDeliveryType` 和 `HitPartType` 分别表达伤害元素、传递形态和命中部位；伤害元素轴当前只参与抗性，不隐式产生附着。
+- 元素施加与伤害请求并列：Definition 的 `ElementApplicationProfileConfig` 定义元素、来源—目标间隔和持续时间；Gameplay 的 `ElementApplicationSourceId` / `ElementApplicationSourceSnapshot` 冻结来源生命周期与归属，`ElementApplicationRequest` 使用独立 `AttackExecutionId` 和目标身份表达一次尝试。该请求不依赖 `DamageRequest`、`DamageResult` 或 Health，当前尚无附着运行时消费者。
 - 解析公式是确定性的，不包含随机暴击；头部与弱点只应用明确倍率。
 - `HealthComponent.CurrentHealth` 是生命数值的唯一存储事实，`IsHealthDepleted` 由初始化状态和当前生命值派生；角色事实、敌人状态机和表现快照只读取或映射该事实。
-- 公共契约、迁移约束和取舍见 [`ADR-Combat-Domain-Contract-v1.md`](Decisions/ADR-Combat-Domain-Contract-v1.md) 与 [`ADR-Combatant-Faction-Execution-Identity-v1.md`](Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md)。
+- 公共契约、迁移约束和取舍见 [`ADR-Combat-Domain-Contract-v1.md`](Decisions/ADR-Combat-Domain-Contract-v1.md)、[`ADR-Combatant-Faction-Execution-Identity-v1.md`](Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md) 与 [`ADR-Element-Application-Profile-Snapshot-v1.md`](Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)。
 
 ## 当前主线
 
@@ -102,6 +103,9 @@ EnemyAttack        → AttackExecutionId → Collider Query ─┴→ CombatTarg
 | 可变运行时数值 | Gameplay Stat/Runtime 组件 |
 | 战斗目标根、当前运行时身份与阵营 | `Combatant` |
 | 攻击执行身份 | 成立攻击的 Gameplay 生产者创建，随 `DamageRequest` 只读透传 |
+| 元素施加编辑期规则 | `ElementApplicationProfileConfig` |
+| 元素来源生命周期身份与冻结归属 | 真实 Gameplay 来源所有者创建 `ElementApplicationSourceId` 并保存 `ElementApplicationSourceSnapshot` |
+| 元素来源—目标间隔键 | `ElementApplicationSourceId + TargetId`；间隔状态由后续附着运行时持有 |
 | 同一执行对目标的精确去重 | 目标 `Combatant` |
 | 生命数值与生命耗尽事实 | `HealthComponent` |
 | 伤害裁决与已提交结果 | `DamageResolver` / `DamageResult` |

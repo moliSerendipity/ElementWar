@@ -34,7 +34,7 @@ namespace Game.Definition.ConfigSystem.Registry
         [Header("Combat")]
         [SerializeField] private List<DamageRuleConfig> damageRules = new();
         [SerializeField] private List<ResistanceSetConfig> resistanceSets = new();
-        [SerializeField] private List<ElementReactionConfig> elementReactions = new();
+        [SerializeField] private List<ElementApplicationProfileConfig> elementApplicationProfiles = new();
         [SerializeField] private List<BuffDefinitionConfig> buffDefinitions = new();
         [SerializeField] private List<AreaEffectConfig> areaEffects = new();
 
@@ -77,7 +77,7 @@ namespace Game.Definition.ConfigSystem.Registry
             foreach (ConfigBase config in Enumerate(characterSwitches)) yield return config;
             foreach (ConfigBase config in Enumerate(damageRules)) yield return config;
             foreach (ConfigBase config in Enumerate(resistanceSets)) yield return config;
-            foreach (ConfigBase config in Enumerate(elementReactions)) yield return config;
+            foreach (ConfigBase config in Enumerate(elementApplicationProfiles)) yield return config;
             foreach (ConfigBase config in Enumerate(buffDefinitions)) yield return config;
             foreach (ConfigBase config in Enumerate(areaEffects)) yield return config;
             foreach (ConfigBase config in Enumerate(weaponDefinitions)) yield return config;

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0435eac04b52083c1ea0d24f3db3d90d, type: 3}
+  m_Name: RifleAmmoElectricApplicationProfile
+  m_EditorClassIdentifier: 
+  configId: RifleAmmoElectricApplication
+  displayName: 步枪雷元素弹药施加
+  description: 步枪雷元素弹药的首版施加规则。
+  isEnabled: 1
+  element: 3
+  sourceTargetIntervalSeconds: 0
+  attachmentDurationSeconds: 6
