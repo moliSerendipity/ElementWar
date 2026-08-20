@@ -2,7 +2,7 @@
 
 - 状态：Verified
 - 负责人：Codex / 项目维护者
-- 维护日期：2026-08-12
+- 维护日期：2026-08-20
 - 关联 Roadmap 任务：`ELM-010`
 - 关联 ADR：[`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)
 - 授权记录：2026-08-12，用户先纠正“元素请求依赖已提交伤害”的方案，随后明确同意元素与伤害并列、使用独立来源身份的修订契约并回复“同意，开始实施”。
@@ -23,7 +23,7 @@
 - 来源快照冻结 Profile Id 与数值、责任 Combatant 引用/Id/阵营及具体 SourceObject；后续不重新读取配置或当前控制角色。
 - `ElementApplicationRequest` 直接由来源快照、`AttackExecutionId` 和当前目标创建，与伤害请求并列；零伤害、免疫伤害或纯元素技能不因缺少 `DamageResult` 而失去附着入口。
 - 应用间隔键只由 `ElementApplicationSourceId + TargetId` 构成。`AttackExecutionId` 用于单次执行关联，`ConfigId` 用于定义追踪，`SourceObject` 用于具体归因。
-- 首版只允许 `PlayerParty → Enemy` 创建元素请求；敌人不向角色附着元素。目标的附着资格、死亡/禁用、间隔和生命周期由 `ELM-020` 裁决。
+- 首版只允许 `PlayerParty → Enemy` 创建元素请求；敌人不向角色附着元素。目标的附着资格、死亡/禁用、间隔和生命周期现由 `ELM-020` 的 `ElementAttachmentRuntime` 裁决。
 
 ## 行为契约与验收
 
@@ -47,7 +47,7 @@
 - 实际命令：`pwsh -File .\Tools\Verify-ElementWarEditMode.ps1`；`pwsh -File .\Tools\Verify-ElementWarPlayMode.ps1`；新旧 GUID/Registry/旧类型引用扫描；测试日志失败标记扫描；`git diff --check`。
 - 实际修改：替换未使用配置壳；新增元素应用 Profile、运行时来源身份、来源快照、来源—目标间隔键、独立请求和明确失败原因；注册两个真实资产；新增 EditMode/PlayMode 测试并同步 ADR、架构、设计与路线。
 - 验收等级：达到 Fast Verified，并额外完成完整 PlayMode 与真实资产加载。Windows64、主线人工验收和性能检查未运行，因此不声明 Full Verified 或 Accepted。
-- 剩余风险：尚无真实武器/技能来源负责保存和重建 SourceId，也没有附着运行时消费请求；这些分别由 `WPN-010` 与下一项 `ELM-020` 负责。当前两个 Profile 已注册但不会改变玩家行为。
+- 剩余风险：`ELM-020` 已提供附着运行时消费者，但尚无真实武器/技能来源负责保存和重建 SourceId，异元素请求也尚无反应事务消费者；这些分别由 `WPN-010` 与当前下一项 `ELM-030` 负责。当前两个 Profile 已注册但仍不会改变玩家行为。
 - 回滚单位：配置类型与资产、Registry 序列化字段、Gameplay 请求契约、测试、Feature Spec/ADR 和路线状态整体回滚。
 
 ## 收口检查

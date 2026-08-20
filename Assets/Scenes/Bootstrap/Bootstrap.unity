@@ -1499,6 +1499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 804426196}
   - component: {fileID: 804426195}
+  - component: {fileID: 8800000000000000203}
   m_Layer: 0
   m_Name: EventBus
   m_TagString: Untagged
@@ -1518,6 +1519,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df9e74b330dae64589e03a03703c8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8800000000000000203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804426194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c5ddb66ef64555a19fa513cf00d312, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  showOverlay: 1
+  overlayPosition: {x: 16, y: 16}
+  overlayWidth: 320
 --- !u!4 &804426196
 Transform:
   m_ObjectHideFlags: 0
@@ -1546,6 +1562,7 @@ GameObject:
   - component: {fileID: 925289280}
   - component: {fileID: 925289279}
   - component: {fileID: 8800000000000000101}
+  - component: {fileID: 8800000000000000201}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -1583,6 +1600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyStat: {fileID: 925289280}
   healthComponent: {fileID: 925289279}
+  elementAttachmentRuntime: {fileID: 8800000000000000201}
   sensor: {fileID: 0}
   brain: {fileID: 0}
   locomotion: {fileID: 0}
@@ -1617,6 +1635,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   faction: 2
+  healthComponent: {fileID: 925289279}
+  elementAttachmentRuntime: {fileID: 8800000000000000201}
+--- !u!114 &8800000000000000201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925289272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d134dc4d4f0049e290d00ea3835f51e9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  combatant: {fileID: 8800000000000000101}
   healthComponent: {fileID: 925289279}
 --- !u!114 &925289280
 MonoBehaviour:
@@ -2469,6 +2502,7 @@ GameObject:
   - component: {fileID: 1297331261}
   - component: {fileID: 1297331260}
   - component: {fileID: 8800000000000000102}
+  - component: {fileID: 8800000000000000202}
   - component: {fileID: 1297331259}
   - component: {fileID: 1297331270}
   - component: {fileID: 1297331269}
@@ -2530,6 +2564,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   faction: 2
+  healthComponent: {fileID: 1297331260}
+  elementAttachmentRuntime: {fileID: 8800000000000000202}
+--- !u!114 &8800000000000000202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297331258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d134dc4d4f0049e290d00ea3835f51e9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  combatant: {fileID: 8800000000000000102}
   healthComponent: {fileID: 1297331260}
 --- !u!114 &1297331261
 MonoBehaviour:
@@ -2673,6 +2722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyStat: {fileID: 1297331261}
   healthComponent: {fileID: 1297331260}
+  elementAttachmentRuntime: {fileID: 8800000000000000202}
   sensor: {fileID: 1297331264}
   brain: {fileID: 1297331265}
   locomotion: {fileID: 1297331263}
@@ -24635,6 +24685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   faction: 1
   healthComponent: {fileID: 8823707006449125371}
+  elementAttachmentRuntime: {fileID: 0}
 --- !u!114 &8823707006449125372
 MonoBehaviour:
   m_ObjectHideFlags: 0

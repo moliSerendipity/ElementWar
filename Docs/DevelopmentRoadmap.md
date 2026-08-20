@@ -1,7 +1,7 @@
 # ElementWar 开发路线
 
 - 状态：Active
-- 维护日期：2026-08-12
+- 维护日期：2026-08-20
 - 路线维护任务：`DOC-001`
 
 本文是开发顺序、任务状态、直接依赖、当前唯一下一项和版本裁剪边界的唯一维护来源。设计目标以 [`GameDesign.md`](GameDesign.md) 及其细则为准，当前代码边界以 [`Architecture.md`](Architecture.md) 为准，单次获批范围与证据以对应 Feature Spec 为准。
@@ -26,9 +26,9 @@
 
 ## 当前唯一下一项
 
-**ELM-020 — 元素附着运行时与生命周期。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#elm-020-元素附着运行时与生命周期)。
+**ELM-030 — 反应判定、消耗与归因管线。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#elm-030-反应判定消耗与归因管线)。
 
-选择它是因为 `ELM-010` 已把配置、运行时来源、执行和目标冻结为与伤害并列的请求，但当前目标仍没有附着事实、到期/刷新/消耗规则或禁用复用清理。先建立唯一附着所有者，后续反应与武器来源才能共享同一状态。
+选择它是因为 `ELM-020` 已建立单槽附着、最近来源刷新、版本化消费和生命周期清理；异元素请求现在会原子返回既有附着与触发请求，但尚无元素对查表、反应归因、同一攻击限制或递归防护。先关闭通用反应事务，`WPN-010` 的生产来源和 `ELM-040` 的超载输出才能依赖稳定结果。
 
 当前已完成基线：
 
@@ -36,6 +36,7 @@
 - `CMB-001`：Combat Domain Contract v1，Fast Verified 且额外完成 PlayMode；Windows64 与主线人工验收未运行。证据见 [`CombatDomainContractV1.md`](Features/CombatDomainContractV1.md)。
 - `CMB-010`：战斗目标、阵营与攻击执行身份 v1，Fast Verified 且额外完成 PlayMode 与 Bootstrap 序列化扫描；Windows64 与主线人工验收未运行。证据见 [`CombatantFactionExecutionIdentityV1.md`](Features/CombatantFactionExecutionIdentityV1.md)。
 - `ELM-010`：元素施加配置、来源身份与请求快照 v1，Fast Verified 且额外完成 PlayMode 与真实 Profile/Registry 加载；Windows64 与主线人工验收未运行。证据见 [`ElementApplicationProfileSnapshotV1.md`](Features/ElementApplicationProfileSnapshotV1.md)。
+- `ELM-020`：敌方元素附着运行时与生命周期 v1，Fast Verified 且额外完成 PlayMode 与 Bootstrap 序列化/Missing Script 检查；Windows64、性能与主线人工验收未运行。证据见 [`ElementAttachmentRuntimeLifecycleV1.md`](Features/ElementAttachmentRuntimeLifecycleV1.md)。
 - `VER-001` / `VER-002` / `VER-003`：EditMode、PlayMode、Bootstrap-only Windows64 自动化基线已分别关闭；它们不是完整项目验收。详见 [`Roadmap/04-IntegrationRelease.md`](Roadmap/04-IntegrationRelease.md)。
 
 ## 主依赖图

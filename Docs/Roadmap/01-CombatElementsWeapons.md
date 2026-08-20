@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-12
+- 维护日期：2026-08-20
 
 本路线先建立可复用战斗身份，再完成一个“开火 → 附着 → 超载 → 范围伤害/控制 → 反馈”的真实闭环，随后才扩展武器实例、弹药、投射物和其余反应。每项启动时用 [`TEMPLATE.md`](../Features/TEMPLATE.md) 建立具体 Feature Spec。
 
@@ -38,23 +38,22 @@
 - 可观察结果：没有 DamageRequest/Result 且 Health 未初始化时仍能建立合法元素请求；配置、身份、阵营或时间非法时返回明确原因；目标禁用复用后使用新 TargetId 和间隔键。
 - 配置迁移：删除无资产引用的旧 `ElementReactionConfig` 壳；默认 Registry 登记火弹/雷弹两个真实 Profile，均为 0 秒应用间隔与 6 秒持续时间；不把反应定义误迁移为应用定义。
 - 证据：[`ElementApplicationProfileSnapshotV1.md`](../Features/ElementApplicationProfileSnapshotV1.md)；决策见 [`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)。
-- 剩余边界：没有实际附着所有者、间隔计时、到期/刷新/消耗、死亡/禁用清理、武器接入或反应输出。
+- 剩余边界：`ELM-020` 已补齐附着消费者与生命周期；真实武器来源和反应输出仍未接入。
 - 解锁：`ELM-020`。
 
 ### ELM-020 元素附着运行时与生命周期
 
-- 状态：Next
+- 状态：Done（Fast Verified，并额外通过 PlayMode 与 Bootstrap 序列化/Missing Script 检查；未做 Windows64、性能与主线人工验收）
 - 依赖：`ELM-010`。
-- 当前缺口：目标没有当前附着、过期、覆盖、消耗或对象池重置的权威运行时事实。
-- 实施要点：① 建立每个敌方战斗目标唯一附着所有者，首版只启用一个主要槽；② 实现默认 6 秒施加、同元素刷新、不同元素交给反应、到期、消耗和查询；③ 保存必要来源快照但不保存第二套生命/伤害事实；④ 处理禁用、死亡和对象池重用；⑤ 只在事实变化后发布事件，并保留未来扩为集合的接口边界。
-- 可观察完成：目标头顶或调试视图能稳定显示当前附着；到期/消耗只发生一次，禁用再启用不会残留旧状态。
-- 范围：Gameplay 状态与最小 Presentation 调试反馈。非目标是任一具体反应伤害。
-- 验证：时间推进 EditMode/PlayMode、生命周期与池复用测试、主场景最小人工观察。
+- 已完成：每个 Bootstrap 敌方 `Combatant` 根装配唯一 `ElementAttachmentRuntime`；首版主要槽支持合法施加、同元素以最近来源刷新、不同元素返回待反应输入、来源—目标间隔、显式到期、版本化消费及生命/禁用/复用清理；实际变化才发布事件。
+- 可观察结果：开发调试 Presenter 通过只读事件稳定维护当前附着；完全重复、迟到消费和重复清理保持幂等；禁用再启用使用新 `TargetId` 且不继承旧状态或间隔。
+- 证据：[`ElementAttachmentRuntimeLifecycleV1.md`](../Features/ElementAttachmentRuntimeLifecycleV1.md)；决策见 [`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](../Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md)。
+- 剩余边界：没有生产武器/技能来源；异元素只交给后续反应事务，尚不产生反应结果；Windows64、性能与 Bootstrap 人工玩法观察未运行。
 - 解锁：`ELM-030`、`WPN-010`。
 
 ### ELM-030 反应判定、消耗与归因管线
 
-- 状态：Planned
+- 状态：Next
 - 依赖：`ELM-020`。
 - 当前缺口：没有元素对查表、反应消费顺序、责任归因、同一次攻击限制或防止反应递归的规则执行者。
 - 实施要点：① 以无序元素对映射唯一反应；② 固定同一命中“弹药元素先、技能附加元素后”，一旦触发即停止该目标剩余应用；③ 完全消耗已有和触发元素，并把责任归于第二个元素施加者；④ 同一攻击对同一目标最多触发一次反应；⑤ 反应派生伤害/控制不附着、不递归，并保留触发基准伤害供独立反应使用。
@@ -87,7 +86,7 @@
 
 ### WPN-010 步枪最小火/雷元素来源
 
-- 状态：Planned
+- 状态：Ready
 - 依赖：`ELM-020`。
 - 当前缺口：当前 Hitscan 步枪只产生 `None/Direct`；尚无可玩方式验证附着与反应管线。
 - 实施要点：① 为当前武器实例增加最小、显式的 Fire/Electric 选择；② 把选择快照进攻击执行而不是命中后读取可变状态；③ 通过已有输入中的批准按键或最小临时调试入口切换；④ HUD/调试反馈显示当前元素；⑤ 不提前实现完整武器/弹药库存。

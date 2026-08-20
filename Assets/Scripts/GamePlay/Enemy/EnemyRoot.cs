@@ -1,5 +1,6 @@
 using Game.Definition.ConfigSystem.Core;
 using Game.Gameplay.Combat;
+using Game.Gameplay.Element;
 using UnityEngine;
 
 namespace Game.Gameplay.Enemy
@@ -26,6 +27,7 @@ namespace Game.Gameplay.Enemy
         [Header("Core Components")]
         [SerializeField] private EnemyStat enemyStat;
         [SerializeField] private HealthComponent healthComponent;
+        [SerializeField] private ElementAttachmentRuntime elementAttachmentRuntime;
 
         [Header("Behavior Components")]
         [SerializeField] private EnemySensor sensor;
@@ -66,6 +68,9 @@ namespace Game.Gameplay.Enemy
 
         private void Update()
         {
+            // 附着属于目标事实，即使 AI 初始化失败也需要继续处理到期或生命清理。
+            elementAttachmentRuntime?.Tick(Time.time);
+
             if (isFullyInitialized == false)
             {
                 return;
@@ -184,6 +189,11 @@ namespace Game.Gameplay.Enemy
             if (healthComponent == null)
             {
                 healthComponent = GetComponent<HealthComponent>();
+            }
+
+            if (elementAttachmentRuntime == null)
+            {
+                elementAttachmentRuntime = GetComponent<ElementAttachmentRuntime>();
             }
 
             if (sensor == null)

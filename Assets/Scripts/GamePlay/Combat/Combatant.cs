@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Game.Gameplay.Element;
 using UnityEngine;
 
 namespace Game.Gameplay.Combat
@@ -15,6 +16,7 @@ namespace Game.Gameplay.Combat
 
         [Header("References")]
         [SerializeField] private HealthComponent healthComponent;
+        [SerializeField] private ElementAttachmentRuntime elementAttachmentRuntime;
 
         private readonly HashSet<AttackExecutionId> acceptedExecutionIds = new();
         private CombatantId id;
@@ -27,6 +29,22 @@ namespace Game.Gameplay.Combat
 
         /// <summary>该目标唯一的生命事实组件。</summary>
         public HealthComponent Health => healthComponent;
+
+        /// <summary>
+        /// 该目标的元素附着事实所有者；首版玩家根和未迁移目标可以为空。
+        /// </summary>
+        public ElementAttachmentRuntime ElementAttachments
+        {
+            get
+            {
+                if (elementAttachmentRuntime == null)
+                {
+                    elementAttachmentRuntime = GetComponent<ElementAttachmentRuntime>();
+                }
+
+                return elementAttachmentRuntime;
+            }
+        }
 
         /// <summary>组件已启用、身份有效且生命引用存在时为真。</summary>
         public bool IsRuntimeActive => isActiveAndEnabled && id.IsValid && healthComponent != null;
@@ -41,10 +59,14 @@ namespace Game.Gameplay.Combat
             ResolveReferences();
             acceptedExecutionIds.Clear();
             id = CombatantId.Create();
+            ElementAttachments?.BeginTargetLifecycle(this, id, Time.time);
         }
 
         private void OnDisable()
         {
+            ElementAttachments?.EndTargetLifecycle(
+                Time.time,
+                ElementAttachmentChangeKind.TargetDisabled);
             id = default;
             acceptedExecutionIds.Clear();
         }
@@ -72,6 +94,11 @@ namespace Game.Gameplay.Combat
             if (healthComponent == null)
             {
                 healthComponent = GetComponent<HealthComponent>();
+            }
+
+            if (elementAttachmentRuntime == null)
+            {
+                elementAttachmentRuntime = GetComponent<ElementAttachmentRuntime>();
             }
         }
 
