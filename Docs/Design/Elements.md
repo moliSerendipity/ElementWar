@@ -1,18 +1,18 @@
 # 元素与反应设计
 
 - 状态：首版规则与初始调试值已确认
-- 维护日期：2026-08-20
+- 维护日期：2026-08-23
 
 本文是元素附着、反应结果、控制处理和未来扩展边界的设计事实源。武器弹药与技能来源见 [`Combat.md`](Combat.md)，反应在波次和 Boss 中的使用见 [`Run.md`](Run.md)。本文描述目标行为，不代表旧 Lua 或新 C# 主线已经完成收敛。
 
 ## 当前实现边界
 
 - 新 C# 伤害主线已经用 `ElementType.None/Fire/Water/Electric/Ice` 建立正式伤害元素语义，并与 `DamageDeliveryType.Direct/Explosion` 分离；伤害元素轴仍只选择抗性，不会隐式产生附着。
-- 新 C# 主线已有独立 `ElementApplicationProfileConfig → ElementApplicationSourceSnapshot → ElementApplicationRequest → ElementApplicationResolver → ElementAttachmentRuntime` 链路。请求保存运行时来源身份、责任者、具体来源、攻击执行和目标身份；Bootstrap 两处敌方根拥有实际附着消费者。
+- 新 C# 主线已有独立 `ElementApplicationProfileConfig → ElementApplicationSourceSnapshot → ElementApplicationRequest → ElementReactionPipeline → ElementAttachmentRuntime` 链路。不可变来源快照由多个小型请求共享；请求保存执行和目标身份；管线提供单请求及固定弹药先、技能后的双请求入口，低层 Resolver 不作为生产公共入口；Bootstrap 两处敌方根拥有实际附着消费者。
 - 元素请求与伤害请求并列，不读取 `DamageResult`；零伤害、伤害免疫或纯施加技能可以独立尝试附着。目标运行时只把当前 `HealthComponent` 作为接收资格与死亡/重置生命周期事实，不写入第二套生命或伤害状态。
-- `ConfigId` 只标识规则，来源—目标应用间隔按 `ElementApplicationSourceId + TargetId` 区分并由目标附着运行时持有。首版主要槽支持同元素以最近合法来源刷新、显式到期和版本化消费；异元素返回 `ReactionRequired` 且保持状态不变，实际反应由 `ELM-030` 负责。
-- 附着事实变化通过 `ElementAttachmentChangedEvent` 发布；开发调试 Presenter 只读维护当前目标列表，不参与 Gameplay 裁决。输入与附着契约分别见 [`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md) 与 [`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](../Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md)。
-- 默认 Registry 已登记步枪火弹与雷弹 Profile，初值均为 `0` 秒来源—目标间隔和 `6` 秒持续时间；它们尚未接入武器，接入由 `WPN-010` 负责。
+- `ConfigId` 只标识规则。每个目标附着运行时在自己的 TargetId 生命周期内按 `ElementApplicationSourceId` 持有来源间隔，不复制组合键。首版主要槽支持同元素以最近合法来源刷新和显式到期；异元素由反应管线按固定无序元素对映射，并在目标侧原子登记触发来源间隔/执行去重、消费版本匹配的已有附着。
+- 附着事实变化通过 `ElementAttachmentChangedEvent` 发布；成功反应结果由调用管线的未来 Gameplay 生产者直接接收，本阶段不发布无消费者的反应事件。开发调试 Presenter 只读维护当前目标列表，不参与 Gameplay 裁决。现行实现契约见 [`ADR-Element-Pipeline-Simplification-v1.md`](../Decisions/ADR-Element-Pipeline-Simplification-v1.md)。
+- 默认 Registry 只登记步枪火弹/雷弹 Profile，初值均为 `0` 秒来源间隔和 `6` 秒持续时间。火、水、雷、冰六个组合是首版固定 Gameplay 映射，不维护反应表资产。真实武器来源仍由 `WPN-010` 接入，具体反应输出由后续 `ELM-040` / `ELM-060`～`ELM-090` 负责。
 
 ## 首版元素集合
 
@@ -110,7 +110,7 @@
 ## 后续扩展边界
 
 - 元素应用使用独立 Application Profile 表达元素、来源—目标间隔和持续时间，而不是把规则硬编码到枪械或技能中；首版不在 Profile 中加入强弱元素或复杂 ICD。
-- 运行时附着容器首版只启用一个主要槽位，但接口允许以后扩展为集合。
+- 运行时附着容器首版只暴露一个主要槽位；出现真实多附着需求时再重新设计集合契约。
 - 反应计算通过独立服务处理输入元素、目标状态和输出事实，表现层不裁决反应。
 - 定义数据与运行时状态分离，使新增元素、反应和网络同步不要求替换现有伤害事实源。
 - 即使首版结果与顺序无关，也保留附着方、触发方、技能/武器来源和责任角色信息。

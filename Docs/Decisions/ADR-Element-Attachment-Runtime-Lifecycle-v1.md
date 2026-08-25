@@ -1,6 +1,6 @@
 # ADR：元素附着运行时所有权与生命周期 v1
 
-- 状态：Accepted
+- 状态：Accepted（实现形状由 [`ADR-Element-Pipeline-Simplification-v1.md`](ADR-Element-Pipeline-Simplification-v1.md) 修订）
 - 日期：2026-08-20
 - 负责人：Codex / 项目维护者
 - 关联 Feature Spec：[`ElementAttachmentRuntimeLifecycleV1.md`](../Features/ElementAttachmentRuntimeLifecycleV1.md)
@@ -41,7 +41,7 @@
 
 选择方案 A。目标侧组件拥有状态，`Combatant` 负责明确的启用/禁用边界，`EnemyRoot` 负责时间推进。Resolver 只接受 ELM-010 的请求，先验证当前目标身份、Health 和来源—目标间隔，再原子写入状态。
 
-同元素刷新以最近一次合法请求替换来源与执行快照。不同元素只返回 `ReactionRequired`，既不修改已有槽，也不提前提交间隔；`ELM-030` 将以已有附着版本和触发请求完成反应事务。消费必须匹配版本，避免迟到调用清除刷新后的附着。
+同元素刷新以最近一次合法请求替换来源与执行快照。不同元素只返回 `ReactionRequired`，既不修改已有槽，也不提前提交间隔；反应管线以当前附着快照和触发请求进入目标侧事务。消费只能由该内部事务完成并必须匹配版本，避免迟到调用清除刷新后的附着；单槽只暴露 `TryGetPrimaryAttachment`，不预设集合查询接口。
 
 ## 后果
 
@@ -55,7 +55,7 @@
 代价与限制：
 
 - 未装配 `ElementAttachmentRuntime` 的敌方目标会明确拒绝请求；Bootstrap 和未来敌人 prefab 必须同步装配。
-- 首版运行时只支持一个主要槽；索引查询只是扩展边界，不代表已经支持多附着。
+- 首版运行时只支持一个主要槽；未来真实多附着需求出现时重新设计查询契约，不提前暴露索引集合接口。
 - 不同元素在 ELM-030 完成前不会改变状态，也不会产生反应结果。
 - 过期由敌方 Gameplay Tick 推进；没有 `EnemyRoot` 的未来目标必须提供等价的权威驱动后才能接入。
 

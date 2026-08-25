@@ -113,9 +113,9 @@ namespace Game.Tests.EditMode.Gameplay.Element
             targetRuntime = null;
         }
 
-        /// <summary>首次附着、完全重复、最近来源刷新与异元素反应交接必须保持原子语义。</summary>
+        /// <summary>首次附着、完全重复和最近来源刷新必须只产生必要的状态变化。</summary>
         [Test]
-        public void AttachDuplicateRefreshAndReactionHandoffAreAtomic()
+        public void AttachDuplicateAndRefreshOnlyCommitNecessaryChanges()
         {
             ElementApplicationSourceSnapshot firstFire = CreateSource(
                 "AttachmentFireA",
@@ -127,89 +127,56 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 ElementType.Fire,
                 0f,
                 4f);
-            ElementApplicationSourceSnapshot electric = CreateSource(
-                "AttachmentElectric",
-                ElementType.Electric,
-                0f,
-                6f);
             ElementApplicationRequest firstRequest = CreateRequest(firstFire, target, 1f);
 
-            ElementApplicationResult attached =
-                ElementApplicationResolver.ResolveAndApply(firstRequest);
-            ElementApplicationResult duplicate =
-                ElementApplicationResolver.ResolveAndApply(firstRequest);
-            ElementApplicationResult refreshed = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(latestFire, target, 2f));
-            ElementApplicationResult reactionRequired = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(electric, target, 3f));
+            Apply(firstRequest);
+            Assert.That(
+                targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot attached),
+                Is.True);
+            Assert.That(attached.Version, Is.EqualTo(1L));
+            Assert.That(attached.Source.SourceId, Is.EqualTo(firstFire.SourceId));
+            Assert.That(attached.ExpiresAt, Is.EqualTo(7f));
 
-            Assert.That(attached.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
-            Assert.That(attached.CurrentAttachment.Version, Is.EqualTo(1L));
-            Assert.That(attached.CurrentAttachment.Source.SourceId, Is.EqualTo(firstFire.SourceId));
-            Assert.That(attached.CurrentAttachment.ExpiresAt, Is.EqualTo(7f));
+            Apply(firstRequest);
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot duplicate), Is.True);
+            Assert.That(duplicate.Version, Is.EqualTo(1L));
+            Assert.That(receivedEvents.Count, Is.EqualTo(1));
 
-            Assert.That(duplicate.Status, Is.EqualTo(ElementApplicationResolutionStatus.Unchanged));
-            Assert.That(duplicate.CurrentAttachment.Version, Is.EqualTo(1L));
+            ElementApplicationRequest refreshRequest = CreateRequest(latestFire, target, 2f);
+            Apply(refreshRequest);
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot refreshed), Is.True);
+            Assert.That(refreshed.Version, Is.EqualTo(2L));
+            Assert.That(refreshed.Source.SourceId, Is.EqualTo(latestFire.SourceId));
+            Assert.That(refreshed.ExecutionId, Is.EqualTo(refreshRequest.ExecutionId));
+            Assert.That(refreshed.ExpiresAt, Is.EqualTo(6f));
 
-            Assert.That(refreshed.Status, Is.EqualTo(ElementApplicationResolutionStatus.Refreshed));
-            Assert.That(refreshed.PreviousAttachment.Version, Is.EqualTo(1L));
-            Assert.That(refreshed.CurrentAttachment.Version, Is.EqualTo(2L));
-            Assert.That(refreshed.CurrentAttachment.Source.SourceId, Is.EqualTo(latestFire.SourceId));
-            Assert.That(refreshed.CurrentAttachment.ExecutionId, Is.EqualTo(refreshed.Request.ExecutionId));
-            Assert.That(refreshed.CurrentAttachment.ExpiresAt, Is.EqualTo(6f));
-
-            Assert.That(reactionRequired.Status, Is.EqualTo(ElementApplicationResolutionStatus.ReactionRequired));
-            Assert.That(reactionRequired.RequiresReaction, Is.True);
-            Assert.That(reactionRequired.PreviousAttachment.Version, Is.EqualTo(2L));
-            Assert.That(reactionRequired.CurrentAttachment.Version, Is.EqualTo(2L));
-            Assert.That(reactionRequired.Request.Source.Element, Is.EqualTo(ElementType.Electric));
-            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot current), Is.True);
-            Assert.That(current.Version, Is.EqualTo(2L));
-            Assert.That(current.Element, Is.EqualTo(ElementType.Fire));
             Assert.That(receivedEvents.Count, Is.EqualTo(2));
             Assert.That(receivedEvents[0].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.Attached));
             Assert.That(receivedEvents[1].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.Refreshed));
         }
 
-        /// <summary>来源—目标间隔只阻止边界前提交，版本消费必须拒绝迟到和重复消费者。</summary>
+        /// <summary>来源—目标间隔只阻止边界前提交，边界时刻允许刷新并分配新版本。</summary>
         [Test]
-        public void SourceTargetIntervalAndVersionedConsumptionUseExactBoundaries()
+        public void SourceTargetIntervalUsesExactBoundary()
         {
             ElementApplicationSourceSnapshot fire = CreateSource(
                 "IntervalFire",
                 ElementType.Fire,
                 2f,
                 6f);
-            ElementApplicationResult attached = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, 10f));
-            ElementApplicationResult intervalRejected = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, 11f));
-            ElementApplicationResult boundaryRefresh = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, 12f));
+            Apply(CreateRequest(fire, target, 10f));
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot attached), Is.True);
 
-            Assert.That(intervalRejected.Status, Is.EqualTo(ElementApplicationResolutionStatus.Rejected));
-            Assert.That(
-                intervalRejected.RejectionReason,
-                Is.EqualTo(ElementApplicationRejectionReason.SourceTargetIntervalActive));
-            Assert.That(boundaryRefresh.Status, Is.EqualTo(ElementApplicationResolutionStatus.Refreshed));
-            Assert.That(boundaryRefresh.CurrentAttachment.Version, Is.EqualTo(2L));
+            Apply(CreateRequest(fire, target, 11f));
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot rejected), Is.True);
+            Assert.That(rejected.Version, Is.EqualTo(attached.Version));
+            Assert.That(receivedEvents.Count, Is.EqualTo(1));
 
-            Assert.That(
-                targetRuntime.TryConsumePrimary(attached.CurrentAttachment.Version, 12f, out _),
-                Is.False);
-            Assert.That(
-                targetRuntime.TryConsumePrimary(
-                    boundaryRefresh.CurrentAttachment.Version,
-                    12f,
-                    out ElementAttachmentSnapshot consumed),
-                Is.True);
-            Assert.That(consumed.Version, Is.EqualTo(2L));
-            Assert.That(
-                targetRuntime.TryConsumePrimary(boundaryRefresh.CurrentAttachment.Version, 12f, out _),
-                Is.False);
-            Assert.That(targetRuntime.AttachmentCount, Is.Zero);
-            Assert.That(receivedEvents.Count, Is.EqualTo(3));
-            Assert.That(receivedEvents[2].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.Consumed));
+            Apply(CreateRequest(fire, target, 12f));
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot refreshed), Is.True);
+            Assert.That(refreshed.Version, Is.EqualTo(2L));
+            Assert.That(receivedEvents.Count, Is.EqualTo(2));
+            Assert.That(receivedEvents[1].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.Refreshed));
         }
 
         /// <summary>到期清理必须幂等；Health 重置即使槽已被消费也必须清除残留间隔。</summary>
@@ -221,14 +188,12 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 ElementType.Fire,
                 0f,
                 2f);
-            ElementApplicationResult expiring = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(expiringFire, target, 1f));
+            Apply(CreateRequest(expiringFire, target, 1f));
 
             targetRuntime.Tick(3f);
             targetRuntime.Tick(4f);
 
-            Assert.That(expiring.IsCommitted, Is.True);
-            Assert.That(targetRuntime.AttachmentCount, Is.Zero);
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out _), Is.False);
             Assert.That(receivedEvents.Count, Is.EqualTo(2));
             Assert.That(receivedEvents[1].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.Expired));
 
@@ -237,20 +202,23 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 ElementType.Fire,
                 10f,
                 6f);
-            ElementApplicationResult beforeReset = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(intervalFire, target, 5f));
-            Assert.That(
-                targetRuntime.TryConsumePrimary(beforeReset.CurrentAttachment.Version, 5.1f, out _),
-                Is.True);
+            Apply(CreateRequest(intervalFire, target, 5f));
+            ElementApplicationSourceSnapshot electric = CreateSource(
+                "ResetIntervalElectric",
+                ElementType.Electric,
+                0f,
+                6f);
+            ElementReactionResult reaction = Apply(CreateRequest(electric, target, 5.1f));
+            Assert.That(reaction.DidTriggerReaction, Is.True);
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out _), Is.False);
 
             targetHealth.ResetRuntimeState();
             targetRuntime.Tick(5.2f);
             Assert.That(targetHealth.TryInitialize(), Is.True);
-            ElementApplicationResult afterReset = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(intervalFire, target, 5.3f));
+            Apply(CreateRequest(intervalFire, target, 5.3f));
 
-            Assert.That(afterReset.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
-            Assert.That(afterReset.RejectionReason, Is.EqualTo(ElementApplicationRejectionReason.None));
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot afterReset), Is.True);
+            Assert.That(afterReset.Source.SourceId, Is.EqualTo(intervalFire.SourceId));
         }
 
         /// <summary>缺少目标所有者与逆序时间必须明确拒绝且不制造提交事件。</summary>
@@ -270,22 +238,15 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 0f,
                 6f);
 
-            ElementApplicationResult missingOwner = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, targetWithoutRuntime, 1f));
-            ElementApplicationResult attached = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, 5f));
-            ElementApplicationResult stale = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, 4f));
+            Apply(CreateRequest(fire, targetWithoutRuntime, 1f));
+            Assert.That(receivedEvents, Is.Empty);
 
-            Assert.That(missingOwner.Status, Is.EqualTo(ElementApplicationResolutionStatus.Rejected));
-            Assert.That(
-                missingOwner.RejectionReason,
-                Is.EqualTo(ElementApplicationRejectionReason.MissingAttachmentOwner));
-            Assert.That(attached.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
-            Assert.That(stale.Status, Is.EqualTo(ElementApplicationResolutionStatus.Rejected));
-            Assert.That(
-                stale.RejectionReason,
-                Is.EqualTo(ElementApplicationRejectionReason.StaleApplicationTime));
+            Apply(CreateRequest(fire, target, 5f));
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot attached), Is.True);
+            Apply(CreateRequest(fire, target, 4f));
+
+            Assert.That(targetRuntime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot afterStale), Is.True);
+            Assert.That(afterStale.Version, Is.EqualTo(attached.Version));
             Assert.That(receivedEvents.Count, Is.EqualTo(1));
         }
 
@@ -391,8 +352,14 @@ namespace Game.Tests.EditMode.Gameplay.Element
             return snapshot;
         }
 
+        private static ElementReactionResult Apply(
+            in ElementApplicationRequest _request)
+        {
+            return ElementReactionPipeline.ResolveAndApply(_request);
+        }
+
         private static ElementApplicationRequest CreateRequest(
-            in ElementApplicationSourceSnapshot _source,
+            ElementApplicationSourceSnapshot _source,
             Combatant _target,
             float _applicationTime)
         {

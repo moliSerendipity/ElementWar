@@ -15,7 +15,6 @@ namespace Game.Gameplay.Element
             float _expiresAt)
         {
             Version = _version;
-            Element = _request.Source.Element;
             Source = _request.Source;
             ExecutionId = _request.ExecutionId;
             TargetCombatant = _request.TargetCombatant;
@@ -27,11 +26,11 @@ namespace Game.Gameplay.Element
         /// <summary>目标生命周期内的递增版本；零表示不存在附着。</summary>
         public long Version { get; }
 
-        /// <summary>当前主要槽保存的元素。</summary>
-        public ElementType Element { get; }
-
         /// <summary>最近一次成功附着或刷新的来源快照。</summary>
         public ElementApplicationSourceSnapshot Source { get; }
+
+        /// <summary>当前主要槽保存的元素，由来源快照唯一确定。</summary>
+        public ElementType Element => Source != null ? Source.Element : ElementType.None;
 
         /// <summary>最近一次成功附着或刷新的攻击或技能执行。</summary>
         public AttackExecutionId ExecutionId { get; }
@@ -52,6 +51,7 @@ namespace Game.Gameplay.Element
         public bool IsValid =>
             Version > 0L
             && Element != ElementType.None
+            && Source != null
             && Source.SourceId.IsValid
             && ExecutionId.IsValid
             && TargetCombatant != null

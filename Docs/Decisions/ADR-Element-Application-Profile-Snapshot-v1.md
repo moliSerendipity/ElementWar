@@ -1,6 +1,6 @@
 # ADR：元素施加配置、来源身份与请求快照 v1
 
-- 状态：Accepted
+- 状态：Accepted（实现形状由 [`ADR-Element-Pipeline-Simplification-v1.md`](ADR-Element-Pipeline-Simplification-v1.md) 修订）
 - 日期：2026-08-12
 - 负责人：Codex / 项目维护者
 - 关联 Feature Spec：[`ElementApplicationProfileSnapshotV1.md`](../Features/ElementApplicationProfileSnapshotV1.md)
@@ -39,7 +39,7 @@
 
 ## 决策
 
-选择方案 B。元素来源快照在来源生命周期建立时冻结配置与责任归属；每次攻击或技能执行可以独立产生零个或多个元素请求以及可选伤害请求。来源—目标应用间隔使用 `ElementApplicationSourceId + TargetId`，不使用 `ConfigId`、`SourceObject` 或 `AttackExecutionId` 冒充来源生命周期。
+选择方案 B。元素来源快照在来源生命周期建立时冻结配置与责任归属；每次攻击或技能执行可以独立产生零个或多个元素请求以及可选伤害请求。来源—目标应用间隔由每个目标 Runtime 按 `ElementApplicationSourceId` 保存；目标生命周期已经由 Runtime 边界隔离，不再额外建立 `SourceId + TargetId` 组合键类型。`ConfigId`、`SourceObject` 与 `AttackExecutionId` 均不冒充来源生命周期。
 
 ## 后果
 

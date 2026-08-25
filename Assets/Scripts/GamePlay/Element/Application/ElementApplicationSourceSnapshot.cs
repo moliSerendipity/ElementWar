@@ -7,7 +7,7 @@ namespace Game.Gameplay.Element
     /// <summary>
     /// 在元素来源建立时冻结配置与归属；后续攻击不得重新读取可变配置或当前控制角色。
     /// </summary>
-    public readonly struct ElementApplicationSourceSnapshot
+    public sealed class ElementApplicationSourceSnapshot
     {
         internal ElementApplicationSourceSnapshot(
             ElementApplicationSourceId _sourceId,
@@ -29,7 +29,6 @@ namespace Game.Gameplay.Element
             InstigatorId = _instigatorId;
             InstigatorFaction = _instigatorFaction;
             SourceObject = _sourceObject;
-            IsCreated = true;
         }
 
         /// <summary>本运行时来源生命周期的身份。</summary>
@@ -58,7 +57,5 @@ namespace Game.Gameplay.Element
 
         /// <summary>产生元素应用的具体武器、技能运行时、持续区域或配置对象。</summary>
         public Object SourceObject { get; }
-
-        internal bool IsCreated { get; }
     }
 }

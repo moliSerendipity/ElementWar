@@ -8,7 +8,7 @@ namespace Game.Gameplay.Element
     public readonly struct ElementApplicationRequest
     {
         internal ElementApplicationRequest(
-            in ElementApplicationSourceSnapshot _source,
+            ElementApplicationSourceSnapshot _source,
             AttackExecutionId _executionId,
             Combatant _targetCombatant,
             CombatantId _targetId,
@@ -19,7 +19,6 @@ namespace Game.Gameplay.Element
             TargetCombatant = _targetCombatant;
             TargetId = _targetId;
             ApplicationTime = _applicationTime;
-            IntervalKey = new ElementApplicationIntervalKey(_source.SourceId, _targetId);
         }
 
         /// <summary>在来源生命周期建立时冻结的配置与归属。</summary>
@@ -33,9 +32,6 @@ namespace Game.Gameplay.Element
 
         /// <summary>请求创建时冻结的目标生命周期身份。</summary>
         public CombatantId TargetId { get; }
-
-        /// <summary>来源—目标应用间隔所使用的稳定运行时键。</summary>
-        public ElementApplicationIntervalKey IntervalKey { get; }
 
         /// <summary>本次尝试成立的运行时时间戳。</summary>
         public float ApplicationTime { get; }

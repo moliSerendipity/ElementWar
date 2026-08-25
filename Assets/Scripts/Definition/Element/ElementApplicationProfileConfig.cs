@@ -31,15 +31,6 @@ namespace Game.Definition.Element
         /// <summary>成功附着后的默认持续时间，单位为秒。</summary>
         public float AttachmentDurationSeconds => attachmentDurationSeconds;
 
-        /// <summary>元素、间隔和持续时间是否能安全冻结进运行时来源快照。</summary>
-        public bool HasValidApplicationData =>
-            Enum.IsDefined(typeof(ElementType), element)
-            && element != ElementType.None
-            && IsFinite(sourceTargetIntervalSeconds)
-            && sourceTargetIntervalSeconds >= 0f
-            && IsFinite(attachmentDurationSeconds)
-            && attachmentDurationSeconds > 0f;
-
         /// <inheritdoc />
         public override void Validate(ConfigValidationContext _context, ConfigService _configService)
         {

@@ -30,7 +30,7 @@ namespace Game.Gameplay.Element
             out ElementApplicationSourceSnapshot _snapshot,
             out ElementApplicationFailureReason _failureReason)
         {
-            _snapshot = default;
+            _snapshot = null;
 
             if (_configService == null || _configService.IsInitialized == false)
             {
@@ -56,12 +56,6 @@ namespace Game.Gameplay.Element
             if (profile.IsEnabled == false)
             {
                 _failureReason = ElementApplicationFailureReason.ProfileDisabled;
-                return false;
-            }
-
-            if (profile.HasValidApplicationData == false)
-            {
-                _failureReason = ElementApplicationFailureReason.InvalidProfileData;
                 return false;
             }
 
@@ -109,7 +103,7 @@ namespace Game.Gameplay.Element
         /// <param name="_failureReason">失败时返回确定原因；成功时为 None。</param>
         /// <returns>请求结构、身份与首版阵营方向合法时返回 <see langword="true"/>。</returns>
         public static bool TryCreateRequest(
-            in ElementApplicationSourceSnapshot _source,
+            ElementApplicationSourceSnapshot _source,
             AttackExecutionId _executionId,
             Combatant _targetCombatant,
             float _applicationTime,
@@ -118,7 +112,7 @@ namespace Game.Gameplay.Element
         {
             _request = default;
 
-            if (_source.IsCreated == false)
+            if (_source == null || _source.SourceId.IsValid == false)
             {
                 _failureReason = ElementApplicationFailureReason.InvalidSourceSnapshot;
                 return false;

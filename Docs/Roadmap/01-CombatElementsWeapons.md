@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-20
+- 维护日期：2026-08-23
 
 本路线先建立可复用战斗身份，再完成一个“开火 → 附着 → 超载 → 范围伤害/控制 → 反馈”的真实闭环，随后才扩展武器实例、弹药、投射物和其余反应。每项启动时用 [`TEMPLATE.md`](../Features/TEMPLATE.md) 建立具体 Feature Spec。
 
@@ -34,37 +34,36 @@
 
 - 状态：Done（Fast Verified，并额外通过 PlayMode 与真实 Profile/Registry 加载；未做 Windows64 与主线人工验收）
 - 依赖：`CMB-010`。
-- 已完成：用 `ElementApplicationProfileConfig` 定义元素、来源—目标间隔和持续时间；用独立 `ElementApplicationSourceId`、来源快照和请求冻结配置、责任者、具体来源、攻击执行与目标；间隔键固定为 `SourceId + TargetId`。
-- 可观察结果：没有 DamageRequest/Result 且 Health 未初始化时仍能建立合法元素请求；配置、身份、阵营或时间非法时返回明确原因；目标禁用复用后使用新 TargetId 和间隔键。
+- 已完成：用 `ElementApplicationProfileConfig` 定义元素、来源间隔和持续时间；用独立 `ElementApplicationSourceId` 与不可变来源快照冻结配置、责任者和具体来源；小型请求只补充攻击执行、目标身份和时间。目标 Runtime 在自身生命周期内按 SourceId 保存间隔，不维护复合键类型。
+- 可观察结果：没有 DamageRequest/Result 且 Health 未初始化时仍能建立合法元素请求；配置结构在 Bootstrap 统一校验，请求身份、阵营或时间非法时返回明确原因；目标禁用复用后使用新 TargetId。
 - 配置迁移：删除无资产引用的旧 `ElementReactionConfig` 壳；默认 Registry 登记火弹/雷弹两个真实 Profile，均为 0 秒应用间隔与 6 秒持续时间；不把反应定义误迁移为应用定义。
-- 证据：[`ElementApplicationProfileSnapshotV1.md`](../Features/ElementApplicationProfileSnapshotV1.md)；决策见 [`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)。
+- 证据：[`ElementApplicationProfileSnapshotV1.md`](../Features/ElementApplicationProfileSnapshotV1.md)；现行实现修订见 [`ElementPipelineSimplificationV1.md`](../Features/ElementPipelineSimplificationV1.md)。
 - 剩余边界：`ELM-020` 已补齐附着消费者与生命周期；真实武器来源和反应输出仍未接入。
 - 解锁：`ELM-020`。
 
 ### ELM-020 元素附着运行时与生命周期
 
-- 状态：Done（Fast Verified，并额外通过 PlayMode 与 Bootstrap 序列化/Missing Script 检查；未做 Windows64、性能与主线人工验收）
+- 状态：Done（2026-08-26 请求校验精简后 Fast Verified，并额外通过 PlayMode；手动 Test Runner：EditMode 48/48、PlayMode 9/9，无独立 XML）
 - 依赖：`ELM-010`。
-- 已完成：每个 Bootstrap 敌方 `Combatant` 根装配唯一 `ElementAttachmentRuntime`；首版主要槽支持合法施加、同元素以最近来源刷新、不同元素返回待反应输入、来源—目标间隔、显式到期、版本化消费及生命/禁用/复用清理；实际变化才发布事件。
-- 可观察结果：开发调试 Presenter 通过只读事件稳定维护当前附着；完全重复、迟到消费和重复清理保持幂等；禁用再启用使用新 `TargetId` 且不继承旧状态或间隔。
+- 已完成：每个 Bootstrap 敌方 `Combatant` 根装配唯一 `ElementAttachmentRuntime`；首版主要槽支持合法施加、同元素以最近来源刷新、不同元素返回待反应输入、来源间隔、显式到期、内部反应事务消费及生命/禁用/复用清理；只暴露主槽查询，实际变化才发布事件。
+- 可观察结果：开发调试 Presenter 通过只读事件稳定维护当前附着；完全重复、迟到/旧生命周期请求和重复清理保持幂等；禁用再启用使用新 `TargetId` 且不继承旧状态、间隔或反应账本。
 - 证据：[`ElementAttachmentRuntimeLifecycleV1.md`](../Features/ElementAttachmentRuntimeLifecycleV1.md)；决策见 [`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](../Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md)。
-- 剩余边界：没有生产武器/技能来源；异元素只交给后续反应事务，尚不产生反应结果；Windows64、性能与 Bootstrap 人工玩法观察未运行。
+- 剩余边界：`ELM-030` 已提供反应事务；没有生产武器/技能来源，Windows64、性能与 Bootstrap 人工玩法观察未运行。
 - 解锁：`ELM-030`、`WPN-010`。
 
 ### ELM-030 反应判定、消耗与归因管线
 
-- 状态：Next
+- 状态：Done（2026-08-26 最新差异 Fast Verified，并额外通过 PlayMode；手动 Test Runner：EditMode 48/48、PlayMode 9/9，无独立 XML）
 - 依赖：`ELM-020`。
-- 当前缺口：没有元素对查表、反应消费顺序、责任归因、同一次攻击限制或防止反应递归的规则执行者。
-- 实施要点：① 以无序元素对映射唯一反应；② 固定同一命中“弹药元素先、技能附加元素后”，一旦触发即停止该目标剩余应用；③ 完全消耗已有和触发元素，并把责任归于第二个元素施加者；④ 同一攻击对同一目标最多触发一次反应；⑤ 反应派生伤害/控制不附着、不递归，并保留触发基准伤害供独立反应使用。
-- 可观察完成：交换两个元素的施加顺序仍命中同一反应定义，重复 Collider/重复事件不重复反应，结果能追溯触发者。
-- 范围：通用反应管线，不实现六种反应的全部输出数值；需要公共契约 ADR。
-- 验证：元素对称性、消耗、重复、递归和归因 EditMode；生产命中 PlayMode。
+- 已完成：Gameplay 固定表达四元素六个无序组合；公共管线提供单请求和“弹药、技能”双请求入口，首次反应或当前阶段拒绝后停止；目标 `ElementAttachmentRuntime` 原子登记触发来源间隔与执行去重、消费版本匹配的已有附着；最小结果保留反应类型、被消费附着和第二元素来源归因。
+- 可观察结果：交换两个元素顺序仍命中同一反应；同一执行重复到达不重复反应或留下附着；触发来源间隔和旧目标请求不能错误消费当前附着；禁用复用后新 `TargetId` 使用新去重生命周期。
+- 证据：[`ElementReactionPipelineV1.md`](../Features/ElementReactionPipelineV1.md)；精简范围见 [`ElementPipelineSimplificationV1.md`](../Features/ElementPipelineSimplificationV1.md)；现行决策见 [`ADR-Element-Pipeline-Simplification-v1.md`](../Decisions/ADR-Element-Pipeline-Simplification-v1.md)。
+- 剩余边界：真实武器/技能生产来源、具体反应伤害/控制/范围输出、反应反馈事件与主线玩法仍未接入；Windows64、性能和人工验收未运行。
 - 解锁：`ELM-040`、`ELM-060`～`ELM-090`。
 
 ### CMB-020 范围目标查询与友伤过滤
 
-- 状态：Ready
+- 状态：Next
 - 依赖：`CMB-010`。
 - 当前缺口：范围效果没有复用的目标根解析、阵营过滤、稳定排序、遮挡策略或多 Collider 去重入口。
 - 实施要点：① 建立只返回权威战斗目标的查询；② 统一半径、层级、触发器、死亡/禁用和友伤过滤；③ 按稳定 ID 或距离建立确定顺序；④ 把 LOS/上限作为显式策略；⑤ 禁止表现层重新裁决命中。
@@ -100,7 +99,7 @@
 - 状态：Planned
 - 依赖：`ELM-030`、`CMB-020`、`CMB-030`、`WPN-010`。
 - 当前缺口：设计中的首个反应尚无生产消费者、范围输出、控制结果和反馈。
-- 实施要点：① 配置 Fire+Electric→Overload；② 按设计从触发基准伤害生成独立范围伤害和普通/精英/Boss 分级控制；③ 使用统一范围查询且不伤害玩家或 AI 队友；④ 防止派生伤害递归触发，也不接受“爆破改良”；⑤ 补齐命中、附着、反应、范围结果、VFX/SFX/HUD 的最小反馈链。
+- 实施要点：① 消费管线固定映射产生的 Overload 结果；② 在真实输出阶段建立触发基准伤害并生成独立范围伤害和普通/精英/Boss 分级控制；③ 使用统一范围查询且不伤害玩家或 AI 队友；④ 派生伤害不生产元素请求，也不接受“爆破改良”；⑤ 补齐命中、附着、反应、范围结果、VFX/SFX/HUD 的最小反馈链。
 - 可观察完成：Bootstrap 中用两种元素触发一次超载，附近合法敌人各受一次确定伤害/控制，责任归属正确，事件与反馈不重复。
 - 范围：首个完整垂直切片。非目标是其余反应、完整武器库存和最终美术品质。
 - 验证：公式/归因/去重 EditMode，真实步枪到多敌人 PlayMode，主线人工验收；达到 Full Verified 时再运行 Windows64。

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Game.Definition.Combat;
 using Game.Foundation.Events;
@@ -20,16 +19,22 @@ namespace Game.Gameplay.Element
         [SerializeField] private HealthComponent healthComponent;
 
         /// <summary>
-        /// 按“来源生命周期 + 目标生命周期”记录下一次允许成功施加的时间。
-        /// 值只在附着或同元素刷新真正提交后写入，不作为全局元素冷却。
+        /// 当前目标生命周期内，按来源身份记录下一次允许成功施加的时间。
+        /// 目标身份由本 Runtime 的生命周期边界保证，无需再复制进字典键。
         /// </summary>
-        private readonly Dictionary<ElementApplicationIntervalKey, float> nextAllowedTimesByKey = new();
+        private readonly Dictionary<ElementApplicationSourceId, float> nextAllowedTimesBySource = new();
 
         /// <summary>
         /// 清理过期间隔时复用的临时键列表。Dictionary 遍历期间不能直接删除元素，
         /// 因此先收集键、遍历结束后再删除，并复用列表容量以避免每帧分配。
         /// </summary>
-        private readonly List<ElementApplicationIntervalKey> expiredIntervalKeys = new();
+        private readonly List<ElementApplicationSourceId> expiredIntervalSourceIds = new();
+
+        /// <summary>
+        /// 当前目标生命周期内已经成功触发反应的攻击执行。
+        /// 与伤害去重分离，因为伤害和元素是同一攻击的并列输出。
+        /// </summary>
+        private readonly HashSet<AttackExecutionId> reactedExecutionIds = new();
 
         /// <summary>首版唯一主要槽中的当前附着；默认值表示没有附着。</summary>
         private ElementAttachmentSnapshot primaryAttachment;
@@ -61,9 +66,6 @@ namespace Game.Gameplay.Element
         /// <summary>当前绑定的目标生命周期身份；禁用或未绑定时无效。</summary>
         public CombatantId BoundTargetId => boundTargetId;
 
-        /// <summary>当前已启用的附着槽数量；首版只能为零或一。</summary>
-        public int AttachmentCount => primaryAttachment.IsValid ? 1 : 0;
-
         private void Awake()
         {
             ResolveReferences();
@@ -86,30 +88,13 @@ namespace Game.Gameplay.Element
             EndTargetLifecycle(Time.time, ElementAttachmentChangeKind.TargetDisabled);
         }
 
-        /// <summary>
-        /// 按只读索引查询当前附着。首版仅索引 0 有效，以便未来扩展为集合而不暴露可变容器。
-        /// </summary>
-        /// <param name="_index">要读取的槽索引。</param>
-        /// <param name="_attachment">成功时返回对应附着快照。</param>
-        /// <returns>索引存在且当前槽有效时返回 <see langword="true"/>。</returns>
-        public bool TryGetAttachment(int _index, out ElementAttachmentSnapshot _attachment)
-        {
-            if (_index == 0 && primaryAttachment.IsValid)
-            {
-                _attachment = primaryAttachment;
-                return true;
-            }
-
-            _attachment = default;
-            return false;
-        }
-
         /// <summary>尝试读取首版主要附着槽。</summary>
         /// <param name="_attachment">当前存在时返回只读快照。</param>
         /// <returns>当前主要槽存在附着时返回 <see langword="true"/>。</returns>
         public bool TryGetPrimaryAttachment(out ElementAttachmentSnapshot _attachment)
         {
-            return TryGetAttachment(0, out _attachment);
+            _attachment = primaryAttachment;
+            return primaryAttachment.IsValid;
         }
 
         /// <summary>
@@ -121,29 +106,59 @@ namespace Game.Gameplay.Element
             TryAdvanceTime(_currentTime, out _);
         }
 
+        /// <summary>查询当前目标生命周期是否已经接受该执行的一次反应。</summary>
+        internal bool HasCommittedReaction(
+            AttackExecutionId _executionId,
+            CombatantId _expectedTargetId)
+        {
+            return _executionId.IsValid
+                && _expectedTargetId.IsValid
+                && boundTargetId == _expectedTargetId
+                && reactedExecutionIds.Contains(_executionId);
+        }
+
         /// <summary>
-        /// 仅在版本仍匹配时消费当前主要附着；迟到或重复消费者不能清除更新后的状态。
+        /// 原子提交一次已经匹配成功的反应：重验待反应版本与间隔，登记执行去重，
+        /// 再记录触发来源间隔并消费已有附着。任一检查失败时不产生部分反应状态。
         /// </summary>
-        /// <param name="_expectedVersion">调用方读取到的当前附着版本，必须大于零。</param>
-        /// <param name="_currentTime">消费发生的运行时时间。</param>
-        /// <param name="_consumedAttachment">成功时返回被清除的附着快照。</param>
-        /// <returns>当前槽存在、尚未到期且版本匹配时返回 <see langword="true"/>。</returns>
-        public bool TryConsumePrimary(
-            long _expectedVersion,
-            float _currentTime,
+        internal bool TryCommitReaction(
+            in ElementApplicationRequest _triggerRequest,
+            in ElementAttachmentSnapshot _expectedAttachment,
             out ElementAttachmentSnapshot _consumedAttachment)
         {
             _consumedAttachment = default;
-            if (_expectedVersion <= 0L ||
-                TryAdvanceTime(_currentTime, out _) == false ||
+
+            // 请求在同一同步调用中刚完成目标、时间和接收资格裁决；这里只重验提交依赖的附着事实。
+            if (_expectedAttachment.IsValid == false ||
+                _expectedAttachment.TargetId != boundTargetId ||
                 primaryAttachment.IsValid == false ||
-                primaryAttachment.Version != _expectedVersion)
+                primaryAttachment.Version != _expectedAttachment.Version ||
+                primaryAttachment.Element != _expectedAttachment.Element ||
+                primaryAttachment.Element == _triggerRequest.Source.Element)
             {
                 return false;
             }
 
+            // 同一执行在当前 TargetId 生命周期只能成功反应一次，重复 Collider 或回调直接拒绝。
+            if (reactedExecutionIds.Contains(_triggerRequest.ExecutionId))
+            {
+                return false;
+            }
+
+            // 触发元素仍受自己的来源—目标间隔约束；失败时不能提前登记执行或消费附着。
+            if (IsSourceTargetIntervalAllowed(_triggerRequest) == false ||
+                TryCalculateNextAllowedTime(_triggerRequest, out float nextAllowedTime) == false)
+            {
+                return false;
+            }
+
+            // 所有可能失败的检查必须早于以下写回；先登记去重，避免消费事件回调重入同一执行。
+            reactedExecutionIds.Add(_triggerRequest.ExecutionId);
+            RecordSourceTargetInterval(_triggerRequest.Source.SourceId, nextAllowedTime);
             _consumedAttachment = primaryAttachment;
-            ClearPrimaryAttachment(ElementAttachmentChangeKind.Consumed, _currentTime);
+            ClearPrimaryAttachment(
+                ElementAttachmentChangeKind.Consumed,
+                _triggerRequest.ApplicationTime);
             return true;
         }
 
@@ -205,26 +220,24 @@ namespace Game.Gameplay.Element
         }
 
         /// <summary>
-        /// 目标侧元素请求的唯一提交入口。依次完成结构校验、时间同步、接收资格、
+        /// 目标侧元素请求的唯一提交入口。依次完成目标生命周期核对、时间同步、接收资格、
         /// 完全重复识别、来源—目标间隔、异元素反应交接和最终附着写回。
         /// </summary>
         internal ElementApplicationResult ResolveAndApply(in ElementApplicationRequest _request)
         {
-            // 先验证不会改变运行时状态的结构、身份和配置字段。
-            ElementApplicationRejectionReason rejectionReason = ValidateRequestStructure(_request);
-            if (rejectionReason != ElementApplicationRejectionReason.None)
+            // 旧请求不能推进或清理对象复用后的新生命周期，因此必须在时间同步前拦截。
+            if (MatchesCurrentTarget(_request) == false)
             {
                 return ElementApplicationResult.Rejected(
-                    _request,
-                    rejectionReason,
+                    ElementApplicationRejectionReason.InvalidTarget,
                     primaryAttachment);
             }
 
             // 在读取当前槽前同步到请求时间，保证过期、死亡或重置状态已经被清理。
+            ElementApplicationRejectionReason rejectionReason;
             if (TryAdvanceTime(_request.ApplicationTime, out rejectionReason) == false)
             {
                 return ElementApplicationResult.Rejected(
-                    _request,
                     rejectionReason,
                     primaryAttachment);
             }
@@ -233,7 +246,6 @@ namespace Game.Gameplay.Element
             if (CanReceiveAttachment() == false)
             {
                 return ElementApplicationResult.Rejected(
-                    _request,
                     ElementApplicationRejectionReason.TargetCannotReceiveAttachment,
                     primaryAttachment);
             }
@@ -243,17 +255,13 @@ namespace Game.Gameplay.Element
             if (IsFinite(expiresAt) == false || expiresAt <= _request.ApplicationTime)
             {
                 return ElementApplicationResult.Rejected(
-                    _request,
                     ElementApplicationRejectionReason.InvalidAttachmentDuration,
                     primaryAttachment);
             }
 
-            float nextAllowedTime =
-                _request.ApplicationTime + _request.Source.SourceTargetIntervalSeconds;
-            if (IsFinite(nextAllowedTime) == false)
+            if (TryCalculateNextAllowedTime(_request, out float nextAllowedTime) == false)
             {
                 return ElementApplicationResult.Rejected(
-                    _request,
                     ElementApplicationRejectionReason.InvalidRequest,
                     primaryAttachment);
             }
@@ -262,14 +270,13 @@ namespace Game.Gameplay.Element
             // 此判断必须早于间隔检查，使重复提交返回 Unchanged 而不是冷却拒绝。
             if (primaryAttachment.RepresentsSameApplication(_request, expiresAt))
             {
-                return ElementApplicationResult.Unchanged(_request, primaryAttachment);
+                return ElementApplicationResult.Unchanged(primaryAttachment);
             }
 
             // 来源—目标间隔只约束新的施加尝试，不是全局元素或反应冷却。
             if (IsSourceTargetIntervalAllowed(_request) == false)
             {
                 return ElementApplicationResult.Rejected(
-                    _request,
                     ElementApplicationRejectionReason.SourceTargetIntervalActive,
                     primaryAttachment);
             }
@@ -278,7 +285,7 @@ namespace Game.Gameplay.Element
             {
                 // 不同元素只交出“已有附着 + 触发请求”。ELM-030 会按版本原子判定和消费，
                 // 本阶段不提前写入间隔或改变槽，否则反应失败时无法恢复原状态。
-                return ElementApplicationResult.ReactionRequired(_request, primaryAttachment);
+                return ElementApplicationResult.ReactionRequired(primaryAttachment);
             }
 
             // 空槽提交 Attached；已有同元素提交 Refreshed，并用最新合法请求替换来源快照。
@@ -295,7 +302,7 @@ namespace Game.Gameplay.Element
                 nextAttachmentVersion,
                 _request,
                 expiresAt);
-            RecordSourceTargetInterval(_request);
+            RecordSourceTargetInterval(_request.Source.SourceId, nextAllowedTime);
             PublishChange(
                 changeKind,
                 previousAttachment,
@@ -304,55 +311,17 @@ namespace Game.Gameplay.Element
 
             return ElementApplicationResult.Committed(
                 status,
-                _request,
-                previousAttachment,
                 primaryAttachment);
         }
 
-        private ElementApplicationRejectionReason ValidateRequestStructure(
+        /// <summary>判断请求冻结的目标引用和身份是否仍属于本 Runtime 当前生命周期。</summary>
+        /// <param name="_request">已经由元素请求工厂建立并交给目标处理的请求。</param>
+        /// <returns>目标引用和 TargetId 都匹配当前绑定时返回 <see langword="true"/>。</returns>
+        private bool MatchesCurrentTarget(
             in ElementApplicationRequest _request)
         {
-            if (isActiveAndEnabled == false ||
-                combatant == null ||
-                boundTargetId.IsValid == false ||
-                combatant.MatchesCurrentIdentity(boundTargetId) == false)
-            {
-                return ElementApplicationRejectionReason.AttachmentOwnerNotReady;
-            }
-
-            if (_request.Source.IsCreated == false ||
-                _request.Source.SourceId.IsValid == false ||
-                Enum.IsDefined(typeof(ElementType), _request.Source.Element) == false ||
-                _request.Source.Element == ElementType.None ||
-                _request.ExecutionId.IsValid == false ||
-                _request.IntervalKey.IsValid == false)
-            {
-                return ElementApplicationRejectionReason.InvalidRequest;
-            }
-
-            if (_request.TargetCombatant != combatant ||
-                _request.TargetId != boundTargetId ||
-                _request.IntervalKey.TargetId != boundTargetId ||
-                _request.IntervalKey.SourceId != _request.Source.SourceId ||
-                combatant.Faction != CombatFaction.Enemy)
-            {
-                return ElementApplicationRejectionReason.InvalidTarget;
-            }
-
-            if (IsFinite(_request.ApplicationTime) == false || _request.ApplicationTime < 0f)
-            {
-                return ElementApplicationRejectionReason.InvalidApplicationTime;
-            }
-
-            if (IsFinite(_request.Source.SourceTargetIntervalSeconds) == false ||
-                _request.Source.SourceTargetIntervalSeconds < 0f ||
-                IsFinite(_request.Source.AttachmentDurationSeconds) == false ||
-                _request.Source.AttachmentDurationSeconds <= 0f)
-            {
-                return ElementApplicationRejectionReason.InvalidRequest;
-            }
-
-            return ElementApplicationRejectionReason.None;
+            return _request.TargetCombatant == combatant
+                && _request.TargetId == boundTargetId;
         }
 
         /// <summary>
@@ -400,7 +369,7 @@ namespace Game.Gameplay.Element
                     ClearPrimaryAttachment(ElementAttachmentChangeKind.TargetReset, _currentTime);
                 }
 
-                nextAllowedTimesByKey.Clear();
+                nextAllowedTimesBySource.Clear();
             }
             else if (healthComponent.IsHealthDepleted)
             {
@@ -409,7 +378,7 @@ namespace Game.Gameplay.Element
                     ClearPrimaryAttachment(ElementAttachmentChangeKind.TargetDepleted, _currentTime);
                 }
 
-                nextAllowedTimesByKey.Clear();
+                nextAllowedTimesBySource.Clear();
             }
             else if (primaryAttachment.IsValid && _currentTime >= primaryAttachment.ExpiresAt)
             {
@@ -433,48 +402,58 @@ namespace Game.Gameplay.Element
         private bool IsSourceTargetIntervalAllowed(in ElementApplicationRequest _request)
         {
             // 等于边界时间时允许再次施加，只有严格早于下一允许时间才拒绝。
-            return nextAllowedTimesByKey.TryGetValue(
-                    _request.IntervalKey,
+            return nextAllowedTimesBySource.TryGetValue(
+                    _request.Source.SourceId,
                     out float nextAllowedTime) == false
                 || _request.ApplicationTime >= nextAllowedTime;
         }
 
-        private void RecordSourceTargetInterval(in ElementApplicationRequest _request)
+        private static bool TryCalculateNextAllowedTime(
+            in ElementApplicationRequest _request,
+            out float _nextAllowedTime)
         {
-            float intervalSeconds = _request.Source.SourceTargetIntervalSeconds;
-            if (intervalSeconds <= 0f)
+            _nextAllowedTime =
+                _request.ApplicationTime + _request.Source.SourceTargetIntervalSeconds;
+            return IsFinite(_nextAllowedTime);
+        }
+
+        private void RecordSourceTargetInterval(
+            ElementApplicationSourceId _sourceId,
+            float _nextAllowedTime)
+        {
+            if (_nextAllowedTime <= latestProcessedRuntimeTime)
             {
                 // 零间隔来源不保留无意义字典项。
-                nextAllowedTimesByKey.Remove(_request.IntervalKey);
+                nextAllowedTimesBySource.Remove(_sourceId);
                 return;
             }
 
-            nextAllowedTimesByKey[_request.IntervalKey] = _request.ApplicationTime + intervalSeconds;
+            nextAllowedTimesBySource[_sourceId] = _nextAllowedTime;
         }
 
         private void PruneExpiredIntervals(float _currentTime)
         {
-            if (nextAllowedTimesByKey.Count == 0)
+            if (nextAllowedTimesBySource.Count == 0)
             {
                 return;
             }
 
             // 先收集再删除，避免在 foreach 枚举 Dictionary 时修改集合。
-            expiredIntervalKeys.Clear();
-            foreach (KeyValuePair<ElementApplicationIntervalKey, float> entry in nextAllowedTimesByKey)
+            expiredIntervalSourceIds.Clear();
+            foreach (KeyValuePair<ElementApplicationSourceId, float> entry in nextAllowedTimesBySource)
             {
                 if (_currentTime >= entry.Value)
                 {
-                    expiredIntervalKeys.Add(entry.Key);
+                    expiredIntervalSourceIds.Add(entry.Key);
                 }
             }
 
-            for (int i = 0; i < expiredIntervalKeys.Count; i++)
+            for (int i = 0; i < expiredIntervalSourceIds.Count; i++)
             {
-                nextAllowedTimesByKey.Remove(expiredIntervalKeys[i]);
+                nextAllowedTimesBySource.Remove(expiredIntervalSourceIds[i]);
             }
 
-            expiredIntervalKeys.Clear();
+            expiredIntervalSourceIds.Clear();
         }
 
         private void ClearPrimaryAttachment(
@@ -524,8 +503,9 @@ namespace Game.Gameplay.Element
         {
             // 这些状态全部只属于一个 CombatantId 生命周期，绝不能泄漏到对象池复用后的新身份。
             primaryAttachment = default;
-            nextAllowedTimesByKey.Clear();
-            expiredIntervalKeys.Clear();
+            nextAllowedTimesBySource.Clear();
+            expiredIntervalSourceIds.Clear();
+            reactedExecutionIds.Clear();
             nextAttachmentVersion = 0L;
             hasEstablishedRuntimeTimeline = false;
             latestProcessedRuntimeTime = 0f;

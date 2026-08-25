@@ -100,8 +100,9 @@ namespace Game.Tests.PlayMode.Gameplay.Element
                 out ElementApplicationFailureReason reusedFailure), Is.True);
             Assert.That(reusedFailure, Is.EqualTo(ElementApplicationFailureReason.None));
             Assert.That(reusedRequest.Source.SourceId, Is.EqualTo(sourceId));
+            Assert.That(reusedRequest.Source, Is.SameAs(firstRequest.Source));
             Assert.That(reusedRequest.TargetId, Is.EqualTo(target.Id));
-            Assert.That(reusedRequest.IntervalKey, Is.Not.EqualTo(firstRequest.IntervalKey));
+            Assert.That(reusedRequest.TargetId, Is.Not.EqualTo(firstRequest.TargetId));
             Assert.That(target.Health.IsInitialized, Is.False);
         }
 

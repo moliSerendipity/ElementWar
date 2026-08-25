@@ -1,10 +1,11 @@
 # 功能：元素附着运行时与生命周期 v1
 
-- 状态：Verified
+- 状态：Fast Verified（并额外通过 PlayMode；现有 Editor 手动 Test Runner 证据）
 - 负责人：Codex / 项目维护者
-- 维护日期：2026-08-20
+- 维护日期：2026-08-26
 - 关联 Roadmap 任务：`ELM-020`
 - 关联 ADR：[`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](../Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md)
+- 后续实现修订：[`ElementPipelineSimplificationV1.md`](ElementPipelineSimplificationV1.md)
 - 授权记录：2026-08-20，用户在只读检查与推荐契约总结后明确回复“开始实施”，授权包含 Bootstrap 精确序列化迁移及同元素刷新采用最近一次合法来源。
 
 ## 目标与范围
@@ -17,11 +18,13 @@
 ## 当前事实与批准方案
 
 - 架构与状态所有权以 [`Architecture.md`](../Architecture.md) 为准；元素目标规则以 [`Elements.md`](../Design/Elements.md) 为准；输入请求契约见 [`ElementApplicationProfileSnapshotV1.md`](ElementApplicationProfileSnapshotV1.md)。
-- `ElementAttachmentRuntime` 是敌方 `Combatant` 根的唯一附着事实所有者；首版只启用索引 `0` 的主要槽，并通过只读数量/索引查询保留未来集合边界。
+- `ElementAttachmentRuntime` 是敌方 `Combatant` 根的唯一附着事实所有者；首版只有一个主要槽，并只暴露 `TryGetPrimaryAttachment`，不为尚不存在的多槽需求预设数量或索引 API。
 - `ElementApplicationResolver` 消费 `ElementApplicationRequest`。目标身份、目标 Health 初始化/耗尽、来源—目标间隔或时间非法时返回明确拒绝，不写入部分状态。
+- 目标提交前只额外核对请求冻结的目标引用与 `TargetId`；时间合法性和 Runtime 绑定由 `TryAdvanceTime` 统一负责，Health/阵营由 `CanReceiveAttachment` 负责，反应提交不重复执行已经同步完成的请求与时间校验。
 - 无附着时提交新状态；同元素再次施加时刷新持续时间，并以最近一次合法请求更新来源与执行快照；完全相同请求不制造新版本或事件。
-- 不同元素返回保留已有附着与触发请求的待反应结果，不修改当前槽，也不提前提交来源—目标间隔；`ELM-030` 负责原子判定与消费。
-- 每次附着或刷新生成递增版本；显式消费必须匹配当前版本，避免迟到消费者清除更新后的状态。
+- 不同元素返回一个关联已有附着的待反应结果，不修改当前槽，也不提前提交来源间隔；调用管线继续持有触发请求并负责进入反应事务。
+- 每次附着或刷新生成递增版本；消费只允许由目标内部反应事务完成，并必须匹配当前附着快照版本，避免迟到消费者清除更新后的状态。
+- 来源间隔在当前目标生命周期内只按 `ElementApplicationSourceId` 保存；TargetId 由 Runtime 自身绑定边界保证，不在每个字典键中重复。
 - `Combatant` 建立/结束目标生命周期，`EnemyRoot` 使用显式 `Time.time` 推进附着；不为 Gameplay 附着组件增加第二条独立 `Update` 主链。
 - 到期、消费、Health 耗尽/重置和禁用仅在当前槽实际存在时清空一次；禁用同时清空来源—目标间隔，重新启用后的新 `TargetId` 不继承旧状态。
 - `ElementAttachmentChangedEvent` 只在附着事实真正提交、刷新或清除后发布。Presentation 调试层只订阅/查询，不裁决附着。
@@ -33,9 +36,9 @@
 |---|---|---|---|---|
 | AC-01 | 活动、已初始化且存活的敌方目标没有附着 | 提交合法元素请求 | 主要槽保存元素、最近来源、执行、目标、起止时间和版本，并发布一次 Attached | EditMode / PlayMode |
 | AC-02 | 目标已有同元素附着 | 在间隔允许时再次施加 | 到期时间按新请求刷新，来源更新为最近合法来源，版本递增且只发布一次 Refreshed | EditMode |
-| AC-03 | 目标已有不同元素附着 | 提交另一元素请求 | 返回 ReactionRequired，保留已有附着与触发请求，槽、版本、间隔和事件均不变 | EditMode |
+| AC-03 | 目标已有不同元素附着 | 提交另一元素请求 | 返回 ReactionRequired 与已有附着；调用方仍持有触发请求，槽、版本、间隔和事件均不变 | EditMode |
 | AC-04 | 同一来源—目标配置了非零间隔 | 在边界前及边界时再次施加 | 边界前明确拒绝；边界时允许，不建立全局冷却 | EditMode |
-| AC-05 | 当前附着版本有效 | 到期、匹配版本消费或重复处理 | 首次清除并发布对应事件；后续处理保持空状态且不重复发布 | EditMode / PlayMode |
+| AC-05 | 当前附着版本有效 | 到期、反应事务消费或重复处理 | 首次清除并发布对应事件；后续处理保持空状态且不重复发布 | EditMode / PlayMode |
 | AC-06 | 目标带有附着 | Health 耗尽/重置，或目标禁用再启用 | 状态和间隔清空；重新启用使用新 TargetId，旧请求/版本不能修改新生命周期 | PlayMode |
 | AC-07 | Bootstrap 已完成精确迁移 | 加载场景与检查组件 | 两处敌方 Combatant 各有一个运行时所有者，玩家没有；调试 Presenter 存在且没有 Missing Script | EditMode / 序列化扫描 |
 | AC-08 | 已提交附着事件到达 Presentation | 附着、刷新或清除 | 开发期叠层稳定维护当前目标列表；Presentation 不反向写入 Gameplay | PlayMode / 人工观察 |
@@ -46,19 +49,21 @@
 |---|---|---|---|
 | EditMode | 施加、重复、刷新、待反应、间隔边界、版本消费、到期、重置、非法目标、事件次数、Bootstrap 装配与 Missing Script | 完整套件 36/36；本功能 5/5 | `Logs/Verification/20260820-201348/EditMode-results.xml`、`EditMode.log`、`verification-summary.json` |
 | PlayMode | 真实组件禁用/复用、旧请求拒绝、生命耗尽/重置、事件到调试 Presenter | 完整套件 8/8；本功能 2/2 | `Logs/Verification/20260820-201420-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
+| 当前编译 | 2026-08-26 请求校验精简后的 Gameplay、EditModeTests 与 PlayModeTests | MSBuild 全部通过 | 系统临时目录 `ElementWar-AttachmentValidation-20260826-0054` |
+| 当前 Unity 回归 | 2026-08-26 最新差异的 EditMode / PlayMode | 用户在现有 Editor 中手动运行并确认 EditMode 48/48、PlayMode 9/9 全部成功 | 无独立 XML；Test Runner 当前列表核对总量 48/9 |
 | 人工验收 | Bootstrap 中以真实武器来源观察附着倒计时 | 未运行；`WPN-010` 尚未接入生产来源 | 无，不以自动化或代码检查替代 |
 
 - 实际命令：`pwsh -NoProfile -File .\Tools\Verify-ElementWarEditMode.ps1`；`pwsh -NoProfile -File .\Tools\Verify-ElementWarPlayMode.ps1`；Bootstrap GUID/引用扫描；测试日志失败标记扫描；`git diff --check`。
-- 实际修改：新增目标侧附着快照、结果、Resolver、版本化消费、来源—目标间隔和已提交事件；由 `Combatant` 管理身份生命周期、`EnemyRoot` 推进时间；Bootstrap 两处敌方根装配唯一所有者，EventBus 根装配只读开发调试叠层，玩家根保持无所有者。
-- 验收等级：达到 Fast Verified，并额外完成完整 PlayMode 与 Bootstrap 序列化/Missing Script 检查。Windows64、性能与主线人工玩法验收未运行，因此不声明 Full Verified 或 Accepted。
-- 剩余风险：真实武器/技能尚未生产元素请求；异元素当前只返回 `ReactionRequired`，尚无 `ELM-030` 反应事务消费它；调试叠层虽通过事件同步测试，但没有生产来源可供本阶段人工观察。
+- 历史实际修改：新增目标侧附着快照、结果、Resolver、版本安全消费、来源间隔和已提交事件；由 `Combatant` 管理身份生命周期、`EnemyRoot` 推进时间；Bootstrap 两处敌方根装配唯一所有者，EventBus 根装配只读开发调试叠层，玩家根保持无所有者。公开索引/数量/消费 API 已在 2026-08-23 精简切片中移除。
+- 验收等级：2026-08-26 最新请求校验差异达到 Fast Verified，并额外通过 PlayMode；运行证据来自现有 Editor 手动 Test Runner，未生成独立 XML。Windows64、性能与主线人工玩法仍未运行。
+- 剩余风险：`ELM-030` 已消费异元素待反应结果；真实武器/技能仍未生产元素请求，调试叠层因此没有生产来源可供人工观察。
 - 回滚单位：Gameplay 状态/事件与接入、Presentation 调试层、Bootstrap 迁移、测试、Feature Spec/ADR 和路线状态整体回滚。
 
 ## 收口检查
 
 - [x] 目标、范围、方案和可观察验收已有明确授权。
 - [x] 实现与 scoped diff 未超出授权，且未吸收用户无关改动。
-- [x] 实际测试数量大于 0；失败、未运行和证据缺口均如实记录。
+- [x] 2026-08-26 最新差异的 EditMode 48/48、PlayMode 9/9 已由用户手动运行并确认成功，证据边界已如实记录。
 - [x] 最终行为、运行方式、证据路径、维护约束和回滚单位仍然有效。
 - [x] 项目级事实与 ADR 使用引用，本 Spec 不保留重复正文或可恢复的过程细节。
 - [x] 对应 Roadmap 任务已更新状态、证据链接、后续解锁项和新的唯一 `Next`。

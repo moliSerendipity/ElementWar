@@ -45,7 +45,7 @@ namespace Game.Tests.EditMode.Gameplay.Element
 
         /// <summary>空、重复或非法 Profile 数据必须在统一配置校验中产生明确错误。</summary>
         [Test]
-        public void ValidationRejectsEmptyDuplicateAndInvalidProfileData()
+        public void ValidationRejectsEmptyDuplicateAndInvalidProfileFields()
         {
             ElementApplicationProfileConfig emptyId = CreateProfile(
                 string.Empty,
@@ -124,10 +124,10 @@ namespace Game.Tests.EditMode.Gameplay.Element
         }
 
         /// <summary>
-        /// 元素请求不需要伤害请求或结果；来源—目标间隔键跨执行稳定并随目标变化。
+        /// 元素请求不需要伤害请求或结果；同一来源可跨执行复用，并冻结各自目标身份。
         /// </summary>
         [Test]
-        public void RequestsDoNotRequireDamageAndUseSourceTargetIntervalKey()
+        public void RequestsDoNotRequireDamageAndFreezeTargetIdentity()
         {
             ElementApplicationProfileConfig profile = CreateProfile(
                 "RifleFireApplication",
@@ -175,11 +175,13 @@ namespace Game.Tests.EditMode.Gameplay.Element
 
             Assert.That(firstRequest.ExecutionId, Is.EqualTo(firstExecution));
             Assert.That(firstRequest.Source.SourceId, Is.EqualTo(sourceId));
+            Assert.That(firstRequest.Source, Is.SameAs(snapshot));
             Assert.That(firstRequest.TargetCombatant, Is.SameAs(firstTarget));
             Assert.That(firstRequest.TargetId, Is.EqualTo(firstTarget.Id));
-            Assert.That(firstRequest.IntervalKey.IsValid, Is.True);
-            Assert.That(firstRequest.IntervalKey, Is.EqualTo(repeatedTargetRequest.IntervalKey));
-            Assert.That(firstRequest.IntervalKey, Is.Not.EqualTo(secondTargetRequest.IntervalKey));
+            Assert.That(repeatedTargetRequest.Source, Is.SameAs(snapshot));
+            Assert.That(secondTargetRequest.Source, Is.SameAs(snapshot));
+            Assert.That(repeatedTargetRequest.TargetId, Is.EqualTo(firstRequest.TargetId));
+            Assert.That(secondTargetRequest.TargetId, Is.Not.EqualTo(firstRequest.TargetId));
             Assert.That(firstRequest.ExecutionId, Is.Not.EqualTo(repeatedTargetRequest.ExecutionId));
         }
 
@@ -235,18 +237,6 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 sourceObject,
                 ElementApplicationFailureReason.ProfileDisabled);
 
-            ElementApplicationProfileConfig invalidProfile = CreateProfile(
-                "InvalidDataApplication",
-                ElementType.None,
-                0f,
-                6f);
-            AssertSourceFailure(
-                CreateConfigService(invalidProfile),
-                invalidProfile.ConfigId,
-                sourceId,
-                player,
-                sourceObject,
-                ElementApplicationFailureReason.InvalidProfileData);
             AssertSourceFailure(
                 validService,
                 validProfile.ConfigId,
@@ -429,12 +419,12 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 out ElementApplicationFailureReason failureReason);
 
             Assert.That(created, Is.False);
-            Assert.That(snapshot, Is.EqualTo(default(ElementApplicationSourceSnapshot)));
+            Assert.That(snapshot, Is.Null);
             Assert.That(failureReason, Is.EqualTo(_expectedReason));
         }
 
         private static void AssertRequestFailure(
-            in ElementApplicationSourceSnapshot _source,
+            ElementApplicationSourceSnapshot _source,
             AttackExecutionId _executionId,
             Combatant _target,
             float _applicationTime,

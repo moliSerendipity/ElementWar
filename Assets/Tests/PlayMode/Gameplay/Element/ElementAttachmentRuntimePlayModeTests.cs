@@ -107,21 +107,20 @@ namespace Game.Tests.PlayMode.Gameplay.Element
             yield return null;
 
             ElementApplicationRequest oldRequest = CreateRequest(fire, target, Time.time);
-            ElementApplicationResult attached =
-                ElementApplicationResolver.ResolveAndApply(oldRequest);
+            Apply(oldRequest);
             CombatantId oldTargetId = target.Id;
 
-            Assert.That(attached.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
+            Assert.That(runtime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot attached), Is.True);
             Assert.That(presenter.TrackedAttachmentCount, Is.EqualTo(1));
             Assert.That(
                 presenter.TryGetTrackedAttachment(oldTargetId, out ElementAttachmentSnapshot tracked),
                 Is.True);
-            Assert.That(tracked.Version, Is.EqualTo(attached.CurrentAttachment.Version));
+            Assert.That(tracked.Version, Is.EqualTo(attached.Version));
 
             target.gameObject.SetActive(false);
             yield return null;
 
-            Assert.That(runtime.AttachmentCount, Is.Zero);
+            Assert.That(runtime.TryGetPrimaryAttachment(out _), Is.False);
             Assert.That(runtime.BoundTargetId.IsValid, Is.False);
             Assert.That(target.Id.IsValid, Is.False);
             Assert.That(presenter.TrackedAttachmentCount, Is.Zero);
@@ -132,18 +131,13 @@ namespace Game.Tests.PlayMode.Gameplay.Element
             Assert.That(target.Id.IsValid, Is.True);
             Assert.That(target.Id, Is.Not.EqualTo(oldTargetId));
             Assert.That(runtime.BoundTargetId, Is.EqualTo(target.Id));
-            ElementApplicationResult staleLifecycle =
-                ElementApplicationResolver.ResolveAndApply(oldRequest);
-            Assert.That(staleLifecycle.Status, Is.EqualTo(ElementApplicationResolutionStatus.Rejected));
-            Assert.That(
-                staleLifecycle.RejectionReason,
-                Is.EqualTo(ElementApplicationRejectionReason.InvalidTarget));
+            Apply(oldRequest);
+            Assert.That(runtime.TryGetPrimaryAttachment(out _), Is.False);
 
-            ElementApplicationResult reused = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, Time.time));
-            Assert.That(reused.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
-            Assert.That(reused.CurrentAttachment.Version, Is.EqualTo(1L));
-            Assert.That(reused.CurrentAttachment.TargetId, Is.EqualTo(target.Id));
+            Apply(CreateRequest(fire, target, Time.time));
+            Assert.That(runtime.TryGetPrimaryAttachment(out ElementAttachmentSnapshot reused), Is.True);
+            Assert.That(reused.Version, Is.EqualTo(1L));
+            Assert.That(reused.TargetId, Is.EqualTo(target.Id));
             Assert.That(presenter.TrackedAttachmentCount, Is.EqualTo(1));
             Assert.That(presenter.TryGetTrackedAttachment(oldTargetId, out _), Is.False);
             Assert.That(presenter.TryGetTrackedAttachment(target.Id, out _), Is.True);
@@ -168,30 +162,26 @@ namespace Game.Tests.PlayMode.Gameplay.Element
             yield return null;
 
             float firstApplicationTime = Time.time;
-            ElementApplicationResult first = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, firstApplicationTime));
+            Apply(CreateRequest(fire, target, firstApplicationTime));
             SetPrivateField(health, "currentHealth", 0f);
             runtime.Tick(firstApplicationTime + 0.1f);
             runtime.Tick(firstApplicationTime + 0.2f);
 
-            Assert.That(first.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
             Assert.That(health.IsHealthDepleted, Is.True);
-            Assert.That(runtime.AttachmentCount, Is.Zero);
+            Assert.That(runtime.TryGetPrimaryAttachment(out _), Is.False);
             Assert.That(presenter.TrackedAttachmentCount, Is.Zero);
             Assert.That(receivedEvents.Count, Is.EqualTo(2));
             Assert.That(receivedEvents[1].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.TargetDepleted));
 
             health.RestoreFullHealth();
             float secondApplicationTime = firstApplicationTime + 0.3f;
-            ElementApplicationResult second = ElementApplicationResolver.ResolveAndApply(
-                CreateRequest(fire, target, secondApplicationTime));
+            Apply(CreateRequest(fire, target, secondApplicationTime));
             health.ResetRuntimeState();
             runtime.Tick(secondApplicationTime + 0.1f);
             runtime.Tick(secondApplicationTime + 0.2f);
 
-            Assert.That(second.Status, Is.EqualTo(ElementApplicationResolutionStatus.Attached));
             Assert.That(health.IsInitialized, Is.False);
-            Assert.That(runtime.AttachmentCount, Is.Zero);
+            Assert.That(runtime.TryGetPrimaryAttachment(out _), Is.False);
             Assert.That(presenter.TrackedAttachmentCount, Is.Zero);
             Assert.That(receivedEvents.Count, Is.EqualTo(4));
             Assert.That(receivedEvents[3].ChangeKind, Is.EqualTo(ElementAttachmentChangeKind.TargetReset));
@@ -235,8 +225,14 @@ namespace Game.Tests.PlayMode.Gameplay.Element
             return snapshot;
         }
 
+        private static ElementReactionResult Apply(
+            in ElementApplicationRequest _request)
+        {
+            return ElementReactionPipeline.ResolveAndApply(_request);
+        }
+
         private static ElementApplicationRequest CreateRequest(
-            in ElementApplicationSourceSnapshot _source,
+            ElementApplicationSourceSnapshot _source,
             Combatant _target,
             float _applicationTime)
         {

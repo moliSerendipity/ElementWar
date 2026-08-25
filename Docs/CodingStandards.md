@@ -70,6 +70,41 @@ private bool TryConsumeAmmo(int _amount)
 - 面向策划或美术的序列化字段，在含义、单位或效果不直观时使用 `[Tooltip]`；可机械表达的范围使用 `[Min]`、`[Range]` 等属性。
 - 常量和 `static readonly` 字段只有在数值来源、选择理由或不变量不明显时注释。
 
+## 校验所有权与运行时边界
+
+- 每项不变量必须只有一个权威校验层：序列化配置的结构、枚举、数量、重复项和引用完整性由 `ConfigBase.Validate` / `ConfigValidationRunner` 在启动阶段负责；一次请求的来源、目标、身份、时间和参数由 Gameplay 入口负责；版本、生命周期、间隔、去重和其他可变状态由权威 Runtime 负责。
+- `TryGetXxx`、只读查询和每帧/每次命中的热路径默认信任已经通过上游校验的不变量，不得再次扫描整张配置表或重复执行同一组结构校验。可以保留避免本方法自身空引用、越界或状态竞争所需的最小保护。
+- 只有当条件可能在上游校验后发生变化，或调用入口明确接受未受信任数据时，才允许跨层重复防御；代码注释必须说明新的失败来源，并由对应测试证明。
+- 添加校验前必须回答：它校验谁拥有的数据、上一层是否已经保证、删除后合法调用路径会出现什么具体错误。第三项没有明确答案时，不增加该判断。
+- 已校验配置值不得在热路径重复调用 `Enum.IsDefined`、完整 `Validate` 或等价的 `HasValidXxx` 扫描；固定小规模表优先直接遍历，没有性能或规模证据时不增加缓存、字典或平行状态。
+
+## 函数体内的逻辑块注释
+
+- 多阶段方法，以及包含非显然校验顺序、状态转换、生命周期、公式、事务写回或事件发布的方法，必须在函数体内按逻辑块添加简洁中文注释，不能只写 XML `<summary>` 后留下大段无解释实现。
+- 一条注释可以覆盖紧随其后的若干语句和分支。注释应放在逻辑块之前，并说明目的、顺序原因、依赖的不变量或失败时为何保持状态不变。
+- 常见需要注释的逻辑块包括：无副作用预检、时间/生命周期同步、接收资格、数值派生与边界保护、重复/间隔裁决、原子状态提交和已提交事实发布。
+- 不要求逐句翻译代码。简单赋值、直白 getter、单一转调、名称已经完整表达意图的短分支和机械枚举循环可以不写块注释。
+- 连续代码虽然语法简单，但如果前后顺序会影响结果或读者需要反推领域规则，仍应拆成逻辑块并解释；不得用“代码本身能看懂”省略关键意图。
+
+```csharp
+// 旧请求不能推进或清理对象复用后的新生命周期，因此必须在时间同步前拦截。
+if (MatchesCurrentTarget(_request) == false)
+{
+    return ElementApplicationResult.Rejected(
+        ElementApplicationRejectionReason.InvalidTarget,
+        primaryAttachment);
+}
+
+// 在读取当前槽前同步到请求时间，保证过期、死亡或重置状态已经被清理。
+ElementApplicationRejectionReason rejectionReason;
+if (TryAdvanceTime(_request.ApplicationTime, out rejectionReason) == false)
+{
+    return ElementApplicationResult.Rejected(
+        rejectionReason,
+        primaryAttachment);
+}
+```
+
 ## 实现注释
 
 - 注释解释“为什么”和约束，不逐行翻译“做了什么”。
