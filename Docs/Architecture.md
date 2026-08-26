@@ -1,7 +1,7 @@
 # ElementWar 架构与边界
 
 - 状态：当前新 C# 架构基线
-- 核对日期：2026-08-23
+- 核对日期：2026-08-26
 - Unity：`2022.3.62f2c1`
 
 本文件是采用后的架构、主线和旧代码边界唯一维护来源。每次高影响任务仍需根据实时仓库复核是否发生漂移。
@@ -59,6 +59,7 @@ Gameplay 来源所有者 → ElementApplicationSourceSnapshot → ElementApplica
 ```
 
 - `Combatant` 是权威战斗目标根和阵营事实所有者；子 Collider 必须先解析到最近的活动 `Combatant`，不能各自成为目标。
+- `CombatRangeQuery` 是球形范围目标集合的共享 Gameplay 裁决入口：固定忽略 Trigger，复用活动目标解析、生命与阵营规则，按当前 `CombatantId` 去重，并可选执行环境 LOS；只读结果 `CombatRangeTarget` 保留目标、最近表面点和距离，最终按距离、CombatantId 稳定排序。查询不持有状态或缓存，具体反应、投射物和伤害消费者仍由后续任务接入。
 - `DamageRequest` 在创建时冻结 `AttackExecutionId`、责任 `CombatantId` 和目标 `CombatantId`；`DamageResult` 与 Combat 事件保留这些身份，以 `SourceObject` 保存武器运行时、攻击配置等具体来源。
 - `DamageAppliedEvent` 是表现层消费“伤害已提交”事实的唯一伤害事件；步枪对任意物理表面的原始命中仍由 `WeaponFiredEvent.HadHit` 表达，不能把两者混为同一语义。
 - `DamageResolver` 是运行时身份、阵营许可和目标侧重复执行的最终裁决点；首版只允许 `PlayerParty ↔ Enemy`，同阵营与 `Unassigned` 均拒绝。同一执行对同一目标至多提交一次，但可分别命中不同目标。
@@ -69,7 +70,7 @@ Gameplay 来源所有者 → ElementApplicationSourceSnapshot → ElementApplica
 - `ElementAttachmentRuntime` 是敌方目标当前附着、来源间隔、附着版本和本目标生命周期反应执行去重的唯一所有者；间隔在目标生命周期内只以 `ElementApplicationSourceId` 为键。同元素刷新使用最近合法来源，不同元素由管线映射后在目标侧原子登记间隔/去重并消费版本匹配附着。`EnemyRoot` 用显式时间推进到期/生命清理，Presentation 只能消费已提交事件、成功反应结果与只读快照。本阶段没有反应事件或具体反应输出。
 - 解析公式是确定性的，不包含随机暴击；头部与弱点只应用明确倍率。
 - `HealthComponent.CurrentHealth` 是生命数值的唯一存储事实，`IsHealthDepleted` 由初始化状态和当前生命值派生；角色事实、敌人状态机和表现快照只读取或映射该事实。
-- 公共契约、迁移约束和取舍见 [`ADR-Combat-Domain-Contract-v1.md`](Decisions/ADR-Combat-Domain-Contract-v1.md)、[`ADR-Combatant-Faction-Execution-Identity-v1.md`](Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md)、[`ADR-Element-Application-Profile-Snapshot-v1.md`](Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)、[`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md) 与现行 [`ADR-Element-Pipeline-Simplification-v1.md`](Decisions/ADR-Element-Pipeline-Simplification-v1.md)。
+- 公共契约、迁移约束和取舍见 [`ADR-Combat-Domain-Contract-v1.md`](Decisions/ADR-Combat-Domain-Contract-v1.md)、[`ADR-Combatant-Faction-Execution-Identity-v1.md`](Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md)、[`ADR-Combat-Range-Target-Query-v1.md`](Decisions/ADR-Combat-Range-Target-Query-v1.md)、[`ADR-Element-Application-Profile-Snapshot-v1.md`](Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)、[`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md) 与现行 [`ADR-Element-Pipeline-Simplification-v1.md`](Decisions/ADR-Element-Pipeline-Simplification-v1.md)。
 
 ## 当前主线
 
@@ -114,6 +115,7 @@ Gameplay 来源所有者 → ElementApplicationSourceSnapshot → ElementApplica
 | 编辑期默认值 | Definition 配置 |
 | 可变运行时数值 | Gameplay Stat/Runtime 组件 |
 | 战斗目标根、当前运行时身份与阵营 | `Combatant` |
+| 范围查询时的合法目标集合与最近表面几何事实 | 无持久所有者；Gameplay `CombatRangeQuery` 每次查询生成只读 `CombatRangeTarget` 结果 |
 | 攻击执行身份 | 成立攻击的 Gameplay 生产者创建，随 `DamageRequest` 只读透传 |
 | 元素施加编辑期规则 | `ElementApplicationProfileConfig` |
 | 首版元素对到反应类型的固定规则 | Gameplay `ElementReactionPipeline.TryResolveReactionType` |

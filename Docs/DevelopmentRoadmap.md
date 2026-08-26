@@ -26,15 +26,16 @@
 
 ## 当前唯一下一项
 
-**CMB-020 — 范围目标查询与友伤过滤。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#cmb-020-范围目标查询与友伤过滤)。
+**CMB-030 — 韧性、失衡与受控状态事实。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#cmb-030-韧性失衡与受控状态事实)。
 
-选择它是因为 `ELM-030` 已关闭固定元素对映射、同命中顺序、原子消费、归因和去重；首个超载输出仍依赖统一的范围目标根解析、阵营过滤、多 Collider 去重和确定顺序。先完成通用范围查询，`ELM-040` 与后续爆炸/连锁效果才能共享同一目标集合事实；`CMB-030` 与 `WPN-010` 仍保持 `Ready`。
+选择它是因为 `CMB-020` 已关闭统一范围目标集合、遮挡与确定顺序；首个超载闭环仍缺当前韧性、失衡和普通/精英/Boss 受控状态的权威事实。先完成这层状态所有权，`ELM-040` 才能在不直接改写 AI 或配置的前提下提交控制结果；`WPN-010` 仍保持 `Ready`。
 
 当前已完成基线：
 
 - `DOC-001`：短指令、自适应工作流与详细路线文档（本次文档切片；以本文件收口记录为准）。
 - `CMB-001`：Combat Domain Contract v1，Fast Verified 且额外完成 PlayMode；Windows64 与主线人工验收未运行。证据见 [`CombatDomainContractV1.md`](Features/CombatDomainContractV1.md)。
 - `CMB-010`：战斗目标、阵营与攻击执行身份 v1，Fast Verified 且额外完成 PlayMode 与 Bootstrap 序列化扫描；Windows64 与主线人工验收未运行。证据见 [`CombatantFactionExecutionIdentityV1.md`](Features/CombatantFactionExecutionIdentityV1.md)。
+- `CMB-020`：范围目标查询与友伤过滤 v1，Fast Verified 且额外完成 PlayMode（EditMode 52/52、PlayMode 12/12）；Windows64、性能与主线人工验收未运行。证据见 [`CombatRangeTargetQueryV1.md`](Features/CombatRangeTargetQueryV1.md)。
 - `ELM-010`：元素施加配置、来源身份与请求快照 v1，Fast Verified 且额外完成 PlayMode 与真实 Profile/Registry 加载；Windows64 与主线人工验收未运行。证据见 [`ElementApplicationProfileSnapshotV1.md`](Features/ElementApplicationProfileSnapshotV1.md)。
 - `ELM-020`：敌方元素附着运行时与生命周期 v1 实现完成；2026-08-26 删除重复请求/时间校验后程序集编译通过，并由用户在现有 Editor 中确认 EditMode 48/48、PlayMode 9/9 全部成功。证据边界见 [`ElementAttachmentRuntimeLifecycleV1.md`](Features/ElementAttachmentRuntimeLifecycleV1.md)。
 - `ELM-030`：元素反应判定、消费与归因管线 v1 已按当前真实需求精简；2026-08-26 最新差异达到 Fast Verified 并额外通过 PlayMode（手动 Test Runner：EditMode 48/48、PlayMode 9/9，无独立 XML）。现行证据见 [`ElementReactionPipelineV1.md`](Features/ElementReactionPipelineV1.md)。
@@ -76,7 +77,7 @@ flowchart LR
 
 | 已知问题 | 处理任务 | 进入时机与边界 |
 |---|---|---|
-| 范围效果仍缺统一目标集合、稳定排序、遮挡与数量策略 | `CMB-020` | `CMB-010` 已提供 Combatant、阵营和单目标去重；在首个范围反应或投射物爆炸前完成通用查询 |
+| 具体范围输出尚未接入统一查询 | `ELM-040`、`PRJ-020`、`ELM-070` | `CMB-020` 已提供目标集合与几何事实；消费者复用查询，不复制目标解析、阵营、LOS、去重或排序规则 |
 | `WeaponRuntime` 职责过多，动画事件与运行时结算边界不稳 | `WPN-020` | 首个超载闭环先证明需求，再于多武器/多弹药前用特征测试保护重构 |
 | 旧 Input Action 与新主线意图混杂 | `INP-010` | 在闪避、换枪、换元素、切人、投掷和复活输入扩展前增量迁移 |
 | 相机、HUD、输入和角色状态按单角色绑定 | `ARC-010`、`PTY-010`、`PTY-020` | 在第二角色切换前建立组合根和 Party 唯一所有权，不事后同步多个 ActiveCharacter |
