@@ -30,7 +30,6 @@ namespace Game.Tests.EditMode.Gameplay.Element
                 0f,
                 10f,
                 0f,
-                100f,
                 1f,
                 1f,
                 0f,

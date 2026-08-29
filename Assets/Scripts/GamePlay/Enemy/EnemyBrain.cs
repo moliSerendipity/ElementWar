@@ -36,6 +36,8 @@ namespace Game.Gameplay.Enemy
 
         [Header("References")]
         [SerializeField] private HealthComponent healthComponent;
+        [SerializeField] private ToughnessComponent toughnessComponent;
+        [SerializeField] private HardControlComponent hardControlComponent;
         [SerializeField] private EnemySensor sensor;
         [SerializeField] private EnemyLocomotion locomotion;
         [SerializeField] private EnemyAttack attack;
@@ -48,6 +50,7 @@ namespace Game.Gameplay.Enemy
         #region Runtime
 
         private EnemyStat enemyStat;
+        private bool wasBehaviorBlockedByControl;
 
         #endregion
 
@@ -68,6 +71,11 @@ namespace Game.Gameplay.Enemy
         /// <summary>是否已初始化。</summary>
         public bool IsInitialized { get; private set; }
 
+        /// <summary>失衡或硬控制当前是否阻断敌人移动和攻击。</summary>
+        public bool IsBehaviorBlockedByControl =>
+            (toughnessComponent != null && toughnessComponent.IsStaggered) ||
+            (hardControlComponent != null && hardControlComponent.IsHardControlled);
+
         #endregion
 
         #region Initialization
@@ -81,7 +89,13 @@ namespace Game.Gameplay.Enemy
             ResolveReferences();
 
             currentState = EnemyState.Idle;
-            IsInitialized = enemyStat != null && sensor != null && locomotion != null && attack != null;
+            wasBehaviorBlockedByControl = false;
+            IsInitialized = enemyStat != null &&
+                toughnessComponent != null &&
+                hardControlComponent != null &&
+                sensor != null &&
+                locomotion != null &&
+                attack != null;
         }
 
         #endregion
@@ -107,6 +121,14 @@ namespace Game.Gameplay.Enemy
                 return;
             }
 
+            if (IsBehaviorBlockedByControl)
+            {
+                HoldForControl();
+                return;
+            }
+
+            wasBehaviorBlockedByControl = false;
+
             switch (currentState)
             {
                 case EnemyState.Idle:
@@ -123,6 +145,24 @@ namespace Game.Gameplay.Enemy
             }
 
             locomotion.Tick();
+        }
+
+        #endregion
+
+        #region Control Hold
+
+        /// <summary>
+        /// 首次受控时取消当前攻击，随后保持停止；状态机状态不切换，控制结束后继续正常求值。
+        /// </summary>
+        private void HoldForControl()
+        {
+            if (wasBehaviorBlockedByControl == false && attack.IsAttacking)
+            {
+                attack.CancelAttack();
+            }
+
+            locomotion.StopMovement();
+            wasBehaviorBlockedByControl = true;
         }
 
         #endregion
@@ -298,6 +338,7 @@ namespace Game.Gameplay.Enemy
         /// </summary>
         private void OnEnterDead()
         {
+            wasBehaviorBlockedByControl = false;
             attack.CancelAttack();
             locomotion.Disable();
             sensor.ClearTarget();
@@ -320,6 +361,16 @@ namespace Game.Gameplay.Enemy
             if (healthComponent == null)
             {
                 healthComponent = GetComponentInParent<HealthComponent>();
+            }
+
+            if (toughnessComponent == null)
+            {
+                toughnessComponent = GetComponent<ToughnessComponent>();
+            }
+
+            if (hardControlComponent == null)
+            {
+                hardControlComponent = GetComponent<HardControlComponent>();
             }
 
             if (sensor == null)

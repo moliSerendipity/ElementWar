@@ -20,6 +20,5 @@ MonoBehaviour:
   attackPower: 10
   defense: 0
   maxShield: 0
-  toughness: 100
   damageTakenMultiplier: 1
   healingTakenMultiplier: 1

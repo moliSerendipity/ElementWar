@@ -1563,6 +1563,8 @@ GameObject:
   - component: {fileID: 925289279}
   - component: {fileID: 8800000000000000101}
   - component: {fileID: 8800000000000000201}
+  - component: {fileID: 8800000000000000301}
+  - component: {fileID: 8800000000000000401}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -1601,6 +1603,8 @@ MonoBehaviour:
   enemyStat: {fileID: 925289280}
   healthComponent: {fileID: 925289279}
   elementAttachmentRuntime: {fileID: 8800000000000000201}
+  toughnessComponent: {fileID: 8800000000000000301}
+  hardControlComponent: {fileID: 8800000000000000401}
   sensor: {fileID: 0}
   brain: {fileID: 0}
   locomotion: {fileID: 0}
@@ -1651,6 +1655,43 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   combatant: {fileID: 8800000000000000101}
   healthComponent: {fileID: 925289279}
+--- !u!114 &8800000000000000301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925289272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2938de1b52ed421788a2518e4e8b4798, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  enemyStat: {fileID: 925289280}
+  healthComponent: {fileID: 925289279}
+  currentToughness: 0
+  isStaggered: 0
+  staggerEndsAt: 0
+  lastUpdatedAt: 0
+  isConfigured: 0
+--- !u!114 &8800000000000000401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925289272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb155e2640c7456f9971f53b8ecab216, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  enemyStat: {fileID: 925289280}
+  healthComponent: {fileID: 925289279}
+  isHardControlled: 0
+  controlEndsAt: 0
+  lastUpdatedAt: 0
+  isConfigured: 0
 --- !u!114 &925289280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1667,7 +1708,6 @@ MonoBehaviour:
   maxShield: 0
   attackPower: 10
   defense: 0
-  toughness: 100
   damageTakenMultiplier: 1
   healingTakenMultiplier: 1
   physicalResistance: 0
@@ -1686,6 +1726,11 @@ MonoBehaviour:
   loseTargetRange: 20
   targetMemoryDuration: 1.5
   scanInterval: 0.15
+  enemyTier: 0
+  maxToughness: 0
+  toughnessRecoveryPerSecond: 0
+  minimumToughnessDamage: 0
+  staggerDuration: 0
   attackCooldown: 0.5
   attackSpeedMultiplier: 1
   weakPointDamageMultiplier: 1.5
@@ -2503,6 +2548,8 @@ GameObject:
   - component: {fileID: 1297331260}
   - component: {fileID: 8800000000000000102}
   - component: {fileID: 8800000000000000202}
+  - component: {fileID: 8800000000000000302}
+  - component: {fileID: 8800000000000000402}
   - component: {fileID: 1297331259}
   - component: {fileID: 1297331270}
   - component: {fileID: 1297331269}
@@ -2580,6 +2627,43 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   combatant: {fileID: 8800000000000000102}
   healthComponent: {fileID: 1297331260}
+--- !u!114 &8800000000000000302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297331258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2938de1b52ed421788a2518e4e8b4798, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  enemyStat: {fileID: 1297331261}
+  healthComponent: {fileID: 1297331260}
+  currentToughness: 0
+  isStaggered: 0
+  staggerEndsAt: 0
+  lastUpdatedAt: 0
+  isConfigured: 0
+--- !u!114 &8800000000000000402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297331258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb155e2640c7456f9971f53b8ecab216, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  enemyStat: {fileID: 1297331261}
+  healthComponent: {fileID: 1297331260}
+  isHardControlled: 0
+  controlEndsAt: 0
+  lastUpdatedAt: 0
+  isConfigured: 0
 --- !u!114 &1297331261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2596,7 +2680,6 @@ MonoBehaviour:
   maxShield: 0
   attackPower: 10
   defense: 0
-  toughness: 100
   damageTakenMultiplier: 1
   healingTakenMultiplier: 1
   physicalResistance: 0
@@ -2615,6 +2698,11 @@ MonoBehaviour:
   loseTargetRange: 20
   targetMemoryDuration: 1.5
   scanInterval: 0.15
+  enemyTier: 0
+  maxToughness: 0
+  toughnessRecoveryPerSecond: 0
+  minimumToughnessDamage: 0
+  staggerDuration: 0
   attackCooldown: 0.5
   attackSpeedMultiplier: 1
   weakPointDamageMultiplier: 1.5
@@ -2688,6 +2776,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthComponent: {fileID: 1297331260}
+  toughnessComponent: {fileID: 8800000000000000302}
+  hardControlComponent: {fileID: 8800000000000000402}
   sensor: {fileID: 1297331264}
   locomotion: {fileID: 1297331263}
   attack: {fileID: 1297331262}
@@ -2723,6 +2813,8 @@ MonoBehaviour:
   enemyStat: {fileID: 1297331261}
   healthComponent: {fileID: 1297331260}
   elementAttachmentRuntime: {fileID: 8800000000000000202}
+  toughnessComponent: {fileID: 8800000000000000302}
+  hardControlComponent: {fileID: 8800000000000000402}
   sensor: {fileID: 1297331264}
   brain: {fileID: 1297331265}
   locomotion: {fileID: 1297331263}
@@ -24686,6 +24778,8 @@ MonoBehaviour:
   faction: 1
   healthComponent: {fileID: 8823707006449125371}
   elementAttachmentRuntime: {fileID: 0}
+  toughnessComponent: {fileID: 0}
+  hardControlComponent: {fileID: 0}
 --- !u!114 &8823707006449125372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24702,7 +24796,6 @@ MonoBehaviour:
   maxShield: 0
   attackPower: 10
   defense: 0
-  toughness: 100
   damageTakenMultiplier: 1
   healingTakenMultiplier: 1
   physicalResistance: 0

@@ -22,6 +22,3 @@ MonoBehaviour:
   electricResistance: 0
   iceResistance: 0
   explosionResistance: 0
-  staggerResistance: 0
-  knockBackResistance: 0
-  debuffResistance: 0

@@ -13,7 +13,6 @@ namespace Game.Definition.Character
         [SerializeField] private float attackPower = 10f;
         [SerializeField] private float defense = 0f;
         [SerializeField] private float maxShield;
-        [SerializeField] private float toughness = 100f;
         [SerializeField] private float damageTakenMultiplier = 1f;
         [SerializeField] private float healingTakenMultiplier = 1f;
 
@@ -21,7 +20,6 @@ namespace Game.Definition.Character
         public float AttackPower => attackPower;
         public float Defense => defense;
         public float MaxShield => maxShield;
-        public float Toughness => toughness;
         public float DamageTakenMultiplier => damageTakenMultiplier;
         public float HealingTakenMultiplier => healingTakenMultiplier;
 
@@ -37,11 +35,6 @@ namespace Game.Definition.Character
             if (maxShield < 0f)
             {
                 _context.AddError(ConfigId, "MaxShield 不能小于 0。");
-            }
-
-            if (toughness < 0f)
-            {
-                _context.AddError(ConfigId, "Toughness 不能小于 0。");
             }
 
             if (damageTakenMultiplier <= 0f)

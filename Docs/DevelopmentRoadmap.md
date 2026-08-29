@@ -1,7 +1,7 @@
 # ElementWar 开发路线
 
 - 状态：Active
-- 维护日期：2026-08-27
+- 维护日期：2026-08-30
 - 路线维护任务：`DOC-001`
 
 本文是开发顺序、任务状态、直接依赖、当前唯一下一项和版本裁剪边界的唯一维护来源。设计目标以 [`GameDesign.md`](GameDesign.md) 及其细则为准，当前代码边界以 [`Architecture.md`](Architecture.md) 为准，单次获批范围与证据以对应 Feature Spec 为准。
@@ -26,9 +26,9 @@
 
 ## 当前唯一下一项
 
-**CMB-030 — 韧性、失衡与受控状态事实。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#cmb-030-韧性失衡与受控状态事实)。
+**WPN-010 — 步枪最小火/雷元素来源。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#wpn-010-步枪最小火雷元素来源)。
 
-选择它是因为 `CMB-020` 已关闭统一范围目标集合、遮挡与确定顺序；首个超载闭环仍缺当前韧性、失衡和普通/精英/Boss 受控状态的权威事实。先完成这层状态所有权，`ELM-040` 才能在不直接改写 AI 或配置的前提下提交控制结果；`WPN-010` 仍保持 `Ready`。
+选择它是因为 `CMB-030` 已建立韧性、失衡、硬控制和三等级转换事实，`ELM-040` 现只缺一个可玩的 Fire/Electric 步枪来源才能进入完整超载生产链。`WPN-010` 先冻结开火瞬间的元素选择，不提前展开完整武器或弹药库存。
 
 当前已完成基线：
 
@@ -36,6 +36,7 @@
 - `CMB-001`：Combat Domain Contract v1，Fast Verified 且额外完成 PlayMode；Windows64 与主线人工验收未运行。证据见 [`CombatDomainContractV1.md`](Features/CombatDomainContractV1.md)。
 - `CMB-010`：战斗目标、阵营与攻击执行身份 v1，Fast Verified 且额外完成 PlayMode 与 Bootstrap 序列化扫描；Windows64 与主线人工验收未运行。证据见 [`CombatantFactionExecutionIdentityV1.md`](Features/CombatantFactionExecutionIdentityV1.md)。
 - `CMB-020`：范围目标查询与友伤过滤 v1，Fast Verified 且额外完成 PlayMode（EditMode 52/52、PlayMode 12/12）；Windows64、性能与主线人工验收未运行。证据见 [`CombatRangeTargetQueryV1.md`](Features/CombatRangeTargetQueryV1.md)。
+- `CMB-030`：敌人韧性、失衡与硬控制事实 v1 已按单次攻击合并边界完成实现；此前 EditMode 63/63、PlayMode 14/14，最新缓存与拒绝结果精简按用户要求未重跑。证据边界见 [`EnemyToughnessAndControlFactsV1.md`](Features/EnemyToughnessAndControlFactsV1.md)。
 - `ELM-010`：元素施加配置、来源身份与请求快照 v1，Fast Verified 且额外完成 PlayMode 与真实 Profile/Registry 加载；Windows64 与主线人工验收未运行。证据见 [`ElementApplicationProfileSnapshotV1.md`](Features/ElementApplicationProfileSnapshotV1.md)。
 - `ELM-020`：敌方元素附着运行时与生命周期 v1 实现完成；2026-08-26 删除重复请求/时间校验后程序集编译通过，并由用户在现有 Editor 中确认 EditMode 48/48、PlayMode 9/9 全部成功。证据边界见 [`ElementAttachmentRuntimeLifecycleV1.md`](Features/ElementAttachmentRuntimeLifecycleV1.md)。
 - `ELM-030`：元素反应判定、消费与归因管线 v1 已按当前真实需求精简；2026-08-26 最新差异达到 Fast Verified 并额外通过 PlayMode（手动 Test Runner：EditMode 48/48、PlayMode 9/9，无独立 XML）。现行证据见 [`ElementReactionPipelineV1.md`](Features/ElementReactionPipelineV1.md)。
@@ -110,4 +111,4 @@ flowchart LR
 - 行为：保留短指令、风险自适应组织、四份详细路线和重构归属；精简 `AGENTS.md`、项目 Skill、Workflow、Feature 模板与验证矩阵，统一授权时序和最低成本稳定接缝规则。未修改运行时代码或 Unity 序列化资源。
 - 证据：[`AdaptiveDevelopmentWorkflow.md`](Features/AdaptiveDevelopmentWorkflow.md)；受影响相对链接、实际工具路径、唯一 `Next`、文档长度、空白、scoped diff 和 Git 暂存区检查通过。
 - ADR：工作流本身不需要 ADR；元素域现行精简 ADR 仅同步通用扩展门槛措辞，没有改变运行时契约。
-- 路线：当前唯一 `Next` 仍为 `CMB-030`，本次不改变开发顺序。
+- 路线：`DOC-001` 当时没有改变开发顺序；现行唯一 `Next` 始终以上方“当前唯一下一项”为准。

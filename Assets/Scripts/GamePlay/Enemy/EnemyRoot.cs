@@ -9,13 +9,13 @@ namespace Game.Gameplay.Enemy
     /// 敌人装配根。
     ///
     /// 职责：
-    /// 1. 在 Start 阶段从配置初始化所有子系统（Stat → Health → Sensor → Locomotion → Attack → Brain）
+    /// 1. 在 Start 阶段从配置初始化所有子系统（Stat → Health → Control Facts → Behavior）
     /// 2. 在 Update 中驱动 Brain 的每帧 Tick
     /// 3. 作为敌人 GameObject 的唯一生命周期入口，不允许子系统各自独立 Update
     ///
     /// 初始化顺序很重要：
     /// Stat 先于 Health（Health 需要读 MaxHealth），
-    /// Sensor / Locomotion / Attack 先于 Brain（Brain 需要它们就位才能工作）。
+    /// 韧性/硬控先于 Brain，Sensor / Locomotion / Attack 也先于 Brain。
     /// Brain / Sensor / Locomotion / Attack 都持有 EnemyStat 引用，并在需要时直接读取。
     /// </summary>
     [DisallowMultipleComponent]
@@ -28,6 +28,8 @@ namespace Game.Gameplay.Enemy
         [SerializeField] private EnemyStat enemyStat;
         [SerializeField] private HealthComponent healthComponent;
         [SerializeField] private ElementAttachmentRuntime elementAttachmentRuntime;
+        [SerializeField] private ToughnessComponent toughnessComponent;
+        [SerializeField] private HardControlComponent hardControlComponent;
 
         [Header("Behavior Components")]
         [SerializeField] private EnemySensor sensor;
@@ -44,6 +46,11 @@ namespace Game.Gameplay.Enemy
 
         public EnemyStat Stat => enemyStat;
         public HealthComponent Health => healthComponent;
+        /// <summary>该敌人的韧性与失衡事实所有者。</summary>
+        public ToughnessComponent Toughness => toughnessComponent;
+
+        /// <summary>该敌人的硬控制事实所有者。</summary>
+        public HardControlComponent HardControl => hardControlComponent;
         public EnemyBrain Brain => brain;
         public bool IsFullyInitialized => isFullyInitialized;
 
@@ -70,6 +77,8 @@ namespace Game.Gameplay.Enemy
         {
             // 附着属于目标事实，即使 AI 初始化失败也需要继续处理到期或生命清理。
             elementAttachmentRuntime?.Tick(Time.time);
+            toughnessComponent?.Tick(Time.time);
+            hardControlComponent?.Tick(Time.time);
 
             if (isFullyInitialized == false)
             {
@@ -99,6 +108,12 @@ namespace Game.Gameplay.Enemy
 
             // 初始化生命组件（依赖 Stat.MaxHealth 已就位）。
             if (InitializeHealth() == false)
+            {
+                allSucceeded = false;
+            }
+
+            // 两个状态组件只依赖 Stat 配置快照与 Health；攻击身份在统一解析入口校验。
+            if (InitializeControlFacts() == false)
             {
                 allSucceeded = false;
             }
@@ -142,6 +157,27 @@ namespace Game.Gameplay.Enemy
             }
 
             return healthComponent.TryInitialize();
+        }
+
+        /// <summary>初始化敌人韧性和硬控制事实；两者缺失时敌人不能进入完整行为循环。</summary>
+        private bool InitializeControlFacts()
+        {
+            if (toughnessComponent == null)
+            {
+                Debug.LogError($"[{nameof(EnemyRoot)}] ToughnessComponent 缺失。Object={name}", this);
+                return false;
+            }
+
+            if (hardControlComponent == null)
+            {
+                Debug.LogError($"[{nameof(EnemyRoot)}] HardControlComponent 缺失。Object={name}", this);
+                return false;
+            }
+
+            float currentTime = Time.time;
+            bool toughnessInitialized = toughnessComponent.TryInitialize(currentTime);
+            bool hardControlInitialized = hardControlComponent.TryInitialize(currentTime);
+            return toughnessInitialized && hardControlInitialized;
         }
 
         /// <summary>
@@ -194,6 +230,16 @@ namespace Game.Gameplay.Enemy
             if (elementAttachmentRuntime == null)
             {
                 elementAttachmentRuntime = GetComponent<ElementAttachmentRuntime>();
+            }
+
+            if (toughnessComponent == null)
+            {
+                toughnessComponent = GetComponent<ToughnessComponent>();
+            }
+
+            if (hardControlComponent == null)
+            {
+                hardControlComponent = GetComponent<HardControlComponent>();
             }
 
             if (sensor == null)

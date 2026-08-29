@@ -23,7 +23,10 @@ MonoBehaviour:
   maxHealth: 9999999
   attackPower: 12
   defense: 2
-  toughness: 120
+  maxToughness: 120
+  toughnessRecoveryPerSecond: 24
+  minimumToughnessDamage: 10
+  staggerDuration: 1
   attackRange: 2.5
   attackCooldown: 0.5
   damageTakenMultiplier: 1

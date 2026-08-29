@@ -119,7 +119,6 @@ namespace Game.Gameplay.Character
                 characterBaseStatConfig.MaxShield,
                 characterBaseStatConfig.AttackPower,
                 characterBaseStatConfig.Defense,
-                characterBaseStatConfig.Toughness,
                 characterBaseStatConfig.DamageTakenMultiplier,
                 characterBaseStatConfig.HealingTakenMultiplier,
                 characterResistanceSetConfig != null ? characterResistanceSetConfig.PhysicalResistance : 0f,

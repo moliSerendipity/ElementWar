@@ -3,7 +3,7 @@
 - 上级路线：[`DevelopmentRoadmap.md`](../DevelopmentRoadmap.md)
 - 目标设计：[`Combat.md`](../Design/Combat.md)、[`Elements.md`](../Design/Elements.md)
 - 当前架构：[`Architecture.md`](../Architecture.md)
-- 维护日期：2026-08-26
+- 维护日期：2026-08-30
 
 本路线先建立可复用战斗身份，再完成一个“开火 → 附着 → 超载 → 范围伤害/控制 → 反馈”的真实闭环，随后才扩展武器实例、弹药、投射物和其余反应。每项启动时用 [`TEMPLATE.md`](../Features/TEMPLATE.md) 建立具体 Feature Spec。
 
@@ -73,18 +73,17 @@
 
 ### CMB-030 韧性、失衡与受控状态事实
 
-- 状态：Next
+- 状态：Done（Implemented；此前 EditMode 63/63、PlayMode 14/14，最新边界精简按用户要求未重跑）
 - 依赖：`CMB-010`。
-- 当前缺口：配置有静态 Toughness，但没有当前韧性、削减、恢复、失衡/硬直生命周期和控制免疫的权威状态。
-- 实施要点：① 定义当前韧性与恢复所有者；② 区分伤害、韧性伤害和控制请求；③ 明确普通敌人、精英、Boss 的抵抗/转换策略；④ 统一打断、到期、死亡、禁用和复用清理；⑤ 事件只报告已提交的状态变化。
-- 可观察完成：相同请求产生确定的韧性变化和一次失衡；Boss 不会因普通控制永久锁死。
-- 范围：Gameplay 战斗状态；非目标是完整动画资产和 Boss 专属窗口。
-- 验证：阈值、恢复、叠加、免疫、生命周期 EditMode/PlayMode。
+- 已完成：配置提供韧性上限、连续恢复、单次阈值、失衡时长和 Normal/Elite/Boss 等级；`ToughnessComponent` / `HardControlComponent` 只保存各自状态，无状态 `EnemyControlApplicationResolver` 以一次攻击为单位完成身份、等级、合并与去重。删除角色/通用 Stat 韧性、三个无消费者控制抗性、两套独立 Request/Result/Event，不建立 `CombatControlRuntime` 或新配置资产。
+- 可观察结果：严格低于 10 的独立攻击永不累计，10 起生效；低频有效攻击可被恢复抵消，高频压力可造成失衡并回满；Normal 完整硬控、Elite 一半，Boss 把同次基础削韧与转换削韧相加后只过一次阈值；死亡、禁用和复用清理状态并拒绝旧 TargetId 请求。
+- 证据边界：[`EnemyToughnessAndControlFactsV1.md`](../Features/EnemyToughnessAndControlFactsV1.md)；决策见 [`ADR-Enemy-Toughness-And-Control-Facts-v1.md`](../Decisions/ADR-Enemy-Toughness-And-Control-Facts-v1.md)。历史 EditMode 63/63、PlayMode 14/14 早于最新精简。
+- 剩余边界：尚无武器/元素生产消费者和玩家可见动画/VFX/HUD；玩家韧性、击退、减速、Modifier、Boss 弱点窗口、Windows64、性能和主线人工验收仍由后续任务处理。
 - 解锁：`ELM-040`、`ELM-080`、`ELM-090`、`BOS-040`。
 
 ### WPN-010 步枪最小火/雷元素来源
 
-- 状态：Ready
+- 状态：Next
 - 依赖：`ELM-020`。
 - 当前缺口：当前 Hitscan 步枪只产生 `None/Direct`；尚无可玩方式验证附着与反应管线。
 - 实施要点：① 为当前武器实例增加最小、显式的 Fire/Electric 选择；② 把选择快照进攻击执行而不是命中后读取可变状态；③ 通过已有输入中的批准按键或最小临时调试入口切换；④ HUD/调试反馈显示当前元素；⑤ 不提前实现完整武器/弹药库存。

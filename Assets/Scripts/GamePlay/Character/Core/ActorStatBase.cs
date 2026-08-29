@@ -21,7 +21,6 @@ namespace Game.Gameplay.Character
         [SerializeField] private float maxShield;
         [SerializeField] private float attackPower = 10f;
         [SerializeField] private float defense;
-        [SerializeField] private float toughness = 100f;
         [SerializeField] private float damageTakenMultiplier = 1f;
         [SerializeField] private float healingTakenMultiplier = 1f;
 
@@ -40,7 +39,6 @@ namespace Game.Gameplay.Character
         public float MaxShield => maxShield;
         public float AttackPower => attackPower;
         public float Defense => defense;
-        public float Toughness => toughness;
         public float DamageTakenMultiplier => damageTakenMultiplier;
         public float HealingTakenMultiplier => healingTakenMultiplier;
         public float PhysicalResistance => physicalResistance;
@@ -56,7 +54,6 @@ namespace Game.Gameplay.Character
             maxShield = 0f;
             attackPower = 10f;
             defense = 0f;
-            toughness = 100f;
             damageTakenMultiplier = 1f;
             healingTakenMultiplier = 1f;
             physicalResistance = 0f;
@@ -73,7 +70,6 @@ namespace Game.Gameplay.Character
             float _maxShield,
             float _attackPower,
             float _defense,
-            float _toughness,
             float _damageTakenMultiplier,
             float _healingTakenMultiplier,
             float _physicalResistance,
@@ -87,7 +83,6 @@ namespace Game.Gameplay.Character
             maxShield = Mathf.Max(0f, _maxShield);
             attackPower = Mathf.Max(0f, _attackPower);
             defense = Mathf.Max(0f, _defense);
-            toughness = Mathf.Max(0f, _toughness);
             damageTakenMultiplier = Mathf.Max(0f, _damageTakenMultiplier);
             healingTakenMultiplier = Mathf.Max(0f, _healingTakenMultiplier);
             physicalResistance = _physicalResistance;
@@ -103,7 +98,6 @@ namespace Game.Gameplay.Character
         public void SetMaxShield(float _value) => maxShield = Mathf.Max(0f, _value);
         public void SetAttackPower(float _value) => attackPower = Mathf.Max(0f, _value);
         public void SetDefense(float _value) => defense = Mathf.Max(0f, _value);
-        public void SetToughness(float _value) => toughness = Mathf.Max(0f, _value);
         public void SetDamageTakenMultiplier(float _value) => damageTakenMultiplier = Mathf.Max(0f, _value);
         public void SetHealingTakenMultiplier(float _value) => healingTakenMultiplier = Mathf.Max(0f, _value);
         public void SetPhysicalResistance(float _value) => physicalResistance = _value;

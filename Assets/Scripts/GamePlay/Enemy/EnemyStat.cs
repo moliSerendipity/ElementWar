@@ -54,6 +54,11 @@ namespace Game.Gameplay.Enemy
         #region Buffable Combat Stats
 
         [Header("Runtime Combat")]
+        [SerializeField] private EnemyTier enemyTier = EnemyTier.Normal;
+        [SerializeField] private float maxToughness;
+        [SerializeField] private float toughnessRecoveryPerSecond;
+        [SerializeField] private float minimumToughnessDamage;
+        [SerializeField] private float staggerDuration;
         [SerializeField] private float attackCooldown = 0.5f;
         [SerializeField] private float attackSpeedMultiplier = 1f;
         [SerializeField] private float weakPointDamageMultiplier = 1.5f;
@@ -80,6 +85,20 @@ namespace Game.Gameplay.Enemy
         public float LoseTargetRange => loseTargetRange;
         public float TargetMemoryDuration => targetMemoryDuration;
         public float ScanInterval => scanInterval;
+        /// <summary>本次初始化采用的敌人硬控制等级策略。</summary>
+        public EnemyTier EnemyTier => enemyTier;
+
+        /// <summary>本次初始化采用的韧性上限。</summary>
+        public float MaxToughness => maxToughness;
+
+        /// <summary>本次初始化采用的每秒韧性恢复量。</summary>
+        public float ToughnessRecoveryPerSecond => toughnessRecoveryPerSecond;
+
+        /// <summary>本次初始化采用的单次最低韧性伤害。</summary>
+        public float MinimumToughnessDamage => minimumToughnessDamage;
+
+        /// <summary>本次初始化采用的失衡时长，单位秒。</summary>
+        public float StaggerDuration => staggerDuration;
         public float AttackCooldown => attackCooldown;
 
         /// <summary>
@@ -165,7 +184,6 @@ namespace Game.Gameplay.Enemy
                 0f,
                 enemyBaseStatConfig.AttackPower,
                 enemyBaseStatConfig.Defense,
-                enemyBaseStatConfig.Toughness,
                 enemyBaseStatConfig.DamageTakenMultiplier,
                 1f,
                 enemyResistanceSetConfig.PhysicalResistance,
@@ -184,6 +202,11 @@ namespace Game.Gameplay.Enemy
             loseTargetRange = Mathf.Max(0f, enemyBaseStatConfig.LoseTargetRange);
             targetMemoryDuration = Mathf.Max(0f, enemyBaseStatConfig.TargetMemoryDuration);
             scanInterval = Mathf.Max(0.05f, enemyBaseStatConfig.ScanInterval);
+            enemyTier = resolvedConfig.EnemyTier;
+            maxToughness = Mathf.Max(0.1f, enemyBaseStatConfig.MaxToughness);
+            toughnessRecoveryPerSecond = Mathf.Max(0f, enemyBaseStatConfig.ToughnessRecoveryPerSecond);
+            minimumToughnessDamage = Mathf.Max(0.01f, enemyBaseStatConfig.MinimumToughnessDamage);
+            staggerDuration = Mathf.Max(0.01f, enemyBaseStatConfig.StaggerDuration);
             attackCooldown = Mathf.Max(0f, enemyBaseStatConfig.AttackCooldown);
             attackSpeedMultiplier = 1f;
             weakPointDamageMultiplier = Mathf.Max(1f, enemyBaseStatConfig.WeakPointDamageMultiplier);
@@ -210,6 +233,11 @@ namespace Game.Gameplay.Enemy
             loseTargetRange = 0f;
             targetMemoryDuration = 0f;
             scanInterval = 0.15f;
+            enemyTier = EnemyTier.Normal;
+            maxToughness = 0f;
+            toughnessRecoveryPerSecond = 0f;
+            minimumToughnessDamage = 0f;
+            staggerDuration = 0f;
             attackCooldown = 0.5f;
             attackSpeedMultiplier = 1f;
             weakPointDamageMultiplier = 1.5f;

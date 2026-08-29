@@ -33,7 +33,6 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
                 0f,
                 10f,
                 0f,
-                100f,
                 1f,
                 1f,
                 0f,

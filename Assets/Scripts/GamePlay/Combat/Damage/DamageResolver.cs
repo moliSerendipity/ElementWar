@@ -89,7 +89,7 @@ namespace Game.Gameplay.Combat
                 return DamageRejectionReason.TargetCannotReceiveDamage;
             }
 
-            if (target.TryAcceptExecution(_request.ExecutionId, _request.TargetId) == false)
+            if (target.TryAcceptDamageExecution(_request.ExecutionId, _request.TargetId) == false)
             {
                 return DamageRejectionReason.DuplicateExecution;
             }

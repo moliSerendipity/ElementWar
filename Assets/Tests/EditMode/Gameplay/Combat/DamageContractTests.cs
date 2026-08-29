@@ -33,7 +33,6 @@ namespace Game.Tests.EditMode.Gameplay.Combat
                 0f,
                 10f,
                 _defense,
-                100f,
                 _damageTakenMultiplier,
                 1f,
                 _physicalResistance,

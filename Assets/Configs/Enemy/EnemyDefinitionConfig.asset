@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: 
   description: 
   isEnabled: 1
+  enemyTier: 0
   enemyBaseStatConfig: {fileID: 11400000, guid: 34c806e2d9a83fe43833c8134c11e676,
     type: 2}
   enemyMovementConfig: {fileID: 11400000, guid: 7172c4a2fbb12054a9d52aa617a99360,

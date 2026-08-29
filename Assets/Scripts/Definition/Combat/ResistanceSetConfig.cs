@@ -17,9 +17,6 @@ namespace Game.Definition.Combat
         [Range(-1f, 1f)][SerializeField] private float electricResistance;
         [Range(-1f, 1f)][SerializeField] private float iceResistance;
         [Range(-1f, 1f)][SerializeField] private float explosionResistance;
-        [Range(0f, 1f)][SerializeField] private float staggerResistance;
-        [Range(0f, 1f)][SerializeField] private float knockBackResistance;
-        [Range(0f, 1f)][SerializeField] private float debuffResistance;
 
         public float PhysicalResistance => physicalResistance;
         public float FireResistance => fireResistance;
@@ -27,9 +24,6 @@ namespace Game.Definition.Combat
         public float ElectricResistance => electricResistance;
         public float IceResistance => iceResistance;
         public float ExplosionResistance => explosionResistance;
-        public float StaggerResistance => staggerResistance;
-        public float KnockBackResistance => knockBackResistance;
-        public float DebuffResistance => debuffResistance;
 
         public override void Validate(ConfigValidationContext _context, ConfigService _configService)
         {
