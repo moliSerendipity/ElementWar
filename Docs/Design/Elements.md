@@ -12,7 +12,7 @@
 - 元素请求与伤害请求并列，不读取 `DamageResult`；零伤害、伤害免疫或纯施加技能可以独立尝试附着。目标运行时只把当前 `HealthComponent` 作为接收资格与死亡/重置生命周期事实，不写入第二套生命或伤害状态。
 - `ConfigId` 只标识规则。每个目标附着运行时在自己的 TargetId 生命周期内按 `ElementApplicationSourceId` 持有来源间隔，不复制组合键。首版主要槽支持同元素以最近合法来源刷新和显式到期；异元素由反应管线按固定无序元素对映射，并在目标侧原子登记触发来源间隔/执行去重、消费版本匹配的已有附着。
 - 附着事实变化通过 `ElementAttachmentChangedEvent` 发布；成功反应结果由调用管线的未来 Gameplay 生产者直接接收，本阶段不发布无消费者的反应事件。开发调试 Presenter 只读维护当前目标列表，不参与 Gameplay 裁决。现行实现契约见 [`ADR-Element-Pipeline-Simplification-v1.md`](../Decisions/ADR-Element-Pipeline-Simplification-v1.md)。
-- 默认 Registry 只登记步枪火弹/雷弹 Profile，初值均为 `0` 秒来源间隔和 `6` 秒持续时间。火、水、雷、冰六个组合是首版固定 Gameplay 映射，不维护反应表资产。真实武器来源仍由 `WPN-010` 接入，具体反应输出由后续 `ELM-040` / `ELM-060`～`ELM-090` 负责。
+- 默认 Registry 只登记步枪火弹/雷弹 Profile，初值均为 `0` 秒来源间隔和 `6` 秒持续时间。当前步枪已冻结开火瞬间选择并接入真实伤害/元素生产链；火、水、雷、冰六个组合仍是首版固定 Gameplay 映射，不维护反应表资产。具体反应输出由后续 `ELM-040` / `ELM-060`～`ELM-090` 负责。
 
 ## 首版元素集合
 

@@ -68,6 +68,7 @@ namespace Game.Gameplay.Character
             bool firePressed = !isReloading && _rawInput.FirePressed;
             bool fireHeld = !isReloading && _rawInput.FireHeld;
             bool reloadTriggered = !isReloading && _rawInput.ReloadPressed;
+            bool switchAmmoTriggered = !isReloading && _rawInput.SwitchAmmoPressed;
             bool switchTriggered = !isReloading && _rawInput.SwitchPressed;
             bool skillTriggered = !isReloading && _rawInput.SkillPressed;
 
@@ -80,6 +81,7 @@ namespace Game.Gameplay.Character
                 firePressed,
                 fireHeld,
                 reloadTriggered,
+                switchAmmoTriggered,
                 switchTriggered,
                 skillTriggered);
         }

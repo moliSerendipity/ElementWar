@@ -40,6 +40,7 @@ namespace Game.Gameplay.Character
                 _inputFrame.FireHeld,
                 _inputFrame.AimHeld,
                 _inputFrame.ReloadPressed,
+                _inputFrame.SwitchAmmoPressed,
                 _inputFrame.SwitchPressed,
                 _inputFrame.SkillPressed);
 

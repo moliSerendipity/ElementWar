@@ -3,6 +3,7 @@ using Game.Definition.Combat;
 using Game.Foundation.Events;
 using Game.Gameplay.Character;
 using Game.Gameplay.Combat;
+using Game.Gameplay.Element;
 using Game.Gameplay.Weapon.Events;
 using UnityEngine;
 
@@ -73,7 +74,15 @@ namespace Game.Gameplay.Weapon
 
             // 扣弹与运行时事实提交完成后，立即进入命中查询与 Combat 主链。
             AttackExecutionId executionId = AttackExecutionId.Create();
-            ResolveHitAndDamage(executionId, _characterFacts, _characterPlan, _currentTime);
+            weaponRuntime.TryCaptureCurrentAmmoElementSource(
+                characterCombatant,
+                out ElementApplicationSourceSnapshot ammoElementSource);
+            ResolveHitAndDamage(
+                executionId,
+                ammoElementSource,
+                _characterFacts,
+                _characterPlan,
+                _currentTime);
             return true;
         }
 
@@ -111,6 +120,7 @@ namespace Game.Gameplay.Weapon
         /// </summary>
         private void ResolveHitAndDamage(
             AttackExecutionId _executionId,
+            ElementApplicationSourceSnapshot _ammoElementSource,
             CharacterFacts _characterFacts,
             in CharacterFramePlan _characterPlan,
             float _currentTime)
@@ -145,12 +155,15 @@ namespace Game.Gameplay.Weapon
                 return;
             }
 
+            ElementType shotElement = _ammoElementSource != null
+                ? _ammoElementSource.Element
+                : ElementType.None;
             DamageRequest damageRequest = new(
                 _executionId,
                 characterCombatant,
                 weaponRuntime,
                 hitContext.TargetCombatant,
-                ElementType.None,
+                shotElement,
                 DamageDeliveryType.Direct,
                 weaponRuntime.Damage,
                 hitContext.HitPartType,
@@ -163,6 +176,39 @@ namespace Game.Gameplay.Weapon
                 _currentTime);
 
             DamageResolver.ResolveAndApply(damageRequest);
+            TryApplyAmmoElement(
+                _ammoElementSource,
+                _executionId,
+                hitContext.TargetCombatant,
+                _currentTime);
+        }
+
+        /// <summary>
+        /// 使用开火成立时冻结的弹药来源建立元素请求，并交给既有反应管线提交目标事实。
+        /// 伤害是否实际写回不作为元素施加前置条件。
+        /// </summary>
+        /// <param name="_ammoElementSource">开火成立、命中查询前冻结的弹药来源。</param>
+        /// <param name="_executionId">与本次伤害请求共享的攻击执行身份。</param>
+        /// <param name="_targetCombatant">Hitscan 解析到的权威目标根。</param>
+        /// <param name="_applicationTime">本次开火成立的运行时时间戳。</param>
+        private static void TryApplyAmmoElement(
+            ElementApplicationSourceSnapshot _ammoElementSource,
+            AttackExecutionId _executionId,
+            Combatant _targetCombatant,
+            float _applicationTime)
+        {
+            if (ElementApplicationRequestFactory.TryCreateRequest(
+                    _ammoElementSource,
+                    _executionId,
+                    _targetCombatant,
+                    _applicationTime,
+                    out ElementApplicationRequest application,
+                    out _) == false)
+            {
+                return;
+            }
+
+            ElementReactionPipeline.ResolveAndApply(application);
         }
 
         private void PublishWeaponFiredEvent(

@@ -1,5 +1,6 @@
 using Game.Gameplay.Character;
 using Game.Gameplay.Weapon;
+using Game.Definition.Combat;
 using TMPro;
 using UnityEngine;
 
@@ -76,6 +77,11 @@ namespace Game.Presentation.HUD
             string weaponName = string.IsNullOrWhiteSpace(currentWeaponViewState.WeaponDefinitionConfigId)
                 ? "Weapon"
                 : currentWeaponViewState.WeaponDefinitionConfigId;
+            if (currentWeaponViewState.CurrentAmmoElement != ElementType.None)
+            {
+                // WPN-010 的最小调试反馈；正式元素图标随后续 HUD 切片接入。
+                weaponName = $"{weaponName} [{currentWeaponViewState.CurrentAmmoElement}]";
+            }
 
             SetText(weaponNameTmpText, weaponName);
             SetText(magazineAmmoTmpText, currentWeaponViewState.CurrentMagazineAmmo.ToString());

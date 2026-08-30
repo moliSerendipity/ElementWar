@@ -1,3 +1,4 @@
+using Game.Definition.Combat;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -27,6 +28,7 @@ namespace Game.Gameplay.Weapon
         [SerializeField] private int currentMagazineAmmo;
         [SerializeField] private int currentReserveAmmo;
         [SerializeField] private int maxMagazineAmmo;
+        private ElementType currentAmmoElement;
 
         [Header("Reload")]
         [SerializeField] private bool isReloading;
@@ -79,6 +81,8 @@ namespace Game.Gameplay.Weapon
         public int CurrentMagazineAmmo => currentMagazineAmmo;
         public int CurrentReserveAmmo => currentReserveAmmo;
         public int MaxMagazineAmmo => maxMagazineAmmo;
+        /// <summary>HUD 与表现层应显示的当前元素弹药选择。</summary>
+        public ElementType CurrentAmmoElement => currentAmmoElement;
         public bool IsReloading => isReloading;
         public bool IsEmptyReload => isEmptyReload;
         public float ActualReloadDuration => actualReloadDuration;
@@ -130,6 +134,7 @@ namespace Game.Gameplay.Weapon
             currentMagazineAmmo = _weaponRuntime.CurrentMagazineAmmo;
             currentReserveAmmo = _weaponRuntime.CurrentReserveAmmo;
             maxMagazineAmmo = _weaponRuntime.MaxMagazineAmmo;
+            currentAmmoElement = _weaponRuntime.CurrentAmmoElement;
 
             isReloading = _weaponRuntime.IsReloading;
             isEmptyReload = _weaponRuntime.IsEmptyReload;

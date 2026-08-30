@@ -1,8 +1,11 @@
 using Game.Definition.ConfigSystem.Core;
+using Game.Definition.Combat;
 using Game.Definition.Presentation;
 using Game.Definition.HUD;
 using Game.Definition.Weapon;
 using Game.Gameplay.Character;
+using Game.Gameplay.Combat;
+using Game.Gameplay.Element;
 using UnityEngine;
 
 namespace Game.Gameplay.Weapon
@@ -24,6 +27,9 @@ namespace Game.Gameplay.Weapon
     [DisallowMultipleComponent]
     public sealed class WeaponRuntime : MonoBehaviour
     {
+        private const string RifleAmmoFireApplicationProfileId = "RifleAmmoFireApplication";
+        private const string RifleAmmoElectricApplicationProfileId = "RifleAmmoElectricApplication";
+
         #region Config References
 
         [Header("Config")]
@@ -107,6 +113,18 @@ namespace Game.Gameplay.Weapon
         [SerializeField] private float nextAllowedFireTime;
         [SerializeField] private bool fireTriggeredThisFrame;
         [SerializeField] private bool isInitialized;
+
+        #endregion
+
+        #region Ammo Element Runtime State
+
+        private ElementType currentAmmoElement;
+
+        private CombatantId ammoElementInstigatorId;
+        private ElementApplicationSourceId fireAmmoSourceId;
+        private ElementApplicationSourceId electricAmmoSourceId;
+        private ElementApplicationSourceSnapshot fireAmmoSource;
+        private ElementApplicationSourceSnapshot electricAmmoSource;
 
         #endregion
 
@@ -216,6 +234,137 @@ namespace Game.Gameplay.Weapon
         public float NextAllowedFireTime => nextAllowedFireTime;
         public bool FireTriggeredThisFrame => fireTriggeredThisFrame;
         public bool IsInitialized => isInitialized;
+
+        /// <summary>当前步枪实例在下一次成立开火时要冻结的弹药元素。</summary>
+        public ElementType CurrentAmmoElement => currentAmmoElement;
+
+        #endregion
+
+        #region Ammo Element
+
+        /// <summary>
+        /// 在当前步枪实例的 Fire 与 Electric 弹药来源之间切换。
+        /// WPN-010 只切换来源选择，不提前建立独立弹匣、备弹池或特殊换弹状态。
+        /// </summary>
+        /// <returns>当前武器已经初始化且支持首版步枪元素来源时返回 <see langword="true"/>。</returns>
+        public bool TrySwitchAmmoElement()
+        {
+            if (isInitialized == false ||
+                weaponDefinitionConfig == null ||
+                weaponDefinitionConfig.AmmoType != WeaponAmmoType.Rifle)
+            {
+                return false;
+            }
+
+            currentAmmoElement = currentAmmoElement == ElementType.Fire
+                ? ElementType.Electric
+                : ElementType.Fire;
+            return true;
+        }
+
+        /// <summary>
+        /// 在开火成立时取得当前选择对应的不可变来源快照。
+        /// 同一武器元素通道跨多枪复用 SourceId；责任 Combatant 生命周期变化时重建两条来源身份。
+        /// </summary>
+        /// <param name="_instigatorCombatant">开火时承担归属的活动角色战斗根。</param>
+        /// <param name="_source">成功时返回当前选择对应的冻结来源。</param>
+        /// <returns>当前选择能够从正式配置建立完整来源快照时返回 <see langword="true"/>。</returns>
+        internal bool TryCaptureCurrentAmmoElementSource(
+            Combatant _instigatorCombatant,
+            out ElementApplicationSourceSnapshot _source)
+        {
+            _source = null;
+            if (isInitialized == false ||
+                weaponDefinitionConfig == null ||
+                weaponDefinitionConfig.AmmoType != WeaponAmmoType.Rifle ||
+                _instigatorCombatant == null ||
+                _instigatorCombatant.IsRuntimeActive == false)
+            {
+                return false;
+            }
+
+            // Combatant 重新启用后会获得新身份；旧来源快照不得把归属带入新角色生命周期。
+            if (ammoElementInstigatorId != _instigatorCombatant.Id)
+            {
+                ResetAmmoElementSources();
+                ammoElementInstigatorId = _instigatorCombatant.Id;
+            }
+
+            if (currentAmmoElement == ElementType.Fire)
+            {
+                return TryGetOrCreateAmmoElementSource(
+                    RifleAmmoFireApplicationProfileId,
+                    _instigatorCombatant,
+                    ref fireAmmoSourceId,
+                    ref fireAmmoSource,
+                    out _source);
+            }
+
+            if (currentAmmoElement == ElementType.Electric)
+            {
+                return TryGetOrCreateAmmoElementSource(
+                    RifleAmmoElectricApplicationProfileId,
+                    _instigatorCombatant,
+                    ref electricAmmoSourceId,
+                    ref electricAmmoSource,
+                    out _source);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 复用已经冻结的元素通道来源；首次使用时才为当前责任角色生命周期建立快照。
+        /// </summary>
+        /// <param name="_profileId">当前元素通道对应的 Profile 逻辑键。</param>
+        /// <param name="_instigatorCombatant">承担该来源归属的活动角色战斗根。</param>
+        /// <param name="_sourceId">该元素通道在当前责任角色生命周期内复用的来源身份。</param>
+        /// <param name="_cachedSource">已经建立的不可变来源快照。</param>
+        /// <param name="_source">成功时返回可供本次开火冻结的来源。</param>
+        /// <returns>已有缓存有效或本次成功建立来源快照时返回 <see langword="true"/>。</returns>
+        private bool TryGetOrCreateAmmoElementSource(
+            string _profileId,
+            Combatant _instigatorCombatant,
+            ref ElementApplicationSourceId _sourceId,
+            ref ElementApplicationSourceSnapshot _cachedSource,
+            out ElementApplicationSourceSnapshot _source)
+        {
+            if (_cachedSource != null)
+            {
+                _source = _cachedSource;
+                return true;
+            }
+
+            if (_sourceId.IsValid == false)
+            {
+                _sourceId = ElementApplicationSourceId.Create();
+            }
+
+            if (ElementApplicationRequestFactory.TryCreateSourceSnapshot(
+                    ConfigService.Active,
+                    _profileId,
+                    _sourceId,
+                    _instigatorCombatant,
+                    this,
+                    out _cachedSource,
+                    out _) == false)
+            {
+                _source = null;
+                return false;
+            }
+
+            _source = _cachedSource;
+            return true;
+        }
+
+        private void ResetAmmoElementSources()
+        {
+            ammoElementInstigatorId = default;
+            fireAmmoSourceId = default;
+            electricAmmoSourceId = default;
+            fireAmmoSource = null;
+            electricAmmoSource = null;
+        }
 
         #endregion
 
@@ -391,6 +540,12 @@ namespace Game.Gameplay.Weapon
                 return WeaponFramePlan.CreateInvalid(
                     WeaponFireFailureReason.NotInitialized,
                     WeaponReloadFailureReason.NotInitialized);
+            }
+
+            // 当前最小入口即时提交选择，使同帧 T + 开火冻结切换后的元素；特殊换弹留给后续武器切片。
+            if (_request.SwitchAmmoTriggered)
+            {
+                TrySwitchAmmoElement();
             }
 
             // 裁决本帧武器计划。
@@ -580,6 +735,11 @@ namespace Game.Gameplay.Weapon
             int reserveCap = weaponStatConfig != null ? Mathf.Max(0, weaponStatConfig.ReserveAmmoCapacity) : 0;
             weaponAmmoComponent.InitializeFromCapacity(magSize, reserveCap);
 
+            // 当前唯一正式武器资产是步枪；首版从 Fire 开始，并保留两条元素通道各自的稳定 SourceId。
+            currentAmmoElement = weaponDefinitionConfig.AmmoType == WeaponAmmoType.Rifle
+                ? ElementType.Fire
+                : ElementType.None;
+
             isInitialized = true;
             SyncViewState(0f);
             return true;
@@ -759,6 +919,10 @@ namespace Game.Gameplay.Weapon
             nextAllowedFireTime = 0f;
             fireTriggeredThisFrame = false;
             isInitialized = false;
+
+            // 重置当前选择及其来源生命周期，避免重新初始化后复用旧归属。
+            currentAmmoElement = ElementType.None;
+            ResetAmmoElementSources();
 
             weaponAmmoComponent?.ResetRuntimeState();
             SyncViewState(0f);

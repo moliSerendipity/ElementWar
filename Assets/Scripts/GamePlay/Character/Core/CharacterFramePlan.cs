@@ -17,6 +17,7 @@ namespace Game.Gameplay.Character
             bool _firePressed,
             bool _fireHeld,
             bool _reloadTriggered,
+            bool _switchAmmoTriggered,
             bool _switchTriggered,
             bool _skillTriggered)
         {
@@ -28,6 +29,7 @@ namespace Game.Gameplay.Character
             FirePressed = _firePressed;
             FireHeld = _fireHeld;
             ReloadTriggered = _reloadTriggered;
+            SwitchAmmoTriggered = _switchAmmoTriggered;
             SwitchTriggered = _switchTriggered;
             SkillTriggered = _skillTriggered;
         }
@@ -40,6 +42,8 @@ namespace Game.Gameplay.Character
         public bool FirePressed { get; }
         public bool FireHeld { get; }
         public bool ReloadTriggered { get; }
+        /// <summary>本帧是否允许当前武器切换元素弹药来源。</summary>
+        public bool SwitchAmmoTriggered { get; }
         public bool SwitchTriggered { get; }
         public bool SkillTriggered { get; }
         public bool FireRequested => FirePressed || FireHeld;
@@ -49,6 +53,7 @@ namespace Game.Gameplay.Character
         public static CharacterFramePlan Empty => new(
             Vector2.zero,
             Vector2.zero,
+            false,
             false,
             false,
             false,

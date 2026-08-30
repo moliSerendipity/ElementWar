@@ -7,18 +7,25 @@ namespace Game.Gameplay.Weapon
     /// </summary>
     public readonly struct WeaponRequest
     {
-        public WeaponRequest(bool _firePressed, bool _fireHeld, bool _reloadTriggered)
+        public WeaponRequest(
+            bool _firePressed,
+            bool _fireHeld,
+            bool _reloadTriggered,
+            bool _switchAmmoTriggered)
         {
             FirePressed = _firePressed;
             FireHeld = _fireHeld;
             ReloadTriggered = _reloadTriggered;
+            SwitchAmmoTriggered = _switchAmmoTriggered;
         }
 
         public bool FirePressed { get; }
         public bool FireHeld { get; }
         public bool ReloadTriggered { get; }
+        /// <summary>本帧是否请求切换当前武器实例的元素弹药来源。</summary>
+        public bool SwitchAmmoTriggered { get; }
         public bool HasFireIntent => FirePressed || FireHeld;
 
-        public static WeaponRequest Empty => new(false, false, false);
+        public static WeaponRequest Empty => new(false, false, false, false);
     }
 }

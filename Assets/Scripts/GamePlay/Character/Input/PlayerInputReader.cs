@@ -20,6 +20,7 @@ namespace Game.Gameplay.Character
 
         [Header("Pressed")]
         [SerializeField] private InputActionReference reloadAction;
+        [SerializeField] private InputActionReference switchAmmoAction;
         [SerializeField] private InputActionReference jumpAction;
         [SerializeField] private InputActionReference skillAction;
         [SerializeField] private InputActionReference switchAction;
@@ -37,6 +38,7 @@ namespace Game.Gameplay.Character
             EnableAction(sprintAction);
             EnableAction(fireAction);
             EnableAction(reloadAction);
+            EnableAction(switchAmmoAction);
             EnableAction(jumpAction);
             EnableAction(skillAction);
             EnableAction(switchAction);
@@ -50,6 +52,7 @@ namespace Game.Gameplay.Character
             DisableAction(sprintAction);
             DisableAction(fireAction);
             DisableAction(reloadAction);
+            DisableAction(switchAmmoAction);
             DisableAction(jumpAction);
             DisableAction(skillAction);
             DisableAction(switchAction);
@@ -107,6 +110,7 @@ namespace Game.Gameplay.Character
                 ReadHeld(fireAction),
                 ReadHeld(aimAction),
                 ReadPressed(reloadAction),
+                ReadPressed(switchAmmoAction),
                 ReadPressed(switchAction),
                 ReadPressed(skillAction));
         }

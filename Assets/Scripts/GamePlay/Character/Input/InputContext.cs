@@ -18,6 +18,7 @@ namespace Game.Gameplay.Character
             bool _fireHeld,
             bool _aimHeld,
             bool _reloadPressed,
+            bool _switchAmmoPressed,
             bool _switchPressed,
             bool _skillPressed)
         {
@@ -29,6 +30,7 @@ namespace Game.Gameplay.Character
             FireHeld = _fireHeld;
             AimHeld = _aimHeld;
             ReloadPressed = _reloadPressed;
+            SwitchAmmoPressed = _switchAmmoPressed;
             SwitchPressed = _switchPressed;
             SkillPressed = _skillPressed;
         }
@@ -49,6 +51,9 @@ namespace Game.Gameplay.Character
 
         public bool ReloadPressed { get; }
 
+        /// <summary>玩家是否在本帧按下元素弹药切换入口。</summary>
+        public bool SwitchAmmoPressed { get; }
+
         public bool SwitchPressed { get; }
 
         public bool SkillPressed { get; }
@@ -60,6 +65,7 @@ namespace Game.Gameplay.Character
         public static InputContext Empty => new(
             Vector2.zero,
             Vector2.zero,
+            false,
             false,
             false,
             false,

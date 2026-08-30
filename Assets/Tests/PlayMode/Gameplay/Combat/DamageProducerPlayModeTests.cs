@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Game.Definition.Combat;
+using Game.Definition.ConfigSystem.Core;
+using Game.Definition.ConfigSystem.Registry;
+using Game.Definition.Element;
 using Game.Definition.Enemy;
+using Game.Definition.Weapon;
 using Game.Foundation.Events;
 using Game.Gameplay.Camera;
 using Game.Gameplay.Character;
 using Game.Gameplay.Combat;
 using Game.Gameplay.Combat.Events;
 using Game.Gameplay.Enemy;
+using Game.Gameplay.Element;
 using Game.Gameplay.Weapon;
 using Game.Gameplay.Weapon.Events;
 using NUnit.Framework;
@@ -52,11 +57,15 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
         /// <summary>测试当前要返回的瞄点上下文。</summary>
         public CameraAimPointContext Context { get; set; }
 
+        /// <summary>返回瞄点前执行的测试钩子，用于验证开火快照不受命中阶段状态变化影响。</summary>
+        public System.Action BeforeReturn { get; set; }
+
         /// <summary>
         /// 始终返回测试设置的有效瞄点。
         /// </summary>
         public bool TryGetCameraAimPointContext(out CameraAimPointContext _cameraAimPointContext)
         {
+            BeforeReturn?.Invoke();
             _cameraAimPointContext = Context;
             return true;
         }
@@ -76,6 +85,7 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
         [SetUp]
         public void SetUp()
         {
+            ConfigService.ClearActive();
             Assert.That(GameEventBus.Instance, Is.Null);
             GameObject eventBusGameObject = CreateGameObject(nameof(DamageProducerPlayModeTests) + "EventBus");
             eventBus = eventBusGameObject.AddComponent<GameEventBus>();
@@ -97,6 +107,7 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
 
             ownedObjects.Clear();
             eventBus = null;
+            ConfigService.ClearActive();
             yield return null;
 
             Assert.That(GameEventBus.Instance, Is.Null);
@@ -190,6 +201,123 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             Assert.That(receivedResult.Delivery, Is.EqualTo(DamageDeliveryType.Direct));
             Assert.That(receivedResult.FinalDamage, Is.EqualTo(25f).Within(0.0001f));
             Assert.That(targetHealth.CurrentHealth, Is.EqualTo(75f).Within(0.0001f));
+        }
+
+        /// <summary>
+        /// 步枪必须在进入命中查询前冻结当前元素；同一元素通道跨多枪复用来源身份，
+        /// 火雷连续命中则进入既有反应管线并消费附着。
+        /// </summary>
+        [UnityTest]
+        public IEnumerator RifleElementSelectionIsFrozenBeforeHitAndFeedsReactionPipeline()
+        {
+            GameObject targetGameObject = CreateGameObject("ElementRifleTarget");
+            targetGameObject.transform.position = new Vector3(0f, 0f, 5f);
+            targetGameObject.AddComponent<BoxCollider>();
+            Combatant targetCombatant = AddInitializedCombatant(
+                targetGameObject,
+                100f,
+                CombatFaction.Enemy);
+            targetGameObject.AddComponent<ElementAttachmentRuntime>();
+
+            GameObject providerGameObject = CreateGameObject("ElementAimPointProvider");
+            DamageProducerTestAimPointProvider provider =
+                providerGameObject.AddComponent<DamageProducerTestAimPointProvider>();
+            provider.Context = new CameraAimPointContext(
+                Vector3.zero,
+                Vector3.forward,
+                targetGameObject.transform.position,
+                true,
+                5f);
+
+            GameObject characterGameObject = CreateGameObject("ElementCharacterInstigator");
+            characterGameObject.AddComponent<CharacterStat>();
+            Combatant characterCombatant = characterGameObject.AddComponent<Combatant>();
+            SetPrivateField(characterCombatant, "faction", CombatFaction.PlayerParty);
+
+            GameObject weaponGameObject = CreateGameObject("ElementRifleSource");
+            weaponGameObject.transform.SetParent(characterGameObject.transform, false);
+            WeaponAmmoComponent ammoComponent = weaponGameObject.AddComponent<WeaponAmmoComponent>();
+
+            LogAssert.Expect(
+                LogType.Error,
+                new Regex(@"\[WeaponRuntime\] 自动初始化失败：当前没有可用的共享 ConfigService.*"));
+            WeaponRuntime weaponRuntime = weaponGameObject.AddComponent<WeaponRuntime>();
+            ammoComponent.InitializeFromCapacity(5, 0);
+            SetPrivateField(weaponRuntime, "damage", 10f);
+            SetPrivateField(weaponRuntime, "fireInterval", 0.1f);
+            SetPrivateField(weaponRuntime, "isInitialized", true);
+            SetPrivateField(weaponRuntime, "currentAmmoElement", ElementType.Fire);
+
+            WeaponDefinitionConfig weaponDefinition =
+                ScriptableObject.CreateInstance<WeaponDefinitionConfig>();
+            ownedObjects.Add(weaponDefinition);
+            SetPrivateField(weaponDefinition, "ammoType", WeaponAmmoType.Rifle);
+            SetPrivateField(weaponRuntime, "weaponDefinitionConfig", weaponDefinition);
+
+            ConfigService configService = CreateElementApplicationConfigService();
+            ConfigService.SetActive(configService);
+
+            weaponGameObject.AddComponent<HitScanService>();
+            WeaponFireExecutor fireExecutor = weaponGameObject.AddComponent<WeaponFireExecutor>();
+
+            List<DamageResult> damageResults = new();
+            eventBus.Subscribe<DamageAppliedEvent>(
+                _eventData => damageResults.Add(_eventData.DamageResult));
+
+            Physics.SyncTransforms();
+            yield return null;
+
+            WeaponFramePlan firePlan = WeaponFramePlan.CreateResolved(
+                true,
+                false,
+                false,
+                false,
+                false,
+                0f,
+                WeaponFireFailureReason.None,
+                WeaponReloadFailureReason.None);
+
+            // 命中查询期间把运行时选择切到 Electric；这一枪仍必须使用查询前冻结的 Fire。
+            provider.BeforeReturn = () => Assert.That(weaponRuntime.TrySwitchAmmoElement(), Is.True);
+            Assert.That(fireExecutor.Execute(
+                firePlan,
+                null,
+                CharacterFramePlan.Empty,
+                Time.time), Is.True);
+            provider.BeforeReturn = null;
+
+            Assert.That(weaponRuntime.CurrentAmmoElement, Is.EqualTo(ElementType.Electric));
+            Assert.That(damageResults, Has.Count.EqualTo(1));
+            Assert.That(damageResults[0].Element, Is.EqualTo(ElementType.Fire));
+            Assert.That(targetCombatant.ElementAttachments.TryGetPrimaryAttachment(
+                out ElementAttachmentSnapshot firstFireAttachment), Is.True);
+            Assert.That(firstFireAttachment.Element, Is.EqualTo(ElementType.Fire));
+            Assert.That(firstFireAttachment.ExecutionId, Is.EqualTo(damageResults[0].ExecutionId));
+            ElementApplicationSourceId fireSourceId = firstFireAttachment.Source.SourceId;
+
+            // 切回 Fire 后再次开火，来源身份必须复用而不是按枪重建。
+            Assert.That(weaponRuntime.TrySwitchAmmoElement(), Is.True);
+            Assert.That(fireExecutor.Execute(
+                firePlan,
+                null,
+                CharacterFramePlan.Empty,
+                Time.time + 0.01f), Is.True);
+            Assert.That(damageResults, Has.Count.EqualTo(2));
+            Assert.That(damageResults[1].Element, Is.EqualTo(ElementType.Fire));
+            Assert.That(targetCombatant.ElementAttachments.TryGetPrimaryAttachment(
+                out ElementAttachmentSnapshot refreshedFireAttachment), Is.True);
+            Assert.That(refreshedFireAttachment.Source.SourceId, Is.EqualTo(fireSourceId));
+
+            // Electric 使用同一生产入口触发 Overload 登记；具体反应输出由 ELM-040 接续。
+            Assert.That(weaponRuntime.TrySwitchAmmoElement(), Is.True);
+            Assert.That(fireExecutor.Execute(
+                firePlan,
+                null,
+                CharacterFramePlan.Empty,
+                Time.time + 0.02f), Is.True);
+            Assert.That(damageResults, Has.Count.EqualTo(3));
+            Assert.That(damageResults[2].Element, Is.EqualTo(ElementType.Electric));
+            Assert.That(targetCombatant.ElementAttachments.TryGetPrimaryAttachment(out _), Is.False);
         }
 
         /// <summary>
@@ -422,6 +550,41 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             GameObject gameObject = new(_name);
             ownedObjects.Add(gameObject);
             return gameObject;
+        }
+
+        private ConfigService CreateElementApplicationConfigService()
+        {
+            ElementApplicationProfileConfig fireProfile = CreateElementApplicationProfile(
+                "RifleAmmoFireApplication",
+                ElementType.Fire);
+            ElementApplicationProfileConfig electricProfile = CreateElementApplicationProfile(
+                "RifleAmmoElectricApplication",
+                ElementType.Electric);
+            ConfigRegistry registry = ScriptableObject.CreateInstance<ConfigRegistry>();
+            ownedObjects.Add(registry);
+            SetPrivateField(
+                registry,
+                "elementApplicationProfiles",
+                new List<ElementApplicationProfileConfig> { fireProfile, electricProfile });
+
+            ConfigService configService = new(registry);
+            configService.Initialize();
+            return configService;
+        }
+
+        private ElementApplicationProfileConfig CreateElementApplicationProfile(
+            string _configId,
+            ElementType _element)
+        {
+            ElementApplicationProfileConfig profile =
+                ScriptableObject.CreateInstance<ElementApplicationProfileConfig>();
+            ownedObjects.Add(profile);
+            SetPrivateField(profile, "configId", _configId);
+            SetPrivateField(profile, "isEnabled", true);
+            SetPrivateField(profile, "element", _element);
+            SetPrivateField(profile, "sourceTargetIntervalSeconds", 0f);
+            SetPrivateField(profile, "attachmentDurationSeconds", 6f);
+            return profile;
         }
 
         private static void SetPrivateField(object _target, string _fieldName, object _value)

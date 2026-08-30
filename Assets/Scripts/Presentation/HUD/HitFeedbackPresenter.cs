@@ -66,7 +66,7 @@ namespace Game.Presentation.HUD
                     ? damageResult.TargetCombatant.name
                     : "Unknown";
                 Debug.Log(
-                    $"[{nameof(HitFeedbackPresenter)}] Damage applied. Target={targetName}, Part={damageResult.HitPartType}, Point={damageResult.HitPoint}",
+                    $"[{nameof(HitFeedbackPresenter)}] Damage applied. Target={targetName}, Element={damageResult.Element}, Part={damageResult.HitPartType}, Point={damageResult.HitPoint}",
                     this);
             }
 

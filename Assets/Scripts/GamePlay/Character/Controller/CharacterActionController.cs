@@ -30,6 +30,8 @@ namespace Game.Gameplay.Character
         public bool FirePressed { get; private set; }
         public bool FireRequested { get; private set; }
         public bool ReloadRequested { get; private set; }
+        /// <summary>本帧是否请求切换当前武器的元素弹药来源。</summary>
+        public bool SwitchAmmoRequested { get; private set; }
         public bool SkillRequested { get; private set; }
         public bool SwitchRequested { get; private set; }
 
@@ -113,6 +115,7 @@ namespace Game.Gameplay.Character
             FirePressed = _plan.FirePressed;
             FireRequested = _plan.FireRequested;
             ReloadRequested = _plan.ReloadTriggered;
+            SwitchAmmoRequested = _plan.SwitchAmmoTriggered;
             SkillRequested = _plan.SkillTriggered;
             SwitchRequested = _plan.SwitchTriggered;
 
@@ -125,7 +128,8 @@ namespace Game.Gameplay.Character
             WeaponRequest weaponRequest = new(
                 _plan.FirePressed,
                 _plan.FireHeld,
-                _plan.ReloadTriggered);
+                _plan.ReloadTriggered,
+                _plan.SwitchAmmoTriggered);
 
             currentWeaponRuntime.TickWeaponRuntime(weaponRequest, _facts, _plan, _currentTime);
         }
@@ -153,6 +157,7 @@ namespace Game.Gameplay.Character
             FirePressed = false;
             FireRequested = false;
             ReloadRequested = false;
+            SwitchAmmoRequested = false;
             SkillRequested = false;
             SwitchRequested = false;
         }

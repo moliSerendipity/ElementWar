@@ -19,10 +19,10 @@
 | PlayMode | 真实组件禁用/复用、旧请求拒绝、生命耗尽/重置、事件到调试 Presenter | 完整套件 8/8；本功能 2/2 | `Logs/Verification/20260820-201420-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
 | 当前编译 | 2026-08-26 请求校验精简后的 Gameplay、EditModeTests 与 PlayModeTests | MSBuild 全部通过 | 系统临时目录 `ElementWar-AttachmentValidation-20260826-0054` |
 | 当前 Unity 回归 | 2026-08-26 最新差异的 EditMode / PlayMode | 用户在现有 Editor 中手动运行并确认 EditMode 48/48、PlayMode 9/9 全部成功 | 无独立 XML；Test Runner 当前列表核对总量 48/9 |
-| 人工验收 | Bootstrap 中以真实武器来源观察附着倒计时 | 未运行；`WPN-010` 尚未接入生产来源 | 无，不以自动化或代码检查替代 |
+| 人工验收 | Bootstrap 中以真实武器来源观察附着倒计时 | 未运行；`WPN-010` 已接入生产来源，本轮仍未执行人工游玩 | 无，不以自动化或代码检查替代 |
 
 ## Remaining Boundaries
-- 剩余风险：`ELM-030` 已消费异元素待反应结果；真实武器/技能仍未生产元素请求，调试叠层因此没有生产来源可供人工观察。
+- 当前演进：`ELM-030` 已消费异元素待反应结果，`WPN-010` 已提供真实步枪元素请求与调试叠层生产来源；真实技能来源和 Bootstrap 人工观察仍未完成。
 - [x] 2026-08-26 最新差异的 EditMode 48/48、PlayMode 9/9 已由用户手动运行并确认成功，证据边界已如实记录。
 
 > 本页只保留关闭后的当前摘要；详细 AC、调查过程、中间失败、授权往返和回滚历史由 Git 追溯。

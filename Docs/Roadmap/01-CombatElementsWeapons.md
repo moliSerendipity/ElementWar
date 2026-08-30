@@ -19,20 +19,21 @@
 - `ELM-030` — 反应判定、消耗与归因管线 → [`ElementReactionPipelineV1.md`](../Features/ElementReactionPipelineV1.md)
 - `CMB-020` — 范围目标查询与友伤过滤 → [`CombatRangeTargetQueryV1.md`](../Features/CombatRangeTargetQueryV1.md)
 - `CMB-030` — 韧性、失衡与受控状态事实 → [`EnemyToughnessAndControlFactsV1.md`](../Features/EnemyToughnessAndControlFactsV1.md)
+- `WPN-010` — 步枪最小火/雷元素来源。
 
 ## M01 首个元素反应垂直切片
 
 ### WPN-010 步枪最小火/雷元素来源
-- 状态：Next
+- 状态：Done
 - 依赖：`ELM-020`。
-- 当前缺口：当前 Hitscan 步枪只产生 `None/Direct`；尚无可玩方式验证附着与反应管线。
-- 当前约束：① 为当前武器实例增加最小、显式的 Fire/Electric 选择；② 把选择快照进攻击执行而不是命中后读取可变状态；③ 通过已有输入中的批准按键或最小临时调试入口切换；④ HUD/调试反馈显示当前元素；⑤ 不提前实现完整武器/弹药库存。
+- 当前事实：当前步枪实例以 `T / Combat/IsSwitchAmmo` 在 Fire/Electric 间即时切换，`PlayerInputReader` 通过序列化 `InputActionReference` 接入该 Action；`WeaponRuntime` 保存每条元素通道的稳定来源身份，开火成立后、Hitscan 前冻结来源，伤害与元素请求共享同一 `AttackExecutionId`。Ammo HUD 与命中调试日志显示当前/实际元素。
 - 可观察完成：玩家可连续用火与雷命中同一敌人，攻击日志和附着事实与开火瞬间选择一致。
-- 范围：当前步枪、输入适配和最小反馈。临时入口必须在 `WPN-060` 前迁移或删除。
+- 范围：当前步枪、输入适配和最小反馈。
+- 当前证据：EditMode `64/64`（`WeaponElementInputContractTests` `1/1`），PlayMode `15/15`（`RifleElementSelectionIsFrozenBeforeHitAndFeedsReactionPipeline` `1/1`）；Windows64 与 Bootstrap 人工游玩未运行。
 - 解锁：`ELM-040`。
 
 ### ELM-040 超载范围伤害与控制闭环
-- 状态：Planned
+- 状态：Next
 - 依赖：`ELM-030`、`CMB-020`、`CMB-030`、`WPN-010`。
 - 可观察完成：Bootstrap 中用两种元素触发一次超载，附近合法敌人各受一次确定伤害/控制，责任归属正确，事件与反馈不重复。
 - 非目标：其余反应、完整武器库存和最终美术品质。
