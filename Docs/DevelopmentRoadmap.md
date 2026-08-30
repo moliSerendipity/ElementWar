@@ -2,46 +2,34 @@
 
 - 状态：Active
 - 维护日期：2026-08-30
-- 路线维护任务：`DOC-001`
 
-本文是开发顺序、任务状态、直接依赖、当前唯一下一项和版本裁剪边界的唯一维护来源。设计目标以 [`GameDesign.md`](GameDesign.md) 及其细则为准，当前代码边界以 [`Architecture.md`](Architecture.md) 为准，单次获批范围与证据以对应 Feature Spec 为准。
+本页只维护唯一 `Next`、状态定义、依赖骨架和分域导航。完成基线、重构归属和版本裁剪见 `Roadmap/Reference.md`，正常“继续下一阶段”不读取该参考页。
 
-## 如何使用
+## 使用规则
 
-- 新对话只需发送 `继续下一阶段`。Codex 应从下方“当前唯一下一项”进入，只读核对实时仓库，然后一次性汇总仍需确认的高影响问题。
-- 也可以发送 `开始功能：<任务 ID 或名称>`。Codex 必须先核对依赖；不能因为指定了远期功能就静默跳过前置契约。
-- 路线任务不是实施授权。大型任务仍按 [`Workflow.md`](Workflow.md) 先完成只读检查、集中澄清和明确授权；授权后再按适用性创建或更新 Feature Spec。
-- 任务组织按风险自适应：一个任务可以完成局部闭环；公共契约、序列化迁移、状态所有权或发布候选可拆成设计、实施和独立审查。
-
-## 状态定义
-
-| 状态 | 含义 |
-|---|---|
-| `Done` | 已有实现与可定位证据；证据等级在任务中明确，不自动等于 Accepted |
-| `Next` | 当前主线唯一应进入的原子任务 |
-| `Ready` | 直接依赖已满足，可在明确点名时开始，但不是当前主线优先项 |
-| `Planned` | 顺序与行为边界已知，仍有未完成依赖 |
-| `Blocked` | 依赖外部资产、授权或尚未解决的高影响决策 |
-| `Deferred` | 首版明确不实施，避免隐性扩大范围 |
+- `继续下一阶段`：只读取下面“当前唯一下一项”，再读取对应路线文件中的**该任务块**；不要全文加载路线文件。
+- `开始功能：<任务 ID 或名称>`：读取指定任务块并核对直接依赖。
+- 路线任务描述的是开发顺序和边界，不自动把普通任务升级为 Full；实施等级按根 `AGENTS.md` / Skill 判断。
+- 全部路线始终只有一个 `Next`。
 
 ## 当前唯一下一项
 
-**WPN-010 — 步枪最小火/雷元素来源。** 详见 [`Roadmap/01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md#wpn-010-步枪最小火雷元素来源)。
+**WPN-010 — 步枪最小火/雷元素来源。**
 
-选择它是因为 `CMB-030` 已建立韧性、失衡、硬控制和三等级转换事实，`ELM-040` 现只缺一个可玩的 Fire/Electric 步枪来源才能进入完整超载生产链。`WPN-010` 先冻结开火瞬间的元素选择，不提前展开完整武器或弹药库存。
+任务块：`Roadmap/01-CombatElementsWeapons.md`
 
-当前已完成基线：
+原因：`CMB-030` 已建立韧性/控制事实，`ELM-040` 只缺一个可玩的 Fire/Electric 步枪来源进入完整超载生产链；本任务先冻结开火瞬间的元素选择，不提前展开完整武器/弹药库存。
 
-- `DOC-001`：短指令、自适应工作流与详细路线文档（本次文档切片；以本文件收口记录为准）。
-- `CMB-001`：Combat Domain Contract v1，Fast Verified 且额外完成 PlayMode；Windows64 与主线人工验收未运行。证据见 [`CombatDomainContractV1.md`](Features/CombatDomainContractV1.md)。
-- `CMB-010`：战斗目标、阵营与攻击执行身份 v1，Fast Verified 且额外完成 PlayMode 与 Bootstrap 序列化扫描；Windows64 与主线人工验收未运行。证据见 [`CombatantFactionExecutionIdentityV1.md`](Features/CombatantFactionExecutionIdentityV1.md)。
-- `CMB-020`：范围目标查询与友伤过滤 v1，Fast Verified 且额外完成 PlayMode（EditMode 52/52、PlayMode 12/12）；Windows64、性能与主线人工验收未运行。证据见 [`CombatRangeTargetQueryV1.md`](Features/CombatRangeTargetQueryV1.md)。
-- `CMB-030`：敌人韧性、失衡与硬控制事实 v1 已按单次攻击合并边界完成实现；此前 EditMode 63/63、PlayMode 14/14，最新缓存与拒绝结果精简按用户要求未重跑。证据边界见 [`EnemyToughnessAndControlFactsV1.md`](Features/EnemyToughnessAndControlFactsV1.md)。
-- `ELM-010`：元素施加配置、来源身份与请求快照 v1，Fast Verified 且额外完成 PlayMode 与真实 Profile/Registry 加载；Windows64 与主线人工验收未运行。证据见 [`ElementApplicationProfileSnapshotV1.md`](Features/ElementApplicationProfileSnapshotV1.md)。
-- `ELM-020`：敌方元素附着运行时与生命周期 v1 实现完成；2026-08-26 删除重复请求/时间校验后程序集编译通过，并由用户在现有 Editor 中确认 EditMode 48/48、PlayMode 9/9 全部成功。证据边界见 [`ElementAttachmentRuntimeLifecycleV1.md`](Features/ElementAttachmentRuntimeLifecycleV1.md)。
-- `ELM-030`：元素反应判定、消费与归因管线 v1 已按当前真实需求精简；2026-08-26 最新差异达到 Fast Verified 并额外通过 PlayMode（手动 Test Runner：EditMode 48/48、PlayMode 9/9，无独立 XML）。现行证据见 [`ElementReactionPipelineV1.md`](Features/ElementReactionPipelineV1.md)。
-- `ELM-010～030` 精简维护：删除反应表资产、包装请求、复合间隔键、重复结果和重复请求/时间校验，保留 TargetId 生命周期防线与原子反应行为；最新差异编译与手动 Test Runner 均通过，范围与证据边界见 [`ElementPipelineSimplificationV1.md`](Features/ElementPipelineSimplificationV1.md)。
-- `VER-001` / `VER-002` / `VER-003`：EditMode、PlayMode、Bootstrap-only Windows64 自动化基线已分别关闭；它们不是完整项目验收。详见 [`Roadmap/04-IntegrationRelease.md`](Roadmap/04-IntegrationRelease.md)。
+## 状态定义
+
+| 状态       | 含义                                   |
+| ---------- | -------------------------------------- |
+| `Done`     | 已有实现与可定位证据；证据等级单独记录 |
+| `Next`     | 当前主线唯一下一项                     |
+| `Ready`    | 直接依赖满足，可明确点名开始           |
+| `Planned`  | 顺序已知，仍有依赖                     |
+| `Blocked`  | 等待外部资产/授权/高影响决策           |
+| `Deferred` | 首版明确不实施                         |
 
 ## 主依赖图
 
@@ -63,52 +51,13 @@ flowchart LR
     BOS010 --> REL010[REL-010~020 发布候选]
 ```
 
-输入、许可、验证、敌人特征测试、性能和旧架构收敛是穿插门禁，不应等到主链末尾才首次处理。
-
 ## 分域路线
 
-| 文档 | 覆盖范围 | 关键重构落点 |
-|---|---|---|
-| [`01-CombatElementsWeapons.md`](Roadmap/01-CombatElementsWeapons.md) | 战斗身份、附着/反应、超载、武器、弹药、投射物和六种反应 | 伤害上下文、目标去重、`WeaponRuntime` 职责、装填事务、对象池重置 |
-| [`02-CharactersPartySkills.md`](Roadmap/02-CharactersPartySkills.md) | 输入、闪避、双角色、AI 队友、切换、倒地复活、技能和 HUD | Party 所有权、输入来源、相机/HUD 绑定、技能与 Modifier 运行时 |
-| [`03-EnemiesRunBoss.md`](Roadmap/03-EnemiesRunBoss.md) | 敌人加固、关卡、波次、强化、失败重开和 Boss | 先特征测试后决定修补或重写；Run/Stage 唯一状态机与完整重置 |
-| [`04-IntegrationRelease.md`](Roadmap/04-IntegrationRelease.md) | 资产许可、组合根、旧架构、验证、性能、构建与发布 | 全局入口收敛、Legacy/Lua/旧场景迁移、验证入口统一 |
+- `Roadmap/01-CombatElementsWeapons.md`：战斗、元素、武器、弹药、投射物。
+- `Roadmap/02-CharactersPartySkills.md`：输入、角色、Party、生命、技能、HUD。
+- `Roadmap/03-EnemiesRunBoss.md`：敌人、关卡、Run、Boss。
+- `Roadmap/04-IntegrationRelease.md`：许可、组合根、Legacy、验证、性能、发布。
 
-## 既有代码重构归属
+## 维护
 
-| 已知问题 | 处理任务 | 进入时机与边界 |
-|---|---|---|
-| 具体范围输出尚未接入统一查询 | `ELM-040`、`PRJ-020`、`ELM-070` | `CMB-020` 已提供目标集合与几何事实；消费者复用查询，不复制目标解析、阵营、LOS、去重或排序规则 |
-| `WeaponRuntime` 职责过多，动画事件与运行时结算边界不稳 | `WPN-020` | 首个超载闭环先证明需求，再于多武器/多弹药前用特征测试保护重构 |
-| 旧 Input Action 与新主线意图混杂 | `INP-010` | 在闪避、换枪、换元素、切人、投掷和复活输入扩展前增量迁移 |
-| 相机、HUD、输入和角色状态按单角色绑定 | `ARC-010`、`PTY-010`、`PTY-020` | 在第二角色切换前建立组合根和 Party 唯一所有权，不事后同步多个 ActiveCharacter |
-| 现有敌人代码质量与攻击行为存在疑问 | `ENM-010`～`ENM-040` | 先复现和建立特征测试，再以证据决定局部修补或边界重构，不预设整套重写 |
-| Skill/Buff/AreaEffect/Stage/Reaction 配置多为壳或无消费者 | `ELM-010`、`MOD-010`、`SKL-010`、`RUN-020`、`CFG-010` | 由当前行为，或由已批准后续需求及其明确延后成本，反推最低成本稳定契约；仅有“以后可能用”支撑的壳字段再删除或冻结 |
-| 静态 `Active`/`Instance`、全局查找与生命周期隐式 | `ARC-010`、`ARC-020` | 先固定组合根，再随 Party/Run 等消费者分批迁移，避免仓库级一次性替换 |
-| Legacy C#、Lua 元素链、SampleScene、旧 WeaponView 与主线并存 | `LEG-010`、`LEG-020` | 新主线闭环稳定后做引用审计和可恢复序列化迁移，不边开发边扩展两套实现 |
-
-## 首版裁剪规则
-
-路线按完整设计拆解，但首个可发布演示必须保住“可解释的闭环”，不按代码数量平均裁剪：
-
-- `Must`：确定性战斗、至少一个完整元素反应、双角色切换、队友跟随、倒地/失败、可完成的一轮战斗流程、一个 Boss 核心阶段、Windows64 可运行版本和许可清单。
-- `Should`：六种反应、两套完整技能、九个强化、多个敌人变体、Boss 多阶段、完整反馈与设置。
-- `Deferred`：联网实现、跨平台矩阵、无消费者的通用框架、为旧 Lua 与新 C# 同时新增功能。
-
-若时间或资产风险迫使裁剪，先在相关任务中缩小内容数量，保留状态闭环、错误恢复和验证；不得把未完成的共享契约伪装为“以后再补”。
-
-## 路线维护规则
-
-1. 全部路线文件中只能有一个任务带有 `Next` 状态标记。
-2. 完成任务时记录 Feature Spec、实际证据等级和剩余风险，再把所有已满足依赖的任务更新为 `Ready` 或选出新的唯一下一项。
-3. 路线只写顺序、缺口、原子结果、依赖和证据边界；具体数值与完整玩法规则链接到设计文档，不复制维护。
-4. 仓库事实与路线冲突时先修正路线；改变顺序必须写明依赖、风险或版本裁剪理由。
-5. 远期任务开始前必须重新审计实时实现。远期“实施要点”是约束和检查表，不是对尚未检查代码的断言。
-
-## DOC-001 收口记录
-
-- 状态：Done（2026-08-27 工作流规则精简与静态检查通过；未运行 Unity 验证）
-- 行为：保留短指令、风险自适应组织、四份详细路线和重构归属；精简 `AGENTS.md`、项目 Skill、Workflow、Feature 模板与验证矩阵，统一授权时序和最低成本稳定接缝规则。未修改运行时代码或 Unity 序列化资源。
-- 证据：[`AdaptiveDevelopmentWorkflow.md`](Features/AdaptiveDevelopmentWorkflow.md)；受影响相对链接、实际工具路径、唯一 `Next`、文档长度、空白、scoped diff 和 Git 暂存区检查通过。
-- ADR：工作流本身不需要 ADR；元素域现行精简 ADR 仅同步通用扩展门槛措辞，没有改变运行时契约。
-- 路线：`DOC-001` 当时没有改变开发顺序；现行唯一 `Next` 始终以上方“当前唯一下一项”为准。
+完成任务时记录实际证据，更新依赖满足项，并选出新的唯一 `Next`。路线只写顺序、缺口、原子结果和依赖；完整玩法规则链接 Design，最终证据链接 Feature/验证记录。
