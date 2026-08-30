@@ -62,16 +62,17 @@
 - Closed Feature Spec 压缩为最终契约、关键文件/契约、证据、剩余边界和 ADR 链接。
 - ADR 只记录长期决策、主要替代方案、后果和重新评估条件，不复制 Feature 验收或完整测试日志。
 
-## 6. 验证等级
+## 6. 验证
 
-| 等级          | 最低证据                               | 可声明含义             |
-| ------------- | -------------------------------------- | ---------------------- |
-| Implemented   | 代码 + scoped diff                     | 已实现，未完成运行验证 |
-| Fast Verified | 当前切片精确测试 + EditMode（适用时）  | 当前切片验证通过       |
-| Full Verified | 适用的 EditMode + PlayMode + Windows64 | 可进入人工验收         |
-| Accepted      | Full 证据 + 主线人工验收 + 文档闭环    | 功能完成               |
+功能进度与验证证据分开记录，不把 Workflow 等级映射成固定测试层级。
 
-0 项测试、缺失目标证据、非零退出码或早于当前源码的证据都不是通过。不适用层级省略，未运行项写“未运行”。
+- 当前 Feature Spec 的功能状态只使用 `Active / Closed`：`Active` 表示当前切片仍在实施或收口；`Closed` 表示不再有当前工作，不代表证据自动充分。
+- 验证状态只使用 `Unverified / Verified / Accepted`：
+  - `Unverified`：当前源码缺少 verification matrix 对本任务实际风险要求的足够当前证据。
+  - `Verified`：verification matrix 选出的必要自动化/静态/资产证据均针对当前源码通过。
+  - `Accepted`：在 `Verified` 基础上，任务确实需要的人工玩法/视觉/发布验收也已通过。
+- EditMode、PlayMode、Windows64、人工验收按行为和证据需要选择，不因任务是 Fast、Standard 或 Full 就固定递进。
+- 0 项测试、缺失目标证据、非零退出码或早于当前源码的证据都不是通过；未运行且非本任务必要的层级只如实记录，不自动阻止 `Verified`。
 
 ## 7. 收口
 

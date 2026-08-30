@@ -1,6 +1,7 @@
 # 功能：元素施加配置与快照契约 v1
 
-- 状态：Verified
+- 状态：Closed
+- 验证：Verified
 - 维护日期：2026-08-23
 - 关联 ADR：[`ADR-Element-Application-Profile-Snapshot-v1.md`](../Decisions/ADR-Element-Application-Profile-Snapshot-v1.md)
 
@@ -16,7 +17,7 @@
 |---|---|---|---|
 | EditMode | 配置、查询、冻结、失败原因、间隔键、真实资产 | 完整套件 31/31；本功能 5/5 | `Logs/Verification/20260812-011452/EditMode-results.xml`、`EditMode.log`、`verification-summary.json` |
 | PlayMode | 无伤害依赖、目标禁用/复用生命周期 | 完整套件 6/6；本功能 1/1 | `Logs/Verification/20260812-011609-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
-- 验收等级：达到 Fast Verified，并额外完成完整 PlayMode 与真实资产加载。Windows64、主线人工验收和性能检查未运行，因此不声明 Full Verified 或 Accepted。
+- 验证结论：当前切片所需的 EditMode、PlayMode 与真实资产加载证据均针对当前源码通过；Windows64、主线人工验收和性能检查未运行。
 
 ## Remaining Boundaries
 - 剩余风险：`ELM-020/030` 已提供附着与反应消费者，但尚无真实武器/技能来源负责保存和重建 SourceId；该生产接入由 `WPN-010` 负责。当前两个 Profile 已注册但仍不会改变玩家行为。

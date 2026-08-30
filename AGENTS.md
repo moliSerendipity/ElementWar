@@ -15,7 +15,7 @@
 - 架构入口：`Docs/Architecture.md`；开发顺序：`Docs/DevelopmentRoadmap.md`。旧对话、记忆和历史计划只作线索。被替代过程默认由 Git 追溯；若存在 `Docs/Archive/**`，默认搜索和读取时排除。
 - 用户未提交改动不得覆盖、清理、格式化或吸收。旧架构不是兼容性要求：当前任务不依赖时不修改，确实依赖时允许最小必要修改；迁移/清理按 Full 处理。第三方仅在任务明确针对时修改。
 - 不手工编辑/清理 `Library`、`Temp`、`Logs`、`obj`、`.vs`、生成的 `.sln/.csproj`；除非用户要求，不删除、重置、暂存、提交、推送或创建 PR。
-- `.cs` 与 `.meta` / GUID 一并维护；scene/prefab/SO/材质/动画/Input Action/Project Settings 属于序列化边界，修改前后检查引用，不批量改 Unity YAML。
+- 新增、移动、重命名或删除 `.cs` / Unity 资源时维护 `.meta` / GUID；只修改现有 `.cs` 内容无需检查未变化的 `.meta`。scene/prefab/SO/材质/动画/Input Action/Project Settings 属于序列化边界；只有对象引用、GUID、结构或序列化契约变化时检查受影响引用，普通标量配置调整不做仓库级引用扫描；不批量改 Unity YAML。
 - 命令行验证前保存并关闭 Editor；不得用第二个 Unity 进程打开同一工程。
 
 ## 实施与交付

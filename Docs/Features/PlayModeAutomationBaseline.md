@@ -1,6 +1,7 @@
 # 功能：最小 PlayMode 自动化验证基线
 
-状态：Closed（本切片 PlayMode 验证通过；不等同于 Full Verified）
+状态：Closed
+验证：Verified
 关联 ADR / Issue / Commit：可信起点 `fef84f2`；不需要 ADR
 
 ## Current

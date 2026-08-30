@@ -1,6 +1,7 @@
 # 功能：最小 EditMode 自动化验证基线
 
-状态：Closed（Fast Verified）
+状态：Closed
+验证：Verified
 维护日期：2026-08-05
 验证路由：项目 Skill 的 `references/verification-matrix.md`；Full 任务再使用 `Docs/Workflow.md`
 

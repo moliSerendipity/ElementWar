@@ -1,6 +1,7 @@
 # 功能：战斗目标、阵营与攻击执行身份 v1
 
-- 状态：Verified
+- 状态：Closed
+- 验证：Verified
 - 维护日期：2026-08-11
 - 关联 ADR：[`ADR-Combatant-Faction-Execution-Identity-v1.md`](../Decisions/ADR-Combatant-Faction-Execution-Identity-v1.md)
 
@@ -18,6 +19,6 @@
 | EditMode | 身份、阵营矩阵、拒绝原因、去重、`DamageAppliedEvent` 完整表现载荷与既有伤害公式 | 26/26 通过；`DamageContractTests` 21/21 | `Logs/Verification/20260811-220515/EditMode-results.xml`、`EditMode.log`、`verification-summary.json` |
 | PlayMode | 步枪、EnemyAttack、多 Collider、同阵营、禁用复用与事件生命周期 | 5/5 通过；`DamageProducerPlayModeTests` 4/4 | `Logs/Verification/20260811-220613-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
 | 序列化 | Bootstrap Combatant 数量、阵营和 GUID/引用 | 3/3 生命根装配：玩家 `PlayerParty`，两处敌人 `Enemy`；脚本 GUID 对应唯一 `.meta`，场景引用 3 处 | [`Bootstrap.unity`](../../Assets/Scenes/Bootstrap/Bootstrap.unity) 与下方可复现扫描命令 |
-- 验收等级：达到 Fast Verified，并额外完成路线要求的 PlayMode 与序列化证据。Windows64、主线场景人工验收和性能检查未运行，因此不声明 Full Verified 或 Accepted。
+- 验证结论：当前切片所需的 EditMode、PlayMode 与序列化证据均针对当前源码通过；Windows64、主线场景人工验收和性能检查未运行。
 
 > 本页只保留关闭后的当前摘要；详细 AC、调查过程、中间失败、授权往返和回滚历史由 Git 追溯。

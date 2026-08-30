@@ -1,6 +1,7 @@
 # <Feature ID> — <Feature Name>
 
-- 状态：Draft / Active / Implemented / Verified / Closed
+- 状态：Active / Closed
+- 验证：Unverified / Verified / Accepted
 - 路线任务：
 - 更新时间：
 
@@ -45,7 +46,7 @@
 |---|---|---|
 | `<当前切片实际需要的验证>` | 未运行 | |
 
-验证种类和等级按项目 Skill / verification matrix 选择；不因为模板存在而补跑无关测试。只保留最终有效证据，失败后已被替代的中间日志不写入 Closed 正文。
+验证种类按项目 Skill / verification matrix 依据实际行为风险选择；不因为 Workflow 等级或模板存在而补跑无关测试。只保留最终有效证据，失败后已被替代的中间日志不写入 Closed 正文。
 
 ## Remaining Boundaries
 

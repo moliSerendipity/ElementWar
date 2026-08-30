@@ -1,6 +1,7 @@
 # 功能：Combat Domain Contract v1
 
-- 状态：Verified
+- 状态：Closed
+- 验证：Verified
 - 维护日期：2026-08-08
 - 关联 ADR：[`ADR-Combat-Domain-Contract-v1.md`](../Decisions/ADR-Combat-Domain-Contract-v1.md)
 
@@ -17,7 +18,7 @@
 |---|---|---|---|
 | EditMode | 伤害公式、来源透传、弱点、抗性、生命耗尽和 CharacterFacts | 12/12 通过；其中本功能 7/7 | `Logs/Verification/20260808-201748/EditMode-results.xml`、`EditMode.log`、`verification-summary.json` |
 | PlayMode | 当前步枪和 EnemyAttack 生产链集成 | 3/3 通过；其中本功能 2/2 | `Logs/Verification/20260808-201828-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
-- 验收等级：达到 Fast Verified，并额外完成完整 PlayMode；Windows64 构建与主线场景人工验收未运行，因此不声明 Full Verified 或 Accepted。
+- 验证结论：当前切片所需的 EditMode 与 PlayMode 证据均针对当前源码通过；Windows64 构建与主线场景人工验收未运行。
 
 ## Remaining Boundaries
 - 剩余风险：`SourceObject` 是本地 Unity 对象引用，不是网络稳定 ID；备份、Legacy/Lua 和旧场景按范围保持不变。

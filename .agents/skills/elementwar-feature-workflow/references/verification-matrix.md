@@ -12,7 +12,7 @@
 | Gameplay 可变状态 | 精确 EditMode；需要帧/组件时加 PlayMode | 当前实际启停、死亡、重置或复用路径 |
 | MonoBehaviour 生命周期/事件 | 精确 PlayMode | 当前真实重启用、场景卸载或订阅路径 |
 | NavMesh、物理、帧或计时 | 精确 PlayMode | 当前玩法要求的容差、低帧率或目标隔离 |
-| scene/prefab/序列化普通配置 | 引用检查 + 必要 PlayMode | 只有发生结构/契约迁移时检查旧数据兼容 |
+| scene/prefab/序列化普通配置 | 目标资产加载/必要 PlayMode | 仅对象引用、GUID、结构或契约变化时检查受影响引用；迁移时再检查旧数据兼容 |
 | 公共接口/asmdef/架构 | 编译 + 受影响测试 + scoped review | 只有长期决策变化时 ADR/独立审查 |
 | 玩家可见里程碑 | 当前切片自动化 + Bootstrap smoke | 需要人工体验证明时截图/录像 |
 | 性能声明 | 代表性 Player Profiling | 需要比较时同设备、同场景前后数据 |

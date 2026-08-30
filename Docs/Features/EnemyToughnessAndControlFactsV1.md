@@ -1,6 +1,7 @@
 # 功能：敌人韧性、失衡与硬控制事实 v1
 
-- 状态：Implemented（本轮边界精简后按用户要求未重新运行测试；下列 EditMode / PlayMode 证据早于当前源码）
+- 状态：Closed
+- 验证：Unverified（最新边界精简后未重跑；历史测试早于当前源码）
 - 维护日期：2026-08-30
 - 关联 ADR：[`ADR-Enemy-Toughness-And-Control-Facts-v1.md`](../Decisions/ADR-Enemy-Toughness-And-Control-Facts-v1.md)
 
@@ -10,7 +11,7 @@
 - Normal 接受完整硬控，Elite 接受一半时长，Boss 不进入硬控；Boss 同次攻击的基础削韧与转换削韧先相加，再只经过一次阈值。
 - `ToughnessComponent` 与 `HardControlComponent` 只保存各自状态；一次攻击的跨组件规则由无状态 `EnemyControlApplicationResolver` 统一提交。
 - `EnemyRoot` 推进状态，`EnemyBrain` 只读取失衡/硬控事实；当前没有无消费者控制事件或详细拒绝枚举。
-- 本轮边界精简后未重跑自动化，因此当前状态仍为 Implemented，历史测试不能升级为当前 Verified。
+- 本轮边界精简后未重跑自动化，因此当前验证仍为 Unverified，历史测试不能替代当前源码的验证。
 
 ## Evidence
 | 层级 | 内容 | 结果 | 证据 |

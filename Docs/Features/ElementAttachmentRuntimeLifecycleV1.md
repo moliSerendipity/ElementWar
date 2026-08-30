@@ -1,6 +1,7 @@
 # 功能：元素附着运行时与生命周期 v1
 
-- 状态：Fast Verified（并额外通过 PlayMode；现有 Editor 手动 Test Runner 证据）
+- 状态：Closed
+- 验证：Verified
 - 维护日期：2026-08-26
 - 关联 ADR：[`ADR-Element-Attachment-Runtime-Lifecycle-v1.md`](../Decisions/ADR-Element-Attachment-Runtime-Lifecycle-v1.md)
 
