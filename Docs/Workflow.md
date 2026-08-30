@@ -73,6 +73,7 @@
   - `Accepted`：在 `Verified` 基础上，任务确实需要的人工玩法/视觉/发布验收也已通过。
 - EditMode、PlayMode、Windows64、人工验收按行为和证据需要选择，不因任务是 Fast、Standard 或 Full 就固定递进。
 - 0 项测试、缺失目标证据、非零退出码或早于当前源码的证据都不是通过；未运行且非本任务必要的层级只如实记录，不自动阻止 `Verified`。
+- Closed Feature 的 `Verified / Accepted` 只代表其记录版本的证据快照，不永久证明当前 HEAD；当前任务修改其关键路径后，不继承旧验证状态，只按本次变更重新选择必要证据。能定位提交或 revision 时记录它，不能定位时不补造。
 
 ## 7. 收口
 

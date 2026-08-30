@@ -4,6 +4,7 @@
 - 验证：Unverified / Verified / Accepted
 - 路线任务：
 - 更新时间：
+- 证据版本：<commit / revision，可定位时填写；否则删除本行>
 
 > 只记录当前功能契约和最终证据；调查过程、聊天记录、逐次实现日志和已被替代方案由 Git 追溯。
 
@@ -47,6 +48,8 @@
 | `<当前切片实际需要的验证>` | 未运行 | |
 
 验证种类按项目 Skill / verification matrix 依据实际行为风险选择；不因为 Workflow 等级或模板存在而补跑无关测试。只保留最终有效证据，失败后已被替代的中间日志不写入 Closed 正文。
+
+Closed 文档中的 `Verified / Accepted` 只对该证据对应版本有效；后续修改关键路径后按当前变更重新判断所需证据，不继承旧状态。
 
 ## Remaining Boundaries
 

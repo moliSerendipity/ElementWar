@@ -21,7 +21,7 @@ description: 在 ElementWar 中继续路线、实现新增行为、处理非简�
 
 1. 按职责取最少事实：实现读代码，所有权/边界读相关 Architecture，玩法读相关 Design，范围只读当前 Roadmap task；先搜符号，再读定义、直接调用者和最相关测试。
 2. 长文档/源码按 heading 或符号区间读取；约 300 行以上源码先读目标类型/方法附近，确有跨区控制流再扩展。已读且未变化的内容不重复全文读；`继续下一阶段` 只读唯一 `Next` 和对应任务块。
-3. Done 依赖以当前代码/Architecture 为契约来源；历史 Feature/Superseded ADR 只在追溯证据或决策原因时读取。diff、设计、验证和性能资料均按当前任务缩小范围。
+3. Done 依赖以当前代码/Architecture 为契约来源；历史 Feature/Superseded ADR 只在追溯证据或决策原因时读取，其 `Verified / Accepted` 仅代表记录版本，不证明当前 HEAD。diff、设计、验证和性能资料均按当前任务缩小范围。
 
 ## 工具输出
 
