@@ -5,7 +5,7 @@
 - 首发平台：Windows 64-bit
 - 公开试玩目标：2026-09-10
 
-本文只维护产品方向、首版范围和细则导航。它描述已经确认的目标设计，不证明对应功能已经实现；当前代码主线、旧架构和已知越界点以 [`Architecture.md`](Architecture.md) 为准，单项功能的实现与验证以对应 Feature Spec 和证据为准。
+本文只维护产品方向、首版范围和细则导航。它描述已经确认的目标设计，不证明对应功能已经实现；当前代码主线、旧架构和已知越界点以 [`Architecture.md`](Architecture.md) 为准，单项功能的实现以当前代码、对应路线任务和适用 Architecture/Design 事实为准；Feature Spec 仅在 Full 或确有长期契约需要时建立，验证声明以实际证据为准。
 
 开发顺序、当前下一项、依赖和裁剪边界以 [`DevelopmentRoadmap.md`](DevelopmentRoadmap.md) 为准；不要从本设计总览的章节顺序推导实施顺序。
 
@@ -55,7 +55,7 @@
 - [`Design/Run.md`](Design/Run.md)：场景、波次、敌人编排、Boss、补给、失败和九个强化。
 - [`Design/Networking.md`](Design/Networking.md)：首版单机边界、未来双人实验和同步约束。
 - [`DevelopmentRoadmap.md`](DevelopmentRoadmap.md)：当前实施状态、唯一下一项、依赖图和分域执行细则。
-- [`Workflow.md`](Workflow.md)：短指令入口、自适应任务组织、验证等级和完成标准。
+- [`Workflow.md`](Workflow.md)：仅 Full 任务的详细流程和完成标准。
 
 实现某项需求时，只读取本总览和直接相关的细则；跨领域行为再补读必要文档，不默认加载全部文件。
 
@@ -67,7 +67,8 @@
 
 ## 维护规则
 
+- 本设计中的“未来 / 后续 / 可扩展”只描述产品方向，不构成当前任务新增接口、状态或防御逻辑的依据；只有当前 Roadmap 任务和真实消费者可以推动实现。
 - 同一事实只在一份细则中详细维护；本总览只保留范围和链接。
 - “初始调试值”不是最终平衡承诺，必须经过实际游玩调整。
 - 被否决或替代的方案不保留在当前设计正文中，可由 Git 历史追溯。
-- 文档读取、精简和过长拆分遵守 [`Workflow.md`](Workflow.md)；拆分后更新本页导航。
+- 文档读取和上下文预算遵守项目 Skill；长文档按相关 section 读取，拆分后更新本页导航。

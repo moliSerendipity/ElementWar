@@ -1,4 +1,4 @@
 interface:
   display_name: "ElementWar 功能工作流"
-  short_description: "按边界、授权与证据流程推进 ElementWar 功能开发"
-  default_prompt: "使用 $elementwar-feature-workflow 安全规划、实施并验证这项 ElementWar 修改。"
+  short_description: "按风险选择最小流程推进 ElementWar 修改"
+  default_prompt: "使用 $elementwar-feature-workflow 按最小必要流程实现并验证这项 ElementWar 修改。"

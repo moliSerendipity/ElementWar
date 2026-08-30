@@ -4,16 +4,18 @@
 
 ## 风险到证据
 
-| 变化 | 最低验证 | 按需增加 |
+额外验证只覆盖仓库当前真实存在或本任务明确引入的路径。本表出现某类风险不构成新增实现、防御代码或测试的理由。
+
+| 变化 | 最低验证 | 仅在真实路径存在时增加 |
 |---|---|---|
-| 纯规则、数值、配置校验 | 精确 EditMode | 边界值、非法数据 |
-| Gameplay 可变状态 | EditMode + 精确 PlayMode | 禁用、死亡、重置、对象池复用 |
-| MonoBehaviour 生命周期/事件 | PlayMode | 重启用、场景卸载、重复订阅 |
-| NavMesh、物理、帧或计时 | PlayMode | 容差、目标隔离、重复触发 |
-| scene/prefab/序列化 | PlayMode + 引用扫描 + 人工场景检查 | 迁移与旧数据兼容 |
-| 公共接口/asmdef/架构 | 编译 + 受影响测试 + scoped review | ADR、调用方扫描、独立审查 |
-| 玩家可见里程碑 | Full Verified + Bootstrap smoke | 截图或录像 |
-| 性能声明 | 代表性 Player Profiling | 同设备、同场景的前后数据 |
+| 纯规则、数值、配置校验 | 精确 EditMode | 当前已定义的边界/非法输入 |
+| Gameplay 可变状态 | 精确 EditMode；需要帧/组件时加 PlayMode | 当前实际启停、死亡、重置或复用路径 |
+| MonoBehaviour 生命周期/事件 | 精确 PlayMode | 当前真实重启用、场景卸载或订阅路径 |
+| NavMesh、物理、帧或计时 | 精确 PlayMode | 当前玩法要求的容差、低帧率或目标隔离 |
+| scene/prefab/序列化普通配置 | 引用检查 + 必要 PlayMode | 只有发生结构/契约迁移时检查旧数据兼容 |
+| 公共接口/asmdef/架构 | 编译 + 受影响测试 + scoped review | 只有长期决策变化时 ADR/独立审查 |
+| 玩家可见里程碑 | 当前切片自动化 + Bootstrap smoke | 需要人工体验证明时截图/录像 |
+| 性能声明 | 代表性 Player Profiling | 需要比较时同设备、同场景前后数据 |
 
 ## 当前仓库入口
 
@@ -33,3 +35,4 @@ pwsh -File .\Tools\Verify-ElementWarWindows64.ps1
 - Windows64 必须生成成功报告和预期 Player。保留 XML、日志、摘要、Player 或其他原始证据路径。
 - 证据必须晚于当前源码；超时后先检查进程、锁和摘要，不直接判定测试失败。每次 Unity 运行后检查并精确还原无关的 Project Settings 自动改动。
 - 未执行项写“未运行”。人工证据记录版本、配置、场景、步骤、预期和观察；性能结论记录设备、构建、场景、采样和基线，不把 Editor 数据泛化为 Player。
+- 完整 XML/日志保存在证据目录；对话/终端只输出数量摘要、失败项和相关错误区间，遵守 Skill 的 Tool Output Budget。

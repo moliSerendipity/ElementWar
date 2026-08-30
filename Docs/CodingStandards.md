@@ -1,6 +1,6 @@
 # ElementWar C# 代码规范
 
-本文件只维护 C# 命名和注释规范。架构、状态所有权、防御边界和组件复杂度由根 `AGENTS.md` / Workflow 维护，避免每次 C# 修改重复加载架构规则。
+本文件只维护 C# 命名和注释规范。架构、状态所有权、防御边界和组件复杂度由根 `AGENTS.md` 与项目 Skill 维护；只有 Full 再读取 Workflow，避免每次 C# 修改重复加载架构规则。
 
 ## 命名
 
@@ -38,7 +38,7 @@
 可以省略：
 
 - 名称和实现都直白的 private 简短工具方法；
-- 只转调一个明确方法的 Unity 消息函数；若调用顺序、启停时机或实际对象池复用会影响行为，仍须注释。
+- 只转调一个明确方法的 Unity 消息函数；若当前真实调用顺序或生命周期会影响行为，仍须注释。
 
 标签要求：
 
@@ -71,27 +71,19 @@ private bool TryConsumeAmmo(int _amount)
 
 - 多阶段方法，以及包含非显然校验顺序、状态转换、生命周期、公式、事务写回或事件发布的方法，必须按逻辑块添加简洁中文注释。
 - 注释放在逻辑块之前，解释目的、顺序原因、依赖的不变量，或失败时为何保持状态不变；一条注释可以覆盖若干语句和分支。
-- 常见需要解释的内容：无副作用预检、时间/生命周期同步、接收资格、数值派生与边界、重复/间隔裁决、原子状态提交和已提交事实发布。
+- 常见需要解释的内容：公式来源、单位/坐标空间、状态转换顺序、权威状态写回、事件发布时机，以及当前真实生命周期或性能取舍。
 - 不逐句翻译代码。简单赋值、直白 getter、单一转调、名称已完整表达意图的短分支和机械枚举循环可以不写块注释。
 - 语法虽简单但顺序会影响结果、或读者需要反推领域规则时，仍应拆成逻辑块说明。
 
 ```
-// 旧请求不能推进或清理对象复用后的新生命周期，因此必须在时间同步前拦截。
-if (MatchesCurrentTarget(_request) == false)
-{
-    return ElementApplicationResult.Rejected(
-        ElementApplicationRejectionReason.InvalidTarget,
-        primaryAttachment);
-}
+// 先按命中部位得到本次攻击自身的确定倍率，再叠加目标侧减伤。
+// 顺序写在这里是为了让所有伤害入口共享同一公式，而不是由各武器重复组合。
+float hitDamage = baseDamage * hitPartMultiplier;
+float finalDamage = hitDamage * defenseMultiplier * resistanceMultiplier;
 
-// 在读取当前槽前同步到请求时间，保证过期、死亡或重置状态已经被清理。
-ElementApplicationRejectionReason rejectionReason;
-if (TryAdvanceTime(_request.ApplicationTime, out rejectionReason) == false)
-{
-    return ElementApplicationResult.Rejected(
-        rejectionReason,
-        primaryAttachment);
-}
+// Health 是生命值唯一事实源，因此只在最终伤害确定后提交一次；
+// Presentation 通过已提交结果更新表现，不参与重新计算。
+healthComponent.ApplyDamage(finalDamage);
 ```
 
 ## 实现注释

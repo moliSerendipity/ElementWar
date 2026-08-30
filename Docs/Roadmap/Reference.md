@@ -219,6 +219,6 @@
 - 某次修改具体改了哪些文件；
 - 某次测试输出是什么；
 
-优先查看 Git、对应 Feature Spec 或 ADR。
+优先查看 Git、活动 Architecture/Design、压缩后的 Feature 摘要或 ADR；只有明确追溯历史时读取 Archive。
 
 只有仍会约束未来开发的结论才保留在本页。

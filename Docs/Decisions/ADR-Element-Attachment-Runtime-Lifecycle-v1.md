@@ -2,73 +2,33 @@
 
 - 状态：Accepted（实现形状由 [`ADR-Element-Pipeline-Simplification-v1.md`](ADR-Element-Pipeline-Simplification-v1.md) 修订）
 - 日期：2026-08-20
-- 负责人：Codex / 项目维护者
-- 关联 Feature Spec：[`ElementAttachmentRuntimeLifecycleV1.md`](../Features/ElementAttachmentRuntimeLifecycleV1.md)
+- 关联 Feature 记录：[`ElementAttachmentRuntimeLifecycleV1.md`](../Features/ElementAttachmentRuntimeLifecycleV1.md)
 
-## 背景
+## Context
 
 `ELM-010` 已建立与伤害并列的元素来源快照和施加请求，但目标尚无消费者。首版敌人只允许一个主要附着槽；状态必须在配置持续时间后到期，并在死亡、禁用和对象复用时清理。当前 `Combatant` 掌握目标生命周期身份，`HealthComponent` 是生命事实源，`EnemyRoot` 是敌方逐帧 Gameplay 主驱动。
 
-## 决策因素
+## Decision
 
+选择方案 A。目标侧组件拥有状态，`Combatant` 负责明确的启用/禁用边界，`EnemyRoot` 负责时间推进。Resolver 只接受 ELM-010 的请求，先验证当前目标身份、Health 和来源—目标间隔，再原子写入状态。
+
+同元素刷新以最近一次合法请求替换来源与执行快照。不同元素只返回 `ReactionRequired`，既不修改已有槽，也不提前提交间隔；反应管线以当前附着快照和触发请求进入目标侧事务。消费只能由该内部事务完成并必须匹配版本，避免迟到调用清除刷新后的附着；单槽只暴露 `TryGetPrimaryAttachment`，不预设集合查询接口。
+
+## Rationale
 - 玩家与开发者结果：相同输入产生确定附着、刷新、待反应与一次性清理；调试层能读取已提交状态。
 - 架构约束：Definition 不持有运行时状态，Presentation 不裁决元素；不得新增第二套生命事实或独立敌人 Update 主链。
 - 生命周期：旧 `TargetId`、附着版本和应用间隔不能跨禁用或对象池复用泄漏；死亡不会自动禁用 `Combatant`，必须显式处理。
 - 扩展性：`ELM-030` 需要稳定读取已有附着与触发请求，并以版本防止迟到消费；首版不能提前实现反应规则。
 - 迁移风险：Bootstrap 只有两处敌方 `Combatant` 根，可做精确组件装配并保留现有 GUID/引用。
 
-## 备选方案
-
-### 方案 A：目标侧独立运行时组件，由 Combatant 与 EnemyRoot 驱动
-
-- 做法：每个敌方根装配 `ElementAttachmentRuntime`；`Combatant` 绑定目标生命周期，`EnemyRoot` 推进显式时间；静态 Resolver 提交请求。
-- 优点：状态所有权明确、生命周期可验证、Presentation 只读，未来可以把单槽扩为集合而不改请求契约。
-- 成本与风险：需要新增公共结果/事件契约并精确迁移 Bootstrap；任何未装配目标会明确拒绝元素应用。
-
-### 方案 B：把附着字段直接并入 Combatant
-
-- 做法：由 `Combatant` 同时保存身份、阵营、伤害去重和元素状态。
-- 优点：不需要额外场景组件，禁用生命周期天然同源。
-- 成本与风险：目标根持续吸收各状态域职责，后续韧性、控制和多槽扩展会让 `Combatant` 成为并行状态容器。
-
-### 方案 C：全局字典按 TargetId 保存附着
-
-- 做法：全局服务维护全部目标的附着与计时。
-- 优点：统一 Tick，场景目标无需附加组件。
-- 成本与风险：目标销毁/禁用需要额外注册表同步，容易保留悬空引用和旧身份，也引入新的全局组合根依赖。
-
-## 决策
-
-选择方案 A。目标侧组件拥有状态，`Combatant` 负责明确的启用/禁用边界，`EnemyRoot` 负责时间推进。Resolver 只接受 ELM-010 的请求，先验证当前目标身份、Health 和来源—目标间隔，再原子写入状态。
-
-同元素刷新以最近一次合法请求替换来源与执行快照。不同元素只返回 `ReactionRequired`，既不修改已有槽，也不提前提交间隔；反应管线以当前附着快照和触发请求进入目标侧事务。消费只能由该内部事务完成并必须匹配版本，避免迟到调用清除刷新后的附着；单槽只暴露 `TryGetPrimaryAttachment`，不预设集合查询接口。
-
-## 后果
-
-正面影响：
-
+## Consequences
 - 每个敌方目标只有一个附着真相源，事件只描述已提交事实。
 - 到期、死亡、禁用和池复用能够幂等清理；旧请求不能写入新目标生命周期。
 - ELM-030 可复用明确的待反应结果与版本化消费，而无需回迁 ELM-010 请求。
 - 调试 Presentation 可以仅依赖事件和只读快照。
-
-代价与限制：
-
 - 未装配 `ElementAttachmentRuntime` 的敌方目标会明确拒绝请求；Bootstrap 和未来敌人 prefab 必须同步装配。
 - 首版运行时只支持一个主要槽；未来真实多附着需求出现时重新设计查询契约，不提前暴露索引集合接口。
 - 不同元素在 ELM-030 完成前不会改变状态，也不会产生反应结果。
 - 过期由敌方 Gameplay Tick 推进；没有 `EnemyRoot` 的未来目标必须提供等价的权威驱动后才能接入。
 
-## 迁移与回滚
-
-- 增量步骤：新增状态/结果/事件与测试；接入 `Combatant`、`EnemyRoot`；精确装配 Bootstrap 两处敌方根与调试 Presenter；最后同步架构、设计和路线。
-- 序列化/API 兼容性：新增脚本保留各自 `.meta`；只向 Bootstrap 既有两个敌方根和 EventBus 根增加组件，不移动对象、不改变玩家装配、不修改旧场景。
-- 回滚单位：Gameplay 契约、目标接入、Presentation、Bootstrap、测试、Feature Spec/ADR 和路线记录整体回滚。
-- 对旧架构的影响：无；Legacy/Lua 与 `SampleScene` 保持只读。
-
-## 验证
-
-- 自动化证据：EditMode 覆盖规则、间隔、版本、事件与序列化；PlayMode 覆盖真实生命周期、死亡、复用和 Presenter。
-- 人工证据：记录 Bootstrap 调试显示是否实际观察；未运行时不声明 Accepted。
-- 性能证据：不作性能提升声明；零间隔来源不保留间隔条目，非零条目在到期后复用暂存列表清理。
-- 重新评估条件：多个主要槽、敌方向玩家施加、没有 `EnemyRoot` 的可附着目标、网络回滚/重放或代表性 Player 数据要求集中调度。
+> 旧备选方案展开、迁移步骤、验证流水账和回滚过程由 Git 历史追溯；当前开发只依赖本页决定、活动 Architecture/Design 与代码。
