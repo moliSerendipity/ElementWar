@@ -2,7 +2,7 @@
 
 - 状态：Closed
 - 验证：Verified
-- 维护日期：2026-08-26
+- 维护日期：2026-08-30
 - 关联 ADR：[`ADR-Combat-Range-Target-Query-v1.md`](../Decisions/ADR-Combat-Range-Target-Query-v1.md)
 
 ## Current
@@ -16,10 +16,10 @@
 ## Evidence
 | 层级 | 内容 | 结果 | 证据 |
 |---|---|---|---|
-| EditMode | 目标解析、过滤、边界、Trigger、排序与上限 | 52/52 通过；本功能 4/4 | `Logs/Verification/20260826-234825/EditMode-results.xml`、`EditMode.log`、`verification-summary.json` |
-| PlayMode | 真实 Physics 多 Collider、友伤、LOS 与禁用复用 | 12/12 通过；本功能 3/3 | `Logs/Verification/20260826-234737-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
+| EditMode | 目标解析、过滤、边界、Trigger、排序与上限 | 64/64 通过；本功能 4/4 | `Logs/Verification/20260830-211319/EditMode-results.xml`、`EditMode.log`、`verification-summary.json` |
+| PlayMode | 真实 Physics 多 Collider、友伤、LOS、禁用复用与 Overload 生产接入 | 15/15 通过；本功能 3/3 | `Logs/Verification/20260830-211458-playmode/PlayMode-results.xml`、`PlayMode.log`、`PlayMode-verification-summary.json` |
 - 验证结论：当前切片所需的 EditMode 与 PlayMode 证据均针对当前源码通过；Windows64 构建和主线人工验收未运行。
 ## Remaining Boundaries
-- 未运行与剩余风险：Windows64、主线人工验收和性能检查未运行；当前没有生产消费者，Player 分配与高密度场景性能仍未测量。
+- 未运行与剩余风险：Windows64、主线人工验收和性能检查未运行；`OverloadReactionResolver` 已成为首个生产消费者，Player 分配与高密度场景性能仍未测量。
 
 > 本页只保留关闭后的当前摘要；详细 AC、调查过程、中间失败、授权往返和回滚历史由 Git 追溯。

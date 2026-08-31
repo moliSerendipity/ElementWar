@@ -205,7 +205,7 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
 
         /// <summary>
         /// 步枪必须在进入命中查询前冻结当前元素；同一元素通道跨多枪复用来源身份，
-        /// 火雷连续命中则进入既有反应管线并消费附着。
+        /// 火雷连续命中后，Overload 对范围内每个合法敌人只提交一次伤害与控制。
         /// </summary>
         [UnityTest]
         public IEnumerator RifleElementSelectionIsFrozenBeforeHitAndFeedsReactionPipeline()
@@ -213,11 +213,30 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             GameObject targetGameObject = CreateGameObject("ElementRifleTarget");
             targetGameObject.transform.position = new Vector3(0f, 0f, 5f);
             targetGameObject.AddComponent<BoxCollider>();
-            Combatant targetCombatant = AddInitializedCombatant(
+            Combatant targetCombatant = AddInitializedEnemyCombatant(
                 targetGameObject,
-                100f,
-                CombatFaction.Enemy);
-            targetGameObject.AddComponent<ElementAttachmentRuntime>();
+                200f,
+                EnemyTier.Normal,
+                out ToughnessComponent targetToughness,
+                out HardControlComponent targetHardControl);
+
+            GameObject nearbyEnemyGameObject = CreateGameObject("NearbyOverloadEnemy");
+            nearbyEnemyGameObject.transform.position = new Vector3(2f, 0f, 5f);
+            nearbyEnemyGameObject.AddComponent<BoxCollider>();
+            Combatant nearbyEnemyCombatant = AddInitializedEnemyCombatant(
+                nearbyEnemyGameObject,
+                200f,
+                EnemyTier.Normal,
+                out ToughnessComponent nearbyToughness,
+                out HardControlComponent nearbyHardControl);
+
+            GameObject friendlyGameObject = CreateGameObject("NearbyFriendly");
+            friendlyGameObject.transform.position = new Vector3(-2f, 0f, 5f);
+            friendlyGameObject.AddComponent<BoxCollider>();
+            Combatant friendlyCombatant = AddInitializedCombatant(
+                friendlyGameObject,
+                200f,
+                CombatFaction.PlayerParty);
 
             GameObject providerGameObject = CreateGameObject("ElementAimPointProvider");
             DamageProducerTestAimPointProvider provider =
@@ -243,7 +262,7 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
                 new Regex(@"\[WeaponRuntime\] 自动初始化失败：当前没有可用的共享 ConfigService.*"));
             WeaponRuntime weaponRuntime = weaponGameObject.AddComponent<WeaponRuntime>();
             ammoComponent.InitializeFromCapacity(5, 0);
-            SetPrivateField(weaponRuntime, "damage", 10f);
+            SetPrivateField(weaponRuntime, "damage", 20f);
             SetPrivateField(weaponRuntime, "fireInterval", 0.1f);
             SetPrivateField(weaponRuntime, "isInitialized", true);
             SetPrivateField(weaponRuntime, "currentAmmoElement", ElementType.Fire);
@@ -308,16 +327,45 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
                 out ElementAttachmentSnapshot refreshedFireAttachment), Is.True);
             Assert.That(refreshedFireAttachment.Source.SourceId, Is.EqualTo(fireSourceId));
 
-            // Electric 使用同一生产入口触发 Overload 登记；具体反应输出由 ELM-040 接续。
+            // Electric 触发 Overload；直接命中后，范围内两个敌人各收到一次独立输出。
             Assert.That(weaponRuntime.TrySwitchAmmoElement(), Is.True);
             Assert.That(fireExecutor.Execute(
                 firePlan,
                 null,
                 CharacterFramePlan.Empty,
                 Time.time + 0.02f), Is.True);
-            Assert.That(damageResults, Has.Count.EqualTo(3));
+            Assert.That(damageResults, Has.Count.EqualTo(5));
             Assert.That(damageResults[2].Element, Is.EqualTo(ElementType.Electric));
             Assert.That(targetCombatant.ElementAttachments.TryGetPrimaryAttachment(out _), Is.False);
+
+            List<DamageResult> overloadResults = damageResults.FindAll(
+                _result => _result.Delivery == DamageDeliveryType.Explosion);
+            Assert.That(overloadResults, Has.Count.EqualTo(2));
+
+            DamageResult targetOverloadResult = overloadResults.Find(
+                _result => _result.TargetCombatant == targetCombatant);
+            DamageResult nearbyOverloadResult = overloadResults.Find(
+                _result => _result.TargetCombatant == nearbyEnemyCombatant);
+            Assert.That(targetOverloadResult.IsApplied, Is.True);
+            Assert.That(nearbyOverloadResult.IsApplied, Is.True);
+            Assert.That(targetOverloadResult.FinalDamage, Is.EqualTo(16f).Within(0.0001f));
+            Assert.That(nearbyOverloadResult.FinalDamage, Is.EqualTo(16f).Within(0.0001f));
+            Assert.That(targetOverloadResult.ExecutionId, Is.EqualTo(nearbyOverloadResult.ExecutionId));
+            Assert.That(targetOverloadResult.ExecutionId, Is.Not.EqualTo(damageResults[2].ExecutionId));
+            Assert.That(targetOverloadResult.InstigatorCombatant, Is.EqualTo(characterCombatant));
+            Assert.That(targetOverloadResult.SourceObject, Is.EqualTo(weaponRuntime));
+            Assert.That(targetOverloadResult.Element, Is.EqualTo(ElementType.Electric));
+            Assert.That(targetOverloadResult.HitPartType, Is.EqualTo(HitPartType.Default));
+
+            Assert.That(targetCombatant.Health.CurrentHealth, Is.EqualTo(124f).Within(0.0001f));
+            Assert.That(nearbyEnemyCombatant.Health.CurrentHealth, Is.EqualTo(184f).Within(0.0001f));
+            Assert.That(friendlyCombatant.Health.CurrentHealth, Is.EqualTo(200f).Within(0.0001f));
+            Assert.That(targetToughness.CurrentToughness, Is.Zero);
+            Assert.That(nearbyToughness.CurrentToughness, Is.Zero);
+            Assert.That(targetToughness.IsStaggered, Is.True);
+            Assert.That(nearbyToughness.IsStaggered, Is.True);
+            Assert.That(targetHardControl.IsHardControlled, Is.True);
+            Assert.That(nearbyHardControl.IsHardControlled, Is.True);
         }
 
         /// <summary>
@@ -519,6 +567,54 @@ namespace Game.Tests.PlayMode.Gameplay.Combat
             SetPrivateField(combatant, "faction", _faction);
             Assert.That(combatant.Id.IsValid, Is.True);
             return combatant;
+        }
+
+        /// <summary>
+        /// 建立可同时接收元素、伤害与敌人控制的完整测试目标；禁用 EnemyRoot 自动 Tick，
+        /// 让用例只观察本次生产入口同步提交的事实。
+        /// </summary>
+        private Combatant AddInitializedEnemyCombatant(
+            GameObject _gameObject,
+            float _maxHealth,
+            EnemyTier _enemyTier,
+            out ToughnessComponent _toughness,
+            out HardControlComponent _hardControl)
+        {
+            EnemyStat stat = _gameObject.AddComponent<EnemyStat>();
+            ConfigureEnemyStat(stat, _maxHealth, _enemyTier);
+            HealthComponent health = _gameObject.AddComponent<HealthComponent>();
+            Assert.That(health.TryInitialize(), Is.True);
+            _gameObject.AddComponent<ElementAttachmentRuntime>();
+
+            Combatant combatant = _gameObject.GetComponent<Combatant>();
+            SetPrivateField(combatant, "faction", CombatFaction.Enemy);
+            Assert.That(combatant.Id.IsValid, Is.True);
+
+            _toughness = _gameObject.AddComponent<ToughnessComponent>();
+            _hardControl = _gameObject.AddComponent<HardControlComponent>();
+            Assert.That(_toughness.TryInitialize(Time.time), Is.True);
+            Assert.That(_hardControl.TryInitialize(Time.time), Is.True);
+
+            EnemyRoot enemyRoot = _gameObject.AddComponent<EnemyRoot>();
+            enemyRoot.enabled = false;
+            return combatant;
+        }
+
+        /// <summary>写入本用例需要的无减伤生命事实与 Normal/Elite/Boss 控制快照。</summary>
+        private static void ConfigureEnemyStat(
+            EnemyStat _stat,
+            float _maxHealth,
+            EnemyTier _enemyTier)
+        {
+            SetPrivateField(_stat, "maxHealth", _maxHealth);
+            SetPrivateField(_stat, "damageTakenMultiplier", 1f);
+            SetPrivateField(_stat, "healingTakenMultiplier", 1f);
+            SetPrivateField(_stat, "isInitialized", true);
+            SetPrivateField(_stat, "enemyTier", _enemyTier);
+            SetPrivateField(_stat, "maxToughness", 120f);
+            SetPrivateField(_stat, "toughnessRecoveryPerSecond", 24f);
+            SetPrivateField(_stat, "minimumToughnessDamage", 10f);
+            SetPrivateField(_stat, "staggerDuration", 1f);
         }
 
         private static DamageRequest CreateRequest(

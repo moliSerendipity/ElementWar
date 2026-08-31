@@ -180,21 +180,27 @@ namespace Game.Gameplay.Weapon
                 _ammoElementSource,
                 _executionId,
                 hitContext.TargetCombatant,
+                weaponRuntime.Damage,
+                weaponRuntime.HitLayerMask,
                 _currentTime);
         }
 
         /// <summary>
-        /// 使用开火成立时冻结的弹药来源建立元素请求，并交给既有反应管线提交目标事实。
+        /// 使用开火成立时冻结的弹药来源建立元素请求，并交给既有反应管线提交目标事实与 Overload 输出。
         /// 伤害是否实际写回不作为元素施加前置条件。
         /// </summary>
         /// <param name="_ammoElementSource">开火成立、命中查询前冻结的弹药来源。</param>
         /// <param name="_executionId">与本次伤害请求共享的攻击执行身份。</param>
         /// <param name="_targetCombatant">Hitscan 解析到的权威目标根。</param>
+        /// <param name="_triggerBaseDamage">本次命中进入目标减伤前的基础伤害。</param>
+        /// <param name="_targetMask">Overload 范围物理候选所在层。</param>
         /// <param name="_applicationTime">本次开火成立的运行时时间戳。</param>
         private static void TryApplyAmmoElement(
             ElementApplicationSourceSnapshot _ammoElementSource,
             AttackExecutionId _executionId,
             Combatant _targetCombatant,
+            float _triggerBaseDamage,
+            LayerMask _targetMask,
             float _applicationTime)
         {
             if (ElementApplicationRequestFactory.TryCreateRequest(
@@ -208,7 +214,13 @@ namespace Game.Gameplay.Weapon
                 return;
             }
 
-            ElementReactionPipeline.ResolveAndApply(application);
+            ElementReactionResult reactionResult =
+                ElementReactionPipeline.ResolveAndApply(application);
+            OverloadReactionResolver.ResolveAndApply(
+                reactionResult,
+                _triggerBaseDamage,
+                _targetMask,
+                _applicationTime);
         }
 
         private void PublishWeaponFiredEvent(

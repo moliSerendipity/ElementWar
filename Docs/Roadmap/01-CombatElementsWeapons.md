@@ -20,6 +20,7 @@
 - `CMB-020` — 范围目标查询与友伤过滤 → [`CombatRangeTargetQueryV1.md`](../Features/CombatRangeTargetQueryV1.md)
 - `CMB-030` — 韧性、失衡与受控状态事实 → [`EnemyToughnessAndControlFactsV1.md`](../Features/EnemyToughnessAndControlFactsV1.md)
 - `WPN-010` — 步枪最小火/雷元素来源。
+- `ELM-040` — 超载范围伤害与控制闭环。
 
 ## M01 首个元素反应垂直切片
 
@@ -33,14 +34,17 @@
 - 解锁：`ELM-040`。
 
 ### ELM-040 超载范围伤害与控制闭环
-- 状态：Next
+- 状态：Done
 - 依赖：`ELM-030`、`CMB-020`、`CMB-030`、`WPN-010`。
+- 当前事实：步枪成功提交 Overload 后，以反应目标为中心查询 `3.5m` 内合法目标；每个目标共享一个新的反应执行身份，各提交一次触发基准伤害 `80%` 的触发元素/Explosion 伤害与一次硬控/削韧。基础削韧与 Boss 额外转换削韧均固定为 `200`；友方过滤、责任 Combatant/SourceObject 和目标侧去重继续由既有 Combat 契约裁决。
 - 可观察完成：Bootstrap 中用两种元素触发一次超载，附近合法敌人各受一次确定伤害/控制，责任归属正确，事件与反馈不重复。
 - 非目标：其余反应、完整武器库存和最终美术品质。
+- 当前验证：Unverified。2026-08-31 将 Overload 改为触发元素伤害与固定 `200` 削韧后，Unity Editor 仍打开，本轮未启动第二个 Unity 进程；2026-08-30 的 EditMode `64/64`、PlayMode `15/15` 只证明改动前版本。Windows64 与 Bootstrap 人工游玩未运行。
+- 剩余边界：Normal 短距水平推动尚无稳定 EnemyLocomotion 接缝；当前控制闭环只提交硬控与削韧，不直接改写 Transform/NavMeshAgent。
 - 解锁：`WPN-020`、`ELM-050`，并形成首个可玩元素里程碑。
 
 ### WPN-020 WeaponRuntime 职责与开火时序重构
-- 状态：Planned
+- 状态：Next
 - 依赖：`ELM-040`。
 - 可观察完成：现有步枪玩家行为不变，重复动画事件不能重复开火或结算，职责可被后续多武器复用。
 - 非目标：新增武器内容。
